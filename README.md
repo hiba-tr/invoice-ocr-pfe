@@ -10,4 +10,4 @@ Ce projet fournit un pipeline modulaire pour extraire le contenu de divers types
 
 ## Utilisation
 ```bash
-python scripts/run_extractor.py chemin/vers/fichier.pdf
+python scripts/run_extractor.py facture.png --output facture_extrait.json
