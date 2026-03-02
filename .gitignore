@@ -1,0 +1,25 @@
+# Environnement virtuel
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OCR / modèles
+models/
+weights/
+*.pt
+*.onnx
+
+# Résultats temporaires
+outputs/
+results/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

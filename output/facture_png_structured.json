@@ -1,0 +1,395 @@
+{
+  "invoice": {
+    "header": {
+      "supplier": "OMV(Tunesien)ProductionGmbH",
+      "document_title": "JOINT INTEREST BILLING DETAIL",
+      "invoice_date": "31 January 2025",
+      "currency": "USD",
+      "concession": {
+        "name": "CHEROUQ",
+        "phase": "Development"
+      }
+    },
+    "columns": [
+      "DESCRIPTION",
+      "Year To Date Expenditure As of Current Month",
+      "Year To Date Expenditure As of Previous Month",
+      "Current Month Expenditure 100%",
+      "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
+      "Current Month Expenditure ETAP Share @ 50%"
+    ],
+    "line_items": [
+      {
+        "description": "Wells",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Farah 2 Stimulation",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Shaheen #2 drilling",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "WAHA 3 Drilling & Completion",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "FARAH 2 Drilling & Completion",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "EL BADR *6 Drilling & Completion",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Waha -1 Acid Stimulation Job",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Facilities",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "(148,271.43)",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "(148,271.43)",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "(74,135.72)",
+          "Current Month Expenditure ETAP Share @ 50%": "(74,135.72)"
+        }
+      },
+      {
+        "description": "CHEROUQ Concession-WAHA PROD F",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "ESDV Valves location as per firefighting rating (IGRR)",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "(31,149.52)",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "(31,149.52)",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "(15,574.76)",
+          "Current Month Expenditure ETAP Share @ 50%": "(15,574.76)"
+        }
+      },
+      {
+        "description": "Camp upgrade 23",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Salt water well disposal FCLT",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Hook up CQ Dev W 13 FARAH2",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Hook up CQ Dev W 13 EL BADR6",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "CHEROUQ Gas Valorisation (FGR",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "WAZE Execute Phase",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "CHEROUQ Upgrade",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "South Tunisia Oil Development",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "CHEROUQ Temporary Facilities",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Repair Fire Fighting System (Safety)",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Inegrate Telemetry in PI",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Process Safety",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Waha CPF LP&HP Flare Tips Replacement",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Renew DCS System",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "WAHA corroded pipes replacement",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Waha CPF TA",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "20,132.69",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "20,132.69",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "10,066.35",
+          "Current Month Expenditure ETAP Share @ 50%": "10,066.35"
+        }
+      },
+      {
+        "description": "Overhaul Rotating Equipment",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "(137,254.60)",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "(137,254.60)",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "(68,627.30)",
+          "Current Month Expenditure ETAP Share @ 50%": "(68,627.30)"
+        }
+      },
+      {
+        "description": "Lightning Protection System for WAHA & AGP Fields",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Other CAPEX",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "CHEROUQ Temporary Facilities 1",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "2008/07 JENEIN NORD 3D SEISMIC",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Camp&Kitchen refurbishment",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Replacement old Pickups",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "General & Administration",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "(0.00)",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "(0.00)",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "(0.00)",
+          "Current Month Expenditure ETAP Share @ 50%": "(0.00)"
+        }
+      },
+      {
+        "description": "Carry Over",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      },
+      {
+        "description": "Admin staff",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "(00°0)",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "(0.00)",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "(0.00)",
+          "Current Month Expenditure ETAP Share @ 50%": "(0.00)"
+        }
+      },
+      {
+        "description": "Tunis Office Lac",
+        "values": {
+          "Year To Date Expenditure As of Current Month": "",
+          "Year To Date Expenditure As of Previous Month": "",
+          "Current Month Expenditure 100%": "",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%": "",
+          "Current Month Expenditure ETAP Share @ 50%": ""
+        }
+      }
+    ],
+    "line_count": 37
+  }
+}

@@ -1,0 +1,585 @@
+{
+  "invoice": {
+    "header": {
+      "supplier": null,
+      "document_title": null,
+      "invoice_date": null,
+      "currency": null,
+      "concession": {
+        "name": null,
+        "phase": null
+      }
+    },
+    "columns": [
+      "DESIGNATION",
+      "Report 2023",
+      "Janvier",
+      "Fevrier Projection",
+      "Mars Projection",
+      "Avril Projection",
+      "Mai Projection",
+      "Juin Projection",
+      "Juillet Projeetion",
+      "Aoit Projection",
+      "Septembre Projection",
+      "Oetobre Projection",
+      "Novembre Projection",
+      "Decembre Projection",
+      "TOTAL"
+    ],
+    "line_items": [
+      {
+        "description": "Stock debut du mois",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "217736",
+          "Fevrier Projection": "267783",
+          "Mars Projection": "267783",
+          "Avril Projection": "267783",
+          "Mai Projection": "267783",
+          "Juin Projection": "267783",
+          "Juillet Projeetion": "267783",
+          "Aoit Projection": "267783",
+          "Septembre Projection": "267783",
+          "Oetobre Projection": "267783",
+          "Novembre Projection": "267783",
+          "Decembre Projection": "267783",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Expedition",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "50 047",
+          "Fevrier Projection": "",
+          "Mars Projection": "",
+          "Avril Projection": "",
+          "Mai Projection": "",
+          "Juin Projection": "",
+          "Juillet Projeetion": "",
+          "Aoit Projection": "",
+          "Septembre Projection": "",
+          "Oetobre Projection": "",
+          "Novembre Projection": "",
+          "Decembre Projection": "",
+          "TOTAL": "50047"
+        }
+      },
+      {
+        "description": "Disponible ETAT/ETAP",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "333156 -65373",
+          "Fevrier Projection": "333156 -65 373",
+          "Mars Projection": "333156 -65 373",
+          "Avril Projection": "333156 -65373",
+          "Mai Projection": "333156 -65 373",
+          "Juin Projection": "333156 -65373",
+          "Juillet Projeetion": "333156 -65 373",
+          "Aoit Projection": "333156 -65373",
+          "Septembre Projection": "333156 -65373",
+          "Oetobre Projection": "333156 -65373",
+          "Novembre Projection": "333156 -65373",
+          "Decembre Projection": "333156 -65 373",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Disponible zzzZz ETAP(50%)",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "-4 695",
+          "Fevrier Projection": "-4 695",
+          "Mars Projection": "-4 695",
+          "Avril Projection": "",
+          "Mai Projection": "",
+          "Juin Projection": "",
+          "Juillet Projeetion": "-4695",
+          "Aoit Projection": "-4 695",
+          "Septembre Projection": "-4695",
+          "Oetobre Projection": "-4 695",
+          "Novembre Projection": "-4 695",
+          "Decembre Projection": "-4 695",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Part nette (33,75%) Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "",
+          "Fevrier Projection": "",
+          "Mars Projection": "",
+          "Avril Projection": "-4 695",
+          "Mai Projection": "-4 695",
+          "Juin Projection": "-4 695",
+          "Juillet Projeetion": "",
+          "Aoit Projection": "",
+          "Septembre Projection": "",
+          "Oetobre Projection": "",
+          "Novembre Projection": "",
+          "Decembre Projection": "",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock Reajustement de stock",
+        "values": {
+          "Report 2023": "-21586",
+          "Janvier": "-4 695",
+          "Fevrier Projection": "-4 695",
+          "Mars Projection": "-4 695",
+          "Avril Projection": "-4 695",
+          "Mai Projection": "-4 695",
+          "Juin Projection": "-4695",
+          "Juillet Projeetion": "-4 695",
+          "Aoit Projection": "-4 695",
+          "Septembre Projection": "-4695",
+          "Oetobre Projection": "-4 695",
+          "Novembre Projection": "-4 695",
+          "Decembre Projection": "-4 695",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Stock Ajuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "-4695",
+          "Fevrier Projection": "-4 695",
+          "Mars Projection": "-4695",
+          "Avril Projection": "-4 695",
+          "Mai Projection": "-4 695",
+          "Juin Projection": "-4 695",
+          "Juillet Projeetion": "-4 695",
+          "Aoit Projection": "-4695",
+          "Septembre Projection": "-4695",
+          "Oetobre Projection": "-4 695",
+          "Novembre Projection": "-4 695",
+          "Decembre Projection": "-4 695",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Marche local (10%) Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "59993",
+          "Fevrier Projection": "59993",
+          "Mars Projection": "59993",
+          "Avril Projection": "59993",
+          "Mai Projection": "59993",
+          "Juin Projection": "59 993",
+          "Juillet Projeetion": "59993",
+          "Aoit Projection": "59993",
+          "Septembre Projection": "59 993",
+          "Oetobre Projection": "59993",
+          "Novembre Projection": "59 993",
+          "Decembre Projection": "59993",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock",
+        "values": {
+          "Report 2023": "54988",
+          "Janvier": "59993",
+          "Fevrier Projection": "59993",
+          "Mars Projection": "59993",
+          "Avril Projection": "59 993",
+          "Mai Projection": "59993",
+          "Juin Projection": "59 993",
+          "Juillet Projeetion": "59 993",
+          "Aoit Projection": "59993",
+          "Septembre Projection": "59993",
+          "Oetobre Projection": "59 993",
+          "Novembre Projection": "59 993",
+          "Decembre Projection": "59993",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Reajustement de stock Stock Ajuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "59993",
+          "Fevrier Projection": "59993",
+          "Mars Projection": "59 993",
+          "Avril Projection": "59 993",
+          "Mai Projection": "59993",
+          "Juin Projection": "59 993",
+          "Juillet Projeetion": "59993",
+          "Aoit Projection": "59993",
+          "Septembre Projection": "59 993",
+          "Oetobre Projection": "59 993",
+          "Novembre Projection": "59 993",
+          "Decembre Projection": "59 993",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Redevance(6,25%) Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "37497",
+          "Fevrier Projection": "37497",
+          "Mars Projection": "37497",
+          "Avril Projection": "37497",
+          "Mai Projection": "37497",
+          "Juin Projection": "37 497",
+          "Juillet Projeetion": "37497",
+          "Aoit Projection": "37 497",
+          "Septembre Projection": "37497",
+          "Oetobre Projection": "37497",
+          "Novembre Projection": "37497",
+          "Decembre Projection": "37 497",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock",
+        "values": {
+          "Report 2023": "34369",
+          "Janvier": "37497",
+          "Fevrier Projection": "37 497",
+          "Mars Projection": "37497",
+          "Avril Projection": "37 497",
+          "Mai Projection": "37497",
+          "Juin Projection": "37 497",
+          "Juillet Projeetion": "37497",
+          "Aoit Projection": "37 497",
+          "Septembre Projection": "37 497",
+          "Oetobre Projection": "37497",
+          "Novembre Projection": "37 497",
+          "Decembre Projection": "37497",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Reajustement de stock StockAjuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "37497",
+          "Fevrier Projection": "37497",
+          "Mars Projection": "37497",
+          "Avril Projection": "37497",
+          "Mai Projection": "37497",
+          "Juin Projection": "37497",
+          "Juillet Projeetion": "37497",
+          "Aoit Projection": "37497",
+          "Septembre Projection": "37497",
+          "Oetobre Projection": "37497",
+          "Novembre Projection": "37497",
+          "Decembre Projection": "37497",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Z222(50%)",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "-65373",
+          "Fevrier Projection": "-65 373",
+          "Mars Projection": "-65373",
+          "Avril Projection": "-65 373",
+          "Mai Projection": "-65 373",
+          "Juin Projection": "-65373",
+          "Juillet Projeetion": "-65 373",
+          "Aoit Projection": "-65373",
+          "Septembre Projection": "-65 373",
+          "Oetobre Projection": "-65 373",
+          "Novembre Projection": "-65 373",
+          "Decembre Projection": "-65373",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Part nette (33,75%) Enlevement Stock",
+        "values": {
+          "Report 2023": "-82264",
+          "Janvier": "-65373",
+          "Fevrier Projection": "-65 373",
+          "Mars Projection": "-65 373",
+          "Avril Projection": "-65 373",
+          "Mai Projection": "-65 373",
+          "Juin Projection": "-65 373",
+          "Juillet Projeetion": "-65 373",
+          "Aoit Projection": "-65 373",
+          "Septembre Projection": "-65 373",
+          "Oetobre Projection": "-65373",
+          "Novembre Projection": "-65373",
+          "Decembre Projection": "-65 373",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Reajustement de stock StockAjuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "-65373",
+          "Fevrier Projection": "-65373",
+          "Mars Projection": "-65 373",
+          "Avril Projection": "-65373",
+          "Mai Projection": "-65 373",
+          "Juin Projection": "-65 373",
+          "Juillet Projeetion": "-65373",
+          "Aoit Projection": "-65 373",
+          "Septembre Projection": "-65 373",
+          "Oetobre Projection": "-65 373",
+          "Novembre Projection": "-65373",
+          "Decembre Projection": "-65 373",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Marchelocal (10%) Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "75005",
+          "Fevrier Projection": "75 005",
+          "Mars Projection": "75005",
+          "Avril Projection": "75005",
+          "Mai Projection": "75005",
+          "Juin Projection": "75005",
+          "Juillet Projeetion": "75005",
+          "Aoit Projection": "75005",
+          "Septembre Projection": "75005",
+          "Oetobre Projection": "75005",
+          "Novembre Projection": "75005",
+          "Decembre Projection": "75005",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Stock Reajustement de stock",
+        "values": {
+          "Report 2023": "70000",
+          "Janvier": "75005",
+          "Fevrier Projection": "75005",
+          "Mars Projection": "75005",
+          "Avril Projection": "75005",
+          "Mai Projection": "75005",
+          "Juin Projection": "75005",
+          "Juillet Projeetion": "75005",
+          "Aoit Projection": "75005",
+          "Septembre Projection": "75005",
+          "Oetobre Projection": "75005",
+          "Novembre Projection": "75005",
+          "Decembre Projection": "75005",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock Ajuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "75005",
+          "Fevrier Projection": "75 005",
+          "Mars Projection": "75005",
+          "Avril Projection": "75005",
+          "Mai Projection": "75005",
+          "Juin Projection": "75 005",
+          "Juillet Projeetion": "75005",
+          "Aoit Projection": "75005",
+          "Septembre Projection": "75005",
+          "Oetobre Projection": "75005",
+          "Novembre Projection": "75005",
+          "Decembre Projection": "75005",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Redevance(6,25%)",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "53128",
+          "Fevrier Projection": "53128",
+          "Mars Projection": "53128",
+          "Avril Projection": "53128",
+          "Mai Projection": "53128",
+          "Juin Projection": "53128",
+          "Juillet Projeetion": "53128",
+          "Aoit Projection": "53128",
+          "Septembre Projection": "53128",
+          "Oetobre Projection": "53128",
+          "Novembre Projection": "53128",
+          "Decembre Projection": "53128",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "",
+          "Fevrier Projection": "",
+          "Mars Projection": "",
+          "Avril Projection": "",
+          "Mai Projection": "",
+          "Juin Projection": "",
+          "Juillet Projeetion": "",
+          "Aoit Projection": "",
+          "Septembre Projection": "",
+          "Oetobre Projection": "",
+          "Novembre Projection": "",
+          "Decembre Projection": "",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock",
+        "values": {
+          "Report 2023": "50000",
+          "Janvier": "53128",
+          "Fevrier Projection": "53128",
+          "Mars Projection": "53128",
+          "Avril Projection": "53128",
+          "Mai Projection": "53128",
+          "Juin Projection": "53 128",
+          "Juillet Projeetion": "53128",
+          "Aoit Projection": "53128",
+          "Septembre Projection": "53128",
+          "Oetobre Projection": "53128",
+          "Novembre Projection": "53128",
+          "Decembre Projection": "53128",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Reajustement de stock StockAjuste",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "53128",
+          "Fevrier Projection": "53128",
+          "Mars Projection": "53128",
+          "Avril Projection": "53128",
+          "Mai Projection": "53128",
+          "Juin Projection": "53128",
+          "Juillet Projeetion": "53128",
+          "Aoit Projection": "53128",
+          "Septembre Projection": "53128",
+          "Oetobre Projection": "53128",
+          "Novembre Projection": "53128",
+          "Decembre Projection": "53128",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "ETAT/ETAP(66,25%)",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "333156",
+          "Fevrier Projection": "333 156",
+          "Mars Projection": "333 156",
+          "Avril Projection": "333156",
+          "Mai Projection": "333 156",
+          "Juin Projection": "333156",
+          "Juillet Projeetion": "333 156",
+          "Aoit Projection": "333156",
+          "Septembre Projection": "333 156",
+          "Oetobre Projection": "333156",
+          "Novembre Projection": "333 156",
+          "Decembre Projection": "333 156",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Enlevement",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "0",
+          "Fevrier Projection": "0",
+          "Mars Projection": "0",
+          "Avril Projection": "0",
+          "Mai Projection": "0",
+          "Juin Projection": "0",
+          "Juillet Projeetion": "0",
+          "Aoit Projection": "0",
+          "Septembre Projection": "0",
+          "Oetobre Projection": "0",
+          "Novembre Projection": "0",
+          "Decembre Projection": "0",
+          "TOTAL": "0"
+        }
+      },
+      {
+        "description": "Stock",
+        "values": {
+          "Report 2023": "300000",
+          "Janvier": "333156",
+          "Fevrier Projection": "333156",
+          "Mars Projection": "333 156",
+          "Avril Projection": "333156",
+          "Mai Projection": "333 156",
+          "Juin Projection": "333156",
+          "Juillet Projeetion": "333156",
+          "Aoit Projection": "333156",
+          "Septembre Projection": "333156",
+          "Oetobre Projection": "333156",
+          "Novembre Projection": "333156",
+          "Decembre Projection": "333156",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Reajustement de stock",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "0 333156",
+          "Fevrier Projection": "0 333156",
+          "Mars Projection": "0 333156",
+          "Avril Projection": "0 333156",
+          "Mai Projection": "0 333156",
+          "Juin Projection": "0 333156",
+          "Juillet Projeetion": "0 333156",
+          "Aoit Projection": "0 333156",
+          "Septembre Projection": "0 333156",
+          "Oetobre Projection": "0 333156",
+          "Novembre Projection": "0 333156",
+          "Decembre Projection": "333156",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "StockAjuste",
+        "values": {
+          "Report 2023": "217736",
+          "Janvier": "267783",
+          "Fevrier Projection": "",
+          "Mars Projection": "",
+          "Avril Projection": "267783",
+          "Mai Projection": "267783",
+          "Juin Projection": "267783",
+          "Juillet Projeetion": "267783",
+          "Aoit Projection": "",
+          "Septembre Projection": "",
+          "Oetobre Projection": "267783",
+          "Novembre Projection": "267783",
+          "Decembre Projection": "267783",
+          "TOTAL": ""
+        }
+      },
+      {
+        "description": "Stock fin du mois",
+        "values": {
+          "Report 2023": "",
+          "Janvier": "",
+          "Fevrier Projection": "267783",
+          "Mars Projection": "267783",
+          "Avril Projection": "",
+          "Mai Projection": "",
+          "Juin Projection": "",
+          "Juillet Projeetion": "",
+          "Aoit Projection": "267783",
+          "Septembre Projection": "267783",
+          "Oetobre Projection": "",
+          "Novembre Projection": "",
+          "Decembre Projection": "",
+          "TOTAL": ""
+        }
+      }
+    ],
+    "line_count": 29
+  }
+}

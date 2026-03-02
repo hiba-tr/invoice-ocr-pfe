@@ -1,0 +1,4 @@
+flask
+cx-oracle
+docling
+python-dotenv

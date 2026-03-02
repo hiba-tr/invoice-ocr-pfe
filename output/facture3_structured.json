@@ -1,0 +1,425 @@
+{
+  "invoice": {
+    "header": {
+      "supplier": "OMV (Tunesien) Production GmbH",
+      "document_title": null,
+      "invoice_date": "31 January 2025",
+      "currency": null,
+      "concession": {
+        "name": "CHEROUQ",
+        "phase": "Development"
+      }
+    },
+    "columns": [
+      "DESCRIPTION",
+      "Working Capital As of Current Month",
+      "Working Capital As of Previous Month",
+      "Working Capital Current Month Expenditure",
+      "Working Capital OMV(Tunesien) Production Share@50%",
+      "Working Capital ETAP Share@50%"
+    ],
+    "line_items": [
+      {
+        "description": "Number Item Description",
+        "values": {
+          "Working Capital As of Current Month": "",
+          "Working Capital As of Previous Month": "",
+          "Working Capital Current Month Expenditure": "",
+          "Working Capital OMV(Tunesien) Production Share@50%": "",
+          "Working Capital ETAP Share@50%": ""
+        }
+      },
+      {
+        "description": "Wells",
+        "values": {
+          "Working Capital As of Current Month": "99,359.346",
+          "Working Capital As of Previous Month": "99,359.346",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Farah 2 Stimulation",
+        "values": {
+          "Working Capital As of Current Month": "(1,070.000)",
+          "Working Capital As of Previous Month": "(1,070.000)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Shaheen #2 drilling",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "WAHA#3 Drilling &Completion",
+        "values": {
+          "Working Capital As of Current Month": "28,467.572",
+          "Working Capital As of Previous Month": "28,467.572",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "FARAH #2 Drilling &Completion",
+        "values": {
+          "Working Capital As of Current Month": "(32,351.050)",
+          "Working Capital As of Previous Month": "(32,351.050)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "EL BADR #6 Drilling &Completion",
+        "values": {
+          "Working Capital As of Current Month": "104,312.824",
+          "Working Capital As of Previous Month": "104,312.824",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Waha -1 Acid Stimulation Job",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Facilities",
+        "values": {
+          "Working Capital As of Current Month": "(360,067.105)",
+          "Working Capital As of Previous Month": "(606,795.678)",
+          "Working Capital Current Month Expenditure": "246,728.573",
+          "Working Capital OMV(Tunesien) Production Share@50%": "123,364.287",
+          "Working Capital ETAP Share@50%": "123,364.287"
+        }
+      },
+      {
+        "description": "CHEROUQ Concession-WAHA PROD F",
+        "values": {
+          "Working Capital As of Current Month": "(0.998)",
+          "Working Capital As of Previous Month": "(0.998)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "ESDV Valves location as per firefighting rating (IGRR)",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Camp upgrade 23",
+        "values": {
+          "Working Capital As of Current Month": "(529.240)",
+          "Working Capital As of Previous Month": "(528.240)",
+          "Working Capital Current Month Expenditure": "(1.000)",
+          "Working Capital OMV(Tunesien) Production Share@50%": "(0.500)",
+          "Working Capital ETAP Share@50%": "(0.500)"
+        }
+      },
+      {
+        "description": "Salt water well disposal FCLT",
+        "values": {
+          "Working Capital As of Current Month": "(53,450.919)",
+          "Working Capital As of Previous Month": "(53,450.919)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Hook up CQ DevW13 FARAH2",
+        "values": {
+          "Working Capital As of Current Month": "(11,340.000)",
+          "Working Capital As of Previous Month": "(11,340.000)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Hook up CQ DevW13 EL BADR6",
+        "values": {
+          "Working Capital As of Current Month": "(4,537.000)",
+          "Working Capital As of Previous Month": "(4,537.000)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "CHEROUQ Gas Valorisation ( FGR",
+        "values": {
+          "Working Capital As of Current Month": "(9,720.000)",
+          "Working Capital As of Previous Month": "(9,720.000)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "WAZE Execute Phase",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "CHEROUQ Upgrade",
+        "values": {
+          "Working Capital As of Current Month": "(15,022.400)",
+          "Working Capital As of Previous Month": "(15,022.400)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "South Tunisia Oil Development",
+        "values": {
+          "Working Capital As of Current Month": "(4,320.400)",
+          "Working Capital As of Previous Month": "(4,320.400)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "CHEROUQ Temporary Facilities",
+        "values": {
+          "Working Capital As of Current Month": "(12,734.161)",
+          "Working Capital As of Previous Month": "(12,734.161)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Repair Fire Fighting System (Safety)",
+        "values": {
+          "Working Capital As of Current Month": "(46,200.000)",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "(46,200.000)",
+          "Working Capital OMV(Tunesien) Production Share@50%": "(23,100.000)",
+          "Working Capital ETAP Share@50%": "(23,100.000)"
+        }
+      },
+      {
+        "description": "Inegrate Telemetry in PI",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Process Safety",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "(17,800.000)",
+          "Working Capital Current Month Expenditure": "17,800.000",
+          "Working Capital OMV(Tunesien) Production Share@50%": "8,900.000",
+          "Working Capital ETAP Share@50%": "8,900.000"
+        }
+      },
+      {
+        "description": "Waha CPF LP&HP Flare Tips Replacement",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Renew DCS System",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "WAHAcorroded pipes replacement",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Waha CPF TA",
+        "values": {
+          "Working Capital As of Current Month": "(202,211.987)",
+          "Working Capital As of Previous Month": "(365,525.560)",
+          "Working Capital Current Month Expenditure": "163,313.573",
+          "Working Capital OMV(Tunesien) Production Share@50%": "81,656.787",
+          "Working Capital ETAP Share@50%": "81,656.787"
+        }
+      },
+      {
+        "description": "Overhaul Rotating Equipment",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "(111,816.000)",
+          "Working Capital Current Month Expenditure": "111,816.000",
+          "Working Capital OMV(Tunesien) Production Share@50%": "55,908.000",
+          "Working Capital ETAP Share@50%": "55,908.000"
+        }
+      },
+      {
+        "description": "Lightning Protection System for WAHA&AGPFields",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Inventory Other CAPEX",
+        "values": {
+          "Working Capital As of Current Month": "14,491.398",
+          "Working Capital As of Previous Month": "14,491.398",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "CHEROUQ Temporary Facilities I",
+        "values": {
+          "Working Capital As of Current Month": "14,491.399",
+          "Working Capital As of Previous Month": "14,491.399",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "2008/07 JENEIN NORD 3D SEISMIC",
+        "values": {
+          "Working Capital As of Current Month": "(0.001)",
+          "Working Capital As of Previous Month": "(0.001)",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Camp&Kitchen refurbishment",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Replacement old Pickups",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Inventory General &Administration",
+        "values": {
+          "Working Capital As of Current Month": "0.001",
+          "Working Capital As of Previous Month": "0.001",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Carry Over",
+        "values": {
+          "Working Capital As of Current Month": "0.001",
+          "Working Capital As of Previous Month": "0.001",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Admin staff",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Tunis Office Lac",
+        "values": {
+          "Working Capital As of Current Month": "-",
+          "Working Capital As of Previous Month": "-",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Inventory",
+        "values": {
+          "Working Capital As of Current Month": "161,274.616",
+          "Working Capital As of Previous Month": "161,274.616",
+          "Working Capital Current Month Expenditure": "-",
+          "Working Capital OMV(Tunesien) Production Share@50%": "-",
+          "Working Capital ETAP Share@50%": "-"
+        }
+      },
+      {
+        "description": "Total Working Capital",
+        "values": {
+          "Working Capital As of Current Month": "(84,941.744)",
+          "Working Capital As of Previous Month": "(331,670.317)",
+          "Working Capital Current Month Expenditure": "246,728.573",
+          "Working Capital OMV(Tunesien) Production Share@50%": "123,364.287",
+          "Working Capital ETAP Share@50%": "123,364.287"
+        }
+      }
+    ],
+    "line_count": 40
+  }
+}

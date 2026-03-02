@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Factures</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .container { max-width: 1200px; margin: auto; }
+        .upload-form { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Factures</h1>
+
+        <div class="upload-form">
+            <h2>Uploader une nouvelle facture</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
+                <button type="submit">Uploader et traiter</button>
+            </form>
+            <div id="uploadMessage"></div>
+            <div class="loader" id="loader"></div>
+        </div>
+
+        <h2>Liste des factures</h2>
+        <button onclick="loadInvoices()">Rafraîchir</button>
+        <div id="invoicesTable"></div>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadMessage = document.getElementById('uploadMessage');
+        const loader = document.getElementById('loader');
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(uploadForm);
+            uploadMessage.innerHTML = '';
+            loader.style.display = 'block';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                loader.style.display = 'none';
+                if (result.error) {
+                    uploadMessage.innerHTML = `<span class="error">Erreur : ${result.error}</span>`;
+                } else {
+                    uploadMessage.innerHTML = `<span class="success">Facture traitée avec succès (ID ${result.invoice_id})</span>`;
+                    uploadForm.reset();
+                    loadInvoices(); // recharger la liste
+                }
+            } catch (err) {
+                loader.style.display = 'none';
+                uploadMessage.innerHTML = `<span class="error">Erreur réseau : ${err.message}</span>`;
+            }
+        });
+
+ async function loadInvoices() {
+    const tableDiv = document.getElementById('invoicesTable');
+    tableDiv.innerHTML = '<div class="loader" style="display:block;"></div>';
+    try {
+        const response = await fetch('/invoices');
+        const invoices = await response.json();
+        if (invoices.length === 0) {
+            tableDiv.innerHTML = '<p>Aucune facture trouvée.</p>';
+            return;
+        }
+        let html = '';
+        for (const inv of invoices) {
+            html += `<h3>Facture #${inv.invoice_id} - ${inv.supplier} (${inv.invoice_date})</h3>`;
+            // Récupérer les colonnes triées par ordre
+            const cols = Object.values(inv.columns).sort((a, b) => a.order - b.order);
+            // Génération des en-têtes : première colonne "Description"
+            html += '<table><thead><tr><th>Description</th>';
+            // On commence à l'index 1 pour ignorer la colonne "DESCRIPTION"
+            for (let i = 1; i < cols.length; i++) {
+                html += `<th>${cols[i].name}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            // Lignes triées par row_order
+            const lines = inv.line_items.sort((a, b) => a.row_order - b.row_order);
+            for (const line of lines) {
+                html += '<tr>';
+                html += `<td>${line.description}</td>`;
+                // Pour chaque colonne de données (à partir de l'index 1)
+                for (let i = 1; i < cols.length; i++) {
+                    let val = line.values[cols[i].name] || '';
+                    html += `<td>${val}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table><br>';
+        }
+        tableDiv.innerHTML = html;
+    } catch (err) {
+        tableDiv.innerHTML = `<span class="error">Erreur chargement : ${err.message}</span>`;
+    }
+}
+
+        // Charger au démarrage
+        window.onload = loadInvoices;
+    </script>
+</body>
+</html>
