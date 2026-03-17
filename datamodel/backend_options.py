@@ -1,11 +1,18 @@
 from typing import Optional, Literal, Union
 from pydantic import BaseModel, Field, SecretStr
 
+
+
 class BaseBackendOptions(BaseModel):
     """Options communes à tous les backends"""
     
     max_file_size: int = 100 * 1024 * 1024  # 100 MB
     password: Optional[SecretStr] = None  # Pour PDF protégés
+
+class DeclarativeBackendOptions(BaseBackendOptions):
+    """Options par défaut pour les backends déclaratifs."""
+    pass
+
 
 class PdfBackendOptions(BaseBackendOptions):
     """Options spécifiques aux PDF"""

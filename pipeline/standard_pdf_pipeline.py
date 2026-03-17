@@ -35,41 +35,38 @@ from docling_core.types.doc import (
     TableItem,
 )
 
-from docling.backend.abstract_backend import AbstractDocumentBackend
-from docling.backend.pdf_backend import PdfDocumentBackend
-from docling.datamodel.base_models import (
+from backend.abstract_backend import AbstractDocumentBackend
+from backend.pdf_backend import PdfDocumentBackend
+from datamodel.base_models import (
     AssembledUnit,
     ConversionStatus,
     DoclingComponentType,
     ErrorItem,
     Page,
 )
-from docling.datamodel.document import ConversionResult
-from docling.datamodel.pipeline_options import ThreadedPdfPipelineOptions
-from docling.datamodel.settings import settings
-from docling.models.factories import (
+from datamodel.document import ConversionResult
+from datamodel.pipeline_options import ThreadedPdfPipelineOptions
+from datamodel.settings import settings
+from models.factories import (
     get_layout_factory,
     get_ocr_factory,
     get_table_structure_factory,
 )
-from docling.models.stages.code_formula.code_formula_vlm_model import (
-    CodeFormulaVlmModel,
-)
-from docling.models.stages.page_assemble.page_assemble_model import (
+
+from models.stages.page_assemble.page_assemble_model import (
     PageAssembleModel,
     PageAssembleOptions,
 )
-from docling.models.stages.page_preprocessing.page_preprocessing_model import (
+from models.stages.page_preprocessing.page_preprocessing_model import (
     PagePreprocessingModel,
     PagePreprocessingOptions,
 )
-from docling.models.stages.reading_order.readingorder_model import (
+from models.stages.reading_order.readingorder_model import (
     ReadingOrderModel,
     ReadingOrderOptions,
 )
-from docling.pipeline.base_pipeline import ConvertPipeline
-from docling.utils.profiling import ProfilingScope, TimeRecorder
-from docling.utils.utils import chunkify
+from pipeline.base_pipeline import ConvertPipeline
+from utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 
@@ -478,33 +475,7 @@ class StandardPdfPipeline(ConvertPipeline):
         self.assemble_model = PageAssembleModel(options=PageAssembleOptions())
         self.reading_order_model = ReadingOrderModel(options=ReadingOrderOptions())
 
-        # --- optional enrichment ------------------------------------------------
-        # Update code_formula_options to match the boolean flags
-        code_formula_opts = self.pipeline_options.code_formula_options
-        code_formula_opts.extract_code = self.pipeline_options.do_code_enrichment
-        code_formula_opts.extract_formulas = self.pipeline_options.do_formula_enrichment
-
-        self.enrichment_pipe = [
-            # Code Formula Enrichment Model (using new VLM runtime system)
-            CodeFormulaVlmModel(
-                enabled=self.pipeline_options.do_code_enrichment
-                or self.pipeline_options.do_formula_enrichment,
-                artifacts_path=self.artifacts_path,
-                options=code_formula_opts,
-                accelerator_options=self.pipeline_options.accelerator_options,
-                enable_remote_services=self.pipeline_options.enable_remote_services,
-            ),
-            *self.enrichment_pipe,
-        ]
-
-        self.keep_backend = any(
-            (
-                self.pipeline_options.do_formula_enrichment,
-                self.pipeline_options.do_code_enrichment,
-                self.pipeline_options.do_picture_classification,
-                self.pipeline_options.do_picture_description,
-            )
-        )
+        self.keep_backend = False
 
     # ---------------------------------------------------------------- helpers
     def _make_ocr_model(self, art_path: Path | None) -> Any:
@@ -754,99 +725,98 @@ class StandardPdfPipeline(ConvertPipeline):
     # ---------------------------------------------------------------- assemble
     def _assemble_document(self, conv_res: ConversionResult) -> ConversionResult:
         elements, headers, body = [], [], []
-        with TimeRecorder(conv_res, "doc_assemble", scope=ProfilingScope.DOCUMENT):
-            for p in conv_res.pages:
-                if p.assembled:
-                    elements.extend(p.assembled.elements)
-                    headers.extend(p.assembled.headers)
-                    body.extend(p.assembled.body)
-            conv_res.assembled = AssembledUnit(
-                elements=elements, headers=headers, body=body
-            )
-            conv_res.document = self.reading_order_model(conv_res)
+        for p in conv_res.pages:
+            if p.assembled:
+                elements.extend(p.assembled.elements)
+                headers.extend(p.assembled.headers)
+                body.extend(p.assembled.body)
+        conv_res.assembled = AssembledUnit(
+            elements=elements, headers=headers, body=body
+        )
+        conv_res.document = self.reading_order_model(conv_res)
 
-            # Generate page images in the output
-            if self.pipeline_options.generate_page_images:
-                for page in conv_res.pages:
-                    assert page.image is not None
-                    page_no = page.page_no
-                    conv_res.document.pages[page_no].image = ImageRef.from_pil(
-                        page.image, dpi=int(72 * self.pipeline_options.images_scale)
-                    )
+        # Generate page images in the output
+        if self.pipeline_options.generate_page_images:
+            for page in conv_res.pages:
+                assert page.image is not None
+                page_no = page.page_no
+                conv_res.document.pages[page_no].image = ImageRef.from_pil(
+                    page.image, dpi=int(72 * self.pipeline_options.images_scale)
+                )
 
-            # Generate images of the requested element types
-            with warnings.catch_warnings():  # deprecated generate_table_images
-                warnings.filterwarnings("ignore", category=DeprecationWarning)
-                if (
-                    self.pipeline_options.generate_picture_images
-                    or self.pipeline_options.generate_table_images
-                ):
-                    scale = self.pipeline_options.images_scale
-                    for element, _level in conv_res.document.iterate_items():
-                        if not isinstance(element, DocItem) or len(element.prov) == 0:
-                            continue
-                        if (
-                            isinstance(element, PictureItem)
-                            and self.pipeline_options.generate_picture_images
-                        ) or (
-                            isinstance(element, TableItem)
-                            and self.pipeline_options.generate_table_images
-                        ):
-                            page_ix = element.prov[0].page_no
-                            page = next(
-                                (p for p in conv_res.pages if p.page_no == page_ix),
-                                cast("Page", None),
+        # Generate images of the requested element types
+        with warnings.catch_warnings():  # deprecated generate_table_images
+            warnings.filterwarnings("ignore", category=DeprecationWarning)
+            if (
+                self.pipeline_options.generate_picture_images
+                or self.pipeline_options.generate_table_images
+            ):
+                scale = self.pipeline_options.images_scale
+                for element, _level in conv_res.document.iterate_items():
+                    if not isinstance(element, DocItem) or len(element.prov) == 0:
+                        continue
+                    if (
+                        isinstance(element, PictureItem)
+                        and self.pipeline_options.generate_picture_images
+                    ) or (
+                        isinstance(element, TableItem)
+                        and self.pipeline_options.generate_table_images
+                    ):
+                        page_ix = element.prov[0].page_no
+                        page = next(
+                            (p for p in conv_res.pages if p.page_no == page_ix),
+                            cast("Page", None),
+                        )
+                        assert page is not None
+                        assert page.size is not None
+                        assert page.image is not None
+
+                        crop_bbox = (
+                            element.prov[0]
+                            .bbox.scaled(scale=scale)
+                            .to_top_left_origin(
+                                page_height=page.size.height * scale
                             )
-                            assert page is not None
-                            assert page.size is not None
-                            assert page.image is not None
-
-                            crop_bbox = (
-                                element.prov[0]
-                                .bbox.scaled(scale=scale)
-                                .to_top_left_origin(
-                                    page_height=page.size.height * scale
-                                )
-                            )
-
-                            cropped_im = page.image.crop(crop_bbox.as_tuple())
-                            element.image = ImageRef.from_pil(
-                                cropped_im, dpi=int(72 * scale)
-                            )
-
-            # Aggregate confidence values for document:
-            if len(conv_res.pages) > 0:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings(
-                        "ignore",
-                        category=RuntimeWarning,
-                        message="Mean of empty slice|All-NaN slice encountered",
-                    )
-                    conv_res.confidence.layout_score = float(
-                        np.nanmean(
-                            [c.layout_score for c in conv_res.confidence.pages.values()]
                         )
-                    )
-                    conv_res.confidence.parse_score = float(
-                        np.nanquantile(
-                            [c.parse_score for c in conv_res.confidence.pages.values()],
-                            q=0.1,  # parse score should relate to worst 10% of pages.
-                        )
-                    )
-                    conv_res.confidence.table_score = float(
-                        np.nanmean(
-                            [c.table_score for c in conv_res.confidence.pages.values()]
-                        )
-                    )
-                    conv_res.confidence.ocr_score = float(
-                        np.nanmean(
-                            [c.ocr_score for c in conv_res.confidence.pages.values()]
-                        )
-                    )
 
-            # Add failed pages to DoclingDocument.pages to preserve page numbering
-            # This ensures page break markers are generated for skipped/failed pages
-            self._add_failed_pages_to_document(conv_res)
+                        cropped_im = page.image.crop(crop_bbox.as_tuple())
+                        element.image = ImageRef.from_pil(
+                            cropped_im, dpi=int(72 * scale)
+                        )
+
+        # Aggregate confidence values for document:
+        if len(conv_res.pages) > 0:
+            with warnings.catch_warnings():
+                warnings.filterwarnings(
+                    "ignore",
+                    category=RuntimeWarning,
+                    message="Mean of empty slice|All-NaN slice encountered",
+                )
+                conv_res.confidence.layout_score = float(
+                    np.nanmean(
+                        [c.layout_score for c in conv_res.confidence.pages.values()]
+                    )
+                )
+                conv_res.confidence.parse_score = float(
+                    np.nanquantile(
+                        [c.parse_score for c in conv_res.confidence.pages.values()],
+                        q=0.1,  # parse score should relate to worst 10% of pages.
+                    )
+                )
+                conv_res.confidence.table_score = float(
+                    np.nanmean(
+                        [c.table_score for c in conv_res.confidence.pages.values()]
+                    )
+                )
+                conv_res.confidence.ocr_score = float(
+                    np.nanmean(
+                        [c.ocr_score for c in conv_res.confidence.pages.values()]
+                    )
+                )
+
+        # Add failed pages to DoclingDocument.pages to preserve page numbering
+        # This ensures page break markers are generated for skipped/failed pages
+        self._add_failed_pages_to_document(conv_res)
 
         return conv_res
 

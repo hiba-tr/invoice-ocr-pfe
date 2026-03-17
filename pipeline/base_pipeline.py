@@ -9,36 +9,26 @@ from typing import Any, Callable, List, Optional
 
 from docling_core.types.doc import NodeItem
 
-from docling.backend.abstract_backend import (
+from backend.abstract_backend import (
     AbstractDocumentBackend,
     PaginatedDocumentBackend,
 )
-from docling.datamodel.base_models import (
+from datamodel.base_models import (
     ConversionStatus,
     DoclingComponentType,
     ErrorItem,
     Page,
 )
-from docling.datamodel.document import ConversionResult, InputDocument
-from docling.datamodel.pipeline_options import (
+from datamodel.document import ConversionResult, InputDocument
+from datamodel.pipeline_options import (
     ConvertPipelineOptions,
     PdfPipelineOptions,
     PipelineOptions,
 )
-from docling.datamodel.settings import settings
-from docling.models.base_model import GenericEnrichmentModel
-from docling.models.factories import get_picture_description_factory
-from docling.models.picture_description_base_model import PictureDescriptionBaseModel
-from docling.models.stages.chart_extraction.granite_vision import (
-    ChartExtractionModelGraniteVision,
-    ChartExtractionModelOptions,
-)
-from docling.models.stages.picture_classifier.document_picture_classifier import (
-    DocumentPictureClassifier,
-    DocumentPictureClassifierOptions,
-)
-from docling.utils.profiling import ProfilingScope, TimeRecorder
-from docling.utils.utils import chunkify
+from datamodel.settings import settings
+
+from utils.profiling import ProfilingScope, TimeRecorder
+from utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 
@@ -48,8 +38,7 @@ class BasePipeline(ABC):
         self.pipeline_options = pipeline_options
         self.keep_images = False
         self.build_pipe: List[Callable] = []
-        self.enrichment_pipe: List[GenericEnrichmentModel[Any]] = []
-
+        self.enrichment_pipe: List[Any] = []
         self.artifacts_path: Optional[Path] = None
         if pipeline_options.artifacts_path is not None:
             self.artifacts_path = Path(pipeline_options.artifacts_path).expanduser()
@@ -102,7 +91,7 @@ class BasePipeline(ABC):
 
     def _enrich_document(self, conv_res: ConversionResult) -> ConversionResult:
         def _prepare_elements(
-            conv_res: ConversionResult, model: GenericEnrichmentModel[Any]
+        conv_res: ConversionResult, model: Any
         ) -> Iterable[NodeItem]:
             for doc_element, _level in conv_res.document.iterate_items():
                 prepared_element = model.prepare_element(
@@ -147,54 +136,11 @@ class ConvertPipeline(BasePipeline):
         super().__init__(pipeline_options)
         self.pipeline_options: ConvertPipelineOptions
 
-        # We need picture classification to do chart_extraction
-        if pipeline_options.do_chart_extraction:
-            pipeline_options.do_picture_classification = True
+        
 
-        # ------ Common enrichment models working on all backends
+        self.enrichment_pipe = []
 
-        # Picture description model
-        if (
-            picture_description_model := self._get_picture_description_model(
-                artifacts_path=self.artifacts_path
-            )
-        ) is None:
-            raise RuntimeError(
-                f"The specified picture description kind is not supported: {pipeline_options.picture_description_options.kind}."
-            )
-
-        self.enrichment_pipe = [
-            # Document Picture Classifier
-            DocumentPictureClassifier(
-                enabled=pipeline_options.do_picture_classification,
-                artifacts_path=self.artifacts_path,
-                options=DocumentPictureClassifierOptions(),
-                accelerator_options=pipeline_options.accelerator_options,
-            ),
-            # Document Picture description
-            picture_description_model,
-            # Document Chart Extraction
-            ChartExtractionModelGraniteVision(
-                enabled=pipeline_options.do_chart_extraction,
-                artifacts_path=self.artifacts_path,
-                options=ChartExtractionModelOptions(),
-                accelerator_options=pipeline_options.accelerator_options,
-            ),
-        ]
-
-    def _get_picture_description_model(
-        self, artifacts_path: Optional[Path] = None
-    ) -> Optional[PictureDescriptionBaseModel]:
-        factory = get_picture_description_factory(
-            allow_external_plugins=self.pipeline_options.allow_external_plugins
-        )
-        return factory.create_instance(
-            options=self.pipeline_options.picture_description_options,
-            enabled=self.pipeline_options.do_picture_description,
-            enable_remote_services=self.pipeline_options.enable_remote_services,
-            artifacts_path=artifacts_path,
-            accelerator_options=self.pipeline_options.accelerator_options,
-        )
+   
 
     @classmethod
     @abstractmethod

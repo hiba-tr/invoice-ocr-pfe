@@ -13,10 +13,10 @@ from typing import Optional, Type, Union
 from pydantic import ConfigDict, model_validator, validate_call
 from typing_extensions import Self
 
-from docling.backend.abstract_backend import AbstractDocumentBackend
-from docling.backend.image_backend import ImageDocumentBackend
-from docling.backend.pypdfium2_backend import PyPdfiumDocumentBackend
-from docling.datamodel.base_models import (
+from backend.abstract_backend import AbstractDocumentBackend
+from backend.image_backend import ImageDocumentBackend
+from backend.pypdfium2_backend import PyPdfiumDocumentBackend
+from datamodel.base_models import (
     BaseFormatOption,
     ConversionStatus,
     DoclingComponentType,
@@ -24,22 +24,22 @@ from docling.datamodel.base_models import (
     ErrorItem,
     InputFormat,
 )
-from docling.datamodel.document import (
+from datamodel.document import (
     InputDocument,
     _DocumentConversionInput,  # intentionally reused builder
 )
-from docling.datamodel.extraction import ExtractionResult, ExtractionTemplateType
-from docling.datamodel.pipeline_options import PipelineOptions
-from docling.datamodel.settings import (
+from datamodel.extraction import ExtractionResult, ExtractionTemplateType
+from datamodel.pipeline_options import PipelineOptions
+from datamodel.settings import (
     DEFAULT_PAGE_RANGE,
     DocumentLimits,
     PageRange,
     settings,
 )
-from docling.exceptions import ConversionError
-from docling.pipeline.base_extraction_pipeline import BaseExtractionPipeline
-from docling.pipeline.extraction_vlm_pipeline import ExtractionVlmPipeline
-from docling.utils.utils import chunkify
+from exceptions import ConversionError
+from pipeline.base_extraction_pipeline import BaseExtractionPipeline
+from pipeline.extraction_vlm_pipeline import ExtractionVlmPipeline
+from utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 _PIPELINE_CACHE_LOCK = threading.Lock()

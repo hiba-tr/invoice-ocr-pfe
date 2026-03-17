@@ -13,50 +13,18 @@ from pydantic import (
 )
 from typing_extensions import deprecated
 
-from docling.datamodel import (
-    asr_model_specs,
-    stage_model_specs,
-    vlm_model_specs,
-)
+
 
 # Import the following for backwards compatibility
-from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
-from docling.datamodel.layout_model_specs import (
-    DOCLING_LAYOUT_EGRET_LARGE,
-    DOCLING_LAYOUT_EGRET_MEDIUM,
-    DOCLING_LAYOUT_EGRET_XLARGE,
-    DOCLING_LAYOUT_HERON,
-    DOCLING_LAYOUT_HERON_101,
-    DOCLING_LAYOUT_V2,
-    LayoutModelConfig,
-)
-from docling.datamodel.object_detection_engine_options import (
-    BaseObjectDetectionEngineOptions,
-)
-from docling.datamodel.pipeline_options_asr_model import InlineAsrOptions
-from docling.datamodel.pipeline_options_vlm_model import (
-    ApiVlmOptions,
-    InferenceFramework,
-    InlineVlmOptions,
-    ResponseFormat,
-)
-from docling.datamodel.stage_model_specs import (
-    ObjectDetectionModelSpec,
-    ObjectDetectionStagePresetMixin,
-    StagePresetMixin,
-    VlmModelSpec,
-)
-from docling.datamodel.vlm_engine_options import BaseVlmEngineOptions
-from docling.datamodel.vlm_model_specs import (
-    GRANITE_VISION_OLLAMA as granite_vision_vlm_ollama_conversion_options,
-    GRANITE_VISION_TRANSFORMERS as granite_vision_vlm_conversion_options,
-    NU_EXTRACT_2B_TRANSFORMERS,
-    SMOLDOCLING_MLX as smoldocling_vlm_mlx_conversion_options,
-    SMOLDOCLING_TRANSFORMERS as smoldocling_vlm_conversion_options,
-    VlmModelType,
-)
+from datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+
+from datamodel.layout_model_specs import LayoutModelConfig, DOCLING_LAYOUT_V2
 
 _log = logging.getLogger(__name__)
+
+
+from datamodel.layout_model_specs import DOCLING_LAYOUT_HERON
+
 
 
 class BaseOptions(BaseModel):
@@ -453,399 +421,6 @@ class OcrMacOptions(OcrOptions):
     )
 
 
-class PictureDescriptionBaseOptions(BaseOptions):
-    """Base configuration for picture description models."""
-
-    batch_size: Annotated[
-        int,
-        Field(
-            description=(
-                "Number of images to process in a single batch during picture description. Higher values improve "
-                "throughput but increase memory usage. Adjust based on available GPU/CPU memory."
-            )
-        ),
-    ] = 8
-    scale: Annotated[
-        float,
-        Field(
-            description=(
-                "Scaling factor for image resolution before processing. Higher values (e.g., 2.0) provide more detail "
-                "for the vision model but increase processing time and memory. Range: 0.5-4.0 typical."
-            )
-        ),
-    ] = 2.0
-    picture_area_threshold: Annotated[
-        float,
-        Field(
-            description=(
-                "Minimum picture area as fraction of page area (0.0-1.0) to trigger description. Pictures smaller than "
-                "this threshold are skipped. Use lower values (e.g., 0.01) to describe small images."
-            )
-        ),
-    ] = 0.05
-    classification_allow: Annotated[
-        Optional[list[PictureClassificationLabel]],
-        Field(
-            description=(
-                "List of picture classification labels to allow for description. Only pictures classified with these "
-                "labels will be processed. If None, all picture types are allowed unless explicitly denied. Use to "
-                "focus description on specific image types (e.g., diagrams, charts)."
-            )
-        ),
-    ] = None
-    classification_deny: Annotated[
-        Optional[list[PictureClassificationLabel]],
-        Field(
-            description=(
-                "List of picture classification labels to exclude from description. Pictures classified with these "
-                "labels will be skipped. If None, no picture types are denied unless not in allow list. Use to "
-                "exclude unwanted image types (e.g., decorative images, logos)."
-            )
-        ),
-    ] = None
-    classification_min_confidence: Annotated[
-        float,
-        Field(
-            description=(
-                "Minimum classification confidence score (0.0-1.0) required for a picture to be processed. Pictures "
-                "with classification confidence below this threshold are skipped. Higher values ensure only "
-                "confidently classified images are described. Range: 0.0 (no filtering) to 1.0 (maximum confidence)."
-            )
-        ),
-    ] = 0.0
-
-
-class PictureDescriptionApiOptions(PictureDescriptionBaseOptions):
-    """Configuration for API-based picture description services."""
-
-    kind: ClassVar[Literal["api"]] = "api"
-    url: Annotated[
-        AnyUrl,
-        Field(
-            description=(
-                "API endpoint URL for picture description service. Must be OpenAI-compatible chat completions endpoint. "
-                "Default points to local server; update for cloud services or custom deployments."
-            )
-        ),
-    ] = AnyUrl("http://localhost:8000/v1/chat/completions")
-    headers: Annotated[
-        dict[str, str],
-        Field(
-            description=(
-                "HTTP headers to include in API requests. Use for authentication or custom headers required by your API "
-                "service."
-            ),
-            examples=[{"Authorization": "Bearer TOKEN"}],
-        ),
-    ] = {}
-    params: Annotated[
-        dict[str, Any],
-        Field(
-            description=(
-                "Additional query parameters to include in API requests. Service-specific parameters for customizing "
-                "API behavior beyond standard options."
-            )
-        ),
-    ] = {}
-    timeout: Annotated[
-        float,
-        Field(
-            description=(
-                "Maximum time in seconds to wait for API response before timing out. Increase for slow networks or "
-                "complex image descriptions. Recommended: 10-60 seconds."
-            )
-        ),
-    ] = 20.0
-    concurrency: Annotated[
-        int,
-        Field(
-            description=(
-                "Number of concurrent API requests allowed. Higher values improve throughput but may hit API rate limits. "
-                "Adjust based on API service quotas and network capacity."
-            )
-        ),
-    ] = 1
-    prompt: Annotated[
-        str,
-        Field(
-            description=(
-                "Prompt template sent to the vision model for image description. Customize to guide the model's output "
-                "style, detail level, or focus."
-            ),
-            examples=["Provide a technical description of this diagram"],
-        ),
-    ] = "Describe this image in a few sentences."
-    provenance: Annotated[
-        str,
-        Field(
-            description=(
-                "Provenance information to track the source or method of picture descriptions. Used for metadata "
-                "and auditing purposes in the output document."
-            )
-        ),
-    ] = ""
-
-
-class PictureDescriptionVlmOptions(PictureDescriptionBaseOptions):
-    """Configuration for inline vision-language models for picture description.
-
-    This is the legacy implementation that uses direct HuggingFace Transformers integration.
-    For the new runtime-based system with preset support, use PictureDescriptionVlmEngineOptions.
-    """
-
-    kind: ClassVar[Literal["vlm"]] = "vlm"
-    repo_id: Annotated[
-        str,
-        Field(
-            description=(
-                "HuggingFace model repository ID for the vision-language model. "
-                "Must be a model capable of image-to-text generation for picture descriptions."
-            ),
-            examples=[
-                "HuggingFaceTB/SmolVLM-256M-Instruct",
-                "ibm-granite/granite-vision-3.3-2b",
-            ],
-        ),
-    ]
-    prompt: Annotated[
-        str,
-        Field(
-            description=(
-                "Prompt template for the vision model. Customize to control description style, detail level, or focus."
-            ),
-            examples=[
-                "What is shown in this image?",
-                "Provide a detailed technical description",
-            ],
-        ),
-    ] = "Describe this image in a few sentences."
-    generation_config: Annotated[
-        dict[str, Any],
-        Field(
-            description=(
-                "HuggingFace generation configuration for text generation. Controls output length, sampling strategy, "
-                "temperature, etc. See: "
-                "https://huggingface.co/docs/transformers/en/main_classes/text_generation#transformers.GenerationConfig"
-            )
-        ),
-    ] = {"max_new_tokens": 200, "do_sample": False}
-
-    @property
-    def repo_cache_folder(self) -> str:
-        return self.repo_id.replace("/", "--")
-
-
-class PictureDescriptionVlmEngineOptions(
-    StagePresetMixin, PictureDescriptionBaseOptions
-):
-    """Configuration for VLM runtime-based picture description.
-
-    This is the new implementation that uses the pluggable runtime system with preset support.
-    Supports all runtime types (Transformers, MLX, API, etc.) through the unified runtime interface.
-
-    Use `from_preset()` to create instances from registered presets.
-
-    Examples:
-        # Use preset with default runtime
-        options = PictureDescriptionVlmEngineOptions.from_preset("smolvlm")
-
-        # Use preset with runtime override
-        from docling.datamodel.vlm_engine_options import MlxVlmEngineOptions, VlmEngineType
-        options = PictureDescriptionVlmEngineOptions.from_preset(
-            "smolvlm",
-            engine_options=MlxVlmEngineOptions(engine_type=VlmEngineType.MLX)
-        )
-    """
-
-    kind: ClassVar[Literal["picture_description_vlm_engine"]] = (
-        "picture_description_vlm_engine"
-    )
-
-    model_spec: VlmModelSpec = Field(
-        description="Model specification with runtime-specific overrides"
-    )
-    engine_options: BaseVlmEngineOptions = Field(
-        description="Runtime configuration (transformers, mlx, api, etc.)"
-    )
-    prompt: Annotated[
-        str,
-        Field(
-            description=(
-                "Prompt template for the vision model. Customize to control description style, detail level, or focus."
-            ),
-            examples=[
-                "What is shown in this image?",
-                "Provide a detailed technical description",
-            ],
-        ),
-    ] = "Describe this image in a few sentences."
-    generation_config: Annotated[
-        dict[str, Any],
-        Field(
-            description=(
-                "Generation configuration for text generation. Controls output length, sampling strategy, "
-                "temperature, etc."
-            )
-        ),
-    ] = {"max_new_tokens": 200, "do_sample": False}
-
-
-# SmolVLM
-smolvlm_picture_description = PictureDescriptionVlmOptions(
-    repo_id="HuggingFaceTB/SmolVLM-256M-Instruct"
-)
-"""Pre-configured SmolVLM model options for picture description.
-
-Uses the HuggingFace SmolVLM-256M-Instruct model, a lightweight vision-language model
-optimized for generating natural language descriptions of images.
-"""
-
-# GraniteVision
-granite_picture_description = PictureDescriptionVlmOptions(
-    repo_id="ibm-granite/granite-vision-3.3-2b",
-    prompt="What is shown in this image?",
-)
-"""Pre-configured Granite Vision model options for picture description.
-
-Uses IBM's Granite Vision 3.3-2B model with a custom prompt for generating
-detailed descriptions of image content.
-"""
-
-
-class VlmConvertOptions(StagePresetMixin, BaseModel):
-    """Configuration for VLM-based document conversion.
-
-    This stage uses vision-language models to convert document pages to
-    structured formats (DocTags, Markdown, etc.). Supports preset-based
-    configuration via StagePresetMixin.
-
-    Examples:
-        # Use preset with default runtime
-        options = VlmConvertOptions.from_preset("smoldocling")
-
-        # Use preset with runtime override
-        from docling.datamodel.vlm_engine_options import ApiVlmEngineOptions, VlmEngineType
-        options = VlmConvertOptions.from_preset(
-            "smoldocling",
-            engine_options=ApiVlmEngineOptions(engine_type=VlmEngineType.API_OLLAMA)
-        )
-    """
-
-    model_spec: VlmModelSpec = Field(
-        description="Model specification with runtime-specific overrides"
-    )
-
-    engine_options: BaseVlmEngineOptions = Field(
-        description="Runtime configuration (transformers, mlx, api, etc.)"
-    )
-
-    scale: float = Field(
-        default=2.0, description="Image scaling factor for preprocessing"
-    )
-
-    max_size: Optional[int] = Field(
-        default=None, description="Maximum image dimension (width or height)"
-    )
-
-    batch_size: int = Field(
-        default=1, description="Batch size for processing multiple pages"
-    )
-
-    force_backend_text: bool = Field(
-        default=False, description="Force use of backend text extraction instead of VLM"
-    )
-
-
-class CodeFormulaVlmOptions(StagePresetMixin, BaseModel):
-    """Configuration for VLM-based code and formula extraction.
-
-    This stage uses vision-language models to extract code blocks and
-    mathematical formulas from document images. Supports preset-based
-    configuration via StagePresetMixin.
-
-    Examples:
-        # Use CodeFormulaV2 preset
-        options = CodeFormulaVlmOptions.from_preset("codeformulav2")
-
-        # Use Granite Docling preset
-        options = CodeFormulaVlmOptions.from_preset("granite_docling")
-    """
-
-    model_spec: VlmModelSpec = Field(
-        description="Model specification with runtime-specific overrides"
-    )
-
-    engine_options: BaseVlmEngineOptions = Field(
-        description="Runtime configuration (transformers, mlx, api, etc.)"
-    )
-
-    scale: float = Field(
-        default=2.0, description="Image scaling factor for preprocessing"
-    )
-
-    max_size: Optional[int] = Field(
-        default=None, description="Maximum image dimension (width or height)"
-    )
-
-    extract_code: bool = Field(default=True, description="Extract code blocks")
-
-    extract_formulas: bool = Field(
-        default=True, description="Extract mathematical formulas"
-    )
-
-
-# =============================================================================
-# PRESET REGISTRATION
-# =============================================================================
-
-# Register VlmConvert presets
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_SMOLDOCLING)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_GRANITE_DOCLING)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_DEEPSEEK_OCR)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_GRANITE_VISION)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_PIXTRAL)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_GOT_OCR)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_PHI4)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_QWEN)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_GEMMA_12B)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_GEMMA_27B)
-VlmConvertOptions.register_preset(stage_model_specs.VLM_CONVERT_DOLPHIN)
-
-# Register PictureDescription presets (for new runtime-based implementation)
-PictureDescriptionVlmEngineOptions.register_preset(
-    stage_model_specs.PICTURE_DESC_SMOLVLM
-)
-PictureDescriptionVlmEngineOptions.register_preset(
-    stage_model_specs.PICTURE_DESC_GRANITE_VISION
-)
-PictureDescriptionVlmEngineOptions.register_preset(
-    stage_model_specs.PICTURE_DESC_PIXTRAL
-)
-PictureDescriptionVlmEngineOptions.register_preset(stage_model_specs.PICTURE_DESC_QWEN)
-
-# Register CodeFormula presets
-CodeFormulaVlmOptions.register_preset(stage_model_specs.CODE_FORMULA_CODEFORMULAV2)
-CodeFormulaVlmOptions.register_preset(stage_model_specs.CODE_FORMULA_GRANITE_DOCLING)
-
-
-# =============================================================================
-# MODULE-LEVEL DEFAULTS FOR NEW PRESET SYSTEM
-# =============================================================================
-# These must be created AFTER preset registration above
-
-# Default VlmConvertOptions using granite_docling preset
-_default_vlm_convert_options = VlmConvertOptions.from_preset("granite_docling")
-"""Default VLM convert options using granite_docling preset with AUTO_INLINE runtime."""
-
-# Default PictureDescriptionVlmEngineOptions using smolvlm preset
-_default_picture_description_options = PictureDescriptionVlmEngineOptions.from_preset(
-    "smolvlm"
-)
-"""Default picture description options using smolvlm preset with AUTO_INLINE runtime."""
-
-# Default CodeFormulaVlmOptions using codeformulav2 preset
-_default_code_formula_options = CodeFormulaVlmOptions.from_preset("codeformulav2")
-"""Default code/formula options using codeformulav2 preset with AUTO_INLINE runtime."""
 
 
 # Define an enum for the backend options
@@ -951,44 +526,8 @@ class PipelineOptions(BaseOptions):
     ] = None
 
 
-class ConvertPipelineOptions(PipelineOptions):
-    """Base configuration for document conversion pipelines."""
 
-    do_picture_classification: Annotated[
-        bool,
-        Field(
-            description=(
-                "Enable picture classification to categorize images by type (photo, diagram, chart, etc.). "
-                "Useful for downstream processing that requires image type awareness."
-            )
-        ),
-    ] = False
-    do_picture_description: Annotated[
-        bool,
-        Field(
-            description=(
-                "Enable automatic generation of textual descriptions for pictures using vision-language models. "
-                "Descriptions are added to the document for accessibility and searchability."
-            )
-        ),
-    ] = False
-    picture_description_options: Annotated[
-        PictureDescriptionBaseOptions,
-        Field(
-            description=(
-                "Configuration for picture description model. Uses new preset system (recommended). "
-                "Default: 'smolvlm' preset. Only applicable when `do_picture_description=True`. "
-                "Example: PictureDescriptionVlmOptions.from_preset('granite_vision')"
-            ),
-        ),
-    ] = _default_picture_description_options
-
-    do_chart_extraction: bool = (
-        False  # True: extract data in tabular format from bar-, pie and line-charts
-    )
-
-
-class PaginatedPipelineOptions(ConvertPipelineOptions):
+class PaginatedPipelineOptions(PipelineOptions):
     """Configuration for pipelines processing paginated documents."""
 
     images_scale: Annotated[
@@ -1020,38 +559,6 @@ class PaginatedPipelineOptions(ConvertPipelineOptions):
         ),
     ] = False
 
-
-class VlmPipelineOptions(PaginatedPipelineOptions):
-    """Pipeline configuration for vision-language model based document processing."""
-
-    generate_page_images: Annotated[
-        bool,
-        Field(
-            description=(
-                "Generate page images for VLM processing. Required for vision-language models to analyze document pages. "
-                "Automatically enabled in VLM pipeline."
-            )
-        ),
-    ] = True
-    force_backend_text: Annotated[
-        bool,
-        Field(
-            description=(
-                "Force use of backend's native text extraction instead of VLM predictions. When enabled, bypasses VLM "
-                "text detection and uses embedded text from the document directly."
-            )
-        ),
-    ] = False
-    vlm_options: Annotated[
-        Union[VlmConvertOptions, InlineVlmOptions, ApiVlmOptions],
-        Field(
-            description=(
-                "Vision-Language Model configuration for document understanding. Uses new VlmConvertOptions "
-                "with preset system (recommended). Legacy InlineVlmOptions/ApiVlmOptions still supported. "
-                "Default: 'granite_docling' preset. Example: VlmConvertOptions.from_preset('smoldocling')"
-            ),
-        ),
-    ] = _default_vlm_convert_options
 
 
 class BaseLayoutOptions(BaseOptions):
@@ -1101,68 +608,7 @@ class LayoutOptions(BaseLayoutOptions):
     ] = DOCLING_LAYOUT_HERON
 
 
-class LayoutObjectDetectionOptions(ObjectDetectionStagePresetMixin, BaseLayoutOptions):
-    """Options for layout detection using object-detection runtimes."""
 
-    kind: ClassVar[str] = "layout_object_detection"
-
-    create_orphan_clusters: Annotated[
-        bool,
-        Field(
-            description=(
-                "Create clusters for orphaned elements not assigned to any structure. When True, isolated text or "
-                "elements are grouped into their own clusters. Recommended for complete document coverage."
-            )
-        ),
-    ] = False
-
-    model_spec: ObjectDetectionModelSpec = Field(
-        default_factory=lambda: stage_model_specs.OBJECT_DETECTION_LAYOUT_HERON.model_spec.model_copy(
-            deep=True
-        ),
-        description="Object-detection model specification for layout analysis",
-    )
-
-    engine_options: BaseObjectDetectionEngineOptions = Field(
-        description="Runtime configuration for the object-detection engine",
-    )
-
-
-LayoutObjectDetectionOptions.register_preset(
-    stage_model_specs.OBJECT_DETECTION_LAYOUT_HERON
-)
-
-
-class AsrPipelineOptions(PipelineOptions):
-    """Configuration options for the Automatic Speech Recognition (ASR) pipeline.
-
-    This pipeline processes audio files and converts speech to text using Whisper-based models.
-    Supports various audio formats (MP3, WAV, FLAC, etc.) and video files with audio tracks.
-    """
-
-    asr_options: Annotated[
-        InlineAsrOptions,
-        Field(
-            description=(
-                "Automatic Speech Recognition (ASR) model configuration for audio transcription. Specifies which "
-                "ASR model to use (e.g., Whisper variants) and model-specific parameters for speech-to-text conversion."
-            )
-        ),
-    ] = asr_model_specs.WHISPER_TINY
-
-
-class VlmExtractionPipelineOptions(PipelineOptions):
-    """Options for extraction pipeline."""
-
-    vlm_options: Annotated[
-        InlineVlmOptions,
-        Field(
-            description=(
-                "Vision-Language Model (VLM) configuration for structured information extraction. Specifies which VLM "
-                "to use and its parameters for extracting structured data from documents using vision models."
-            )
-        ),
-    ] = NU_EXTRACT_2B_TRANSFORMERS
 
 
 class PdfPipelineOptions(PaginatedPipelineOptions):
@@ -1201,24 +647,7 @@ class PdfPipelineOptions(PaginatedPipelineOptions):
             )
         ),
     ] = True
-    do_code_enrichment: Annotated[
-        bool,
-        Field(
-            description=(
-                "Enable specialized processing for code blocks. Applies code-aware OCR and formatting to improve accuracy "
-                "of programming language snippets, terminal output, and structured code content."
-            )
-        ),
-    ] = False
-    do_formula_enrichment: Annotated[
-        bool,
-        Field(
-            description=(
-                "Enable mathematical formula recognition and LaTeX conversion. Uses specialized models to detect and "
-                "extract mathematical expressions, converting them to LaTeX format for accurate representation."
-            )
-        ),
-    ] = False
+    
     force_backend_text: Annotated[
         bool,
         Field(
@@ -1257,16 +686,7 @@ class PdfPipelineOptions(PaginatedPipelineOptions):
             )
         ),
     ] = LayoutOptions()
-    code_formula_options: Annotated[
-        CodeFormulaVlmOptions,
-        Field(
-            description=(
-                "Configuration for code and formula extraction using VLM. Uses new preset system (recommended). "
-                "Default: 'default' preset. Only applicable when `do_code_enrichment=True` or `do_formula_enrichment=True`. "
-                "Example: CodeFormulaVlmOptions.from_preset('granite_vision')"
-            ),
-        ),
-    ] = _default_code_formula_options
+    
     images_scale: Annotated[
         float,
         Field(
@@ -1295,15 +715,7 @@ class PdfPipelineOptions(PaginatedPipelineOptions):
             )
         ),
     ] = False
-    generate_table_images: Annotated[
-        bool,
-        Field(
-            deprecated=(
-                "This field is deprecated. Use `generate_page_images=True` and call `TableItem.get_image()` to extract "
-                "table images from page images."
-            )
-        ),
-    ] = False
+    
     generate_parsed_pages: Annotated[
         bool,
         Field(

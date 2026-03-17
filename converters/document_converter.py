@@ -15,33 +15,20 @@ from typing import Optional, Type, Union
 from pydantic import ConfigDict, Field, model_validator, validate_call
 from typing_extensions import Self
 
-from docling.backend.abstract_backend import (
+from backend.abstract_backend import (
     AbstractDocumentBackend,
 )
-from docling.backend.asciidoc_backend import AsciiDocBackend
-from docling.backend.csv_backend import CsvDocumentBackend
-from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
-from docling.backend.html_backend import HTMLDocumentBackend
-from docling.backend.image_backend import ImageDocumentBackend
-from docling.backend.json.docling_json_backend import DoclingJSONBackend
-from docling.backend.latex_backend import LatexDocumentBackend
-from docling.backend.md_backend import MarkdownDocumentBackend
-from docling.backend.mets_gbs_backend import MetsGbsDocumentBackend
-from docling.backend.msexcel_backend import MsExcelDocumentBackend
-from docling.backend.mspowerpoint_backend import MsPowerpointDocumentBackend
-from docling.backend.msword_backend import MsWordDocumentBackend
-from docling.backend.noop_backend import NoOpBackend
-from docling.backend.webvtt_backend import WebVTTDocumentBackend
-from docling.backend.xml.jats_backend import JatsDocumentBackend
-from docling.backend.xml.uspto_backend import PatentUsptoDocumentBackend
-from docling.datamodel.backend_options import (
+from backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
+from backend.image_backend import ImageDocumentBackend
+
+from datamodel.backend_options import (
     BackendOptions,
     HTMLBackendOptions,
     LatexBackendOptions,
     MarkdownBackendOptions,
     PdfBackendOptions,
 )
-from docling.datamodel.base_models import (
+from datamodel.base_models import (
     BaseFormatOption,
     ConversionStatus,
     DoclingComponentType,
@@ -49,24 +36,22 @@ from docling.datamodel.base_models import (
     ErrorItem,
     InputFormat,
 )
-from docling.datamodel.document import (
+from datamodel.document import (
     ConversionResult,
     InputDocument,
     _DocumentConversionInput,
 )
-from docling.datamodel.pipeline_options import ConvertPipelineOptions, PipelineOptions
-from docling.datamodel.settings import (
+from datamodel.pipeline_options import  PipelineOptions
+from datamodel.settings import (
     DEFAULT_PAGE_RANGE,
     DocumentLimits,
     PageRange,
     settings,
 )
-from docling.exceptions import ConversionError
-from docling.pipeline.asr_pipeline import AsrPipeline
-from docling.pipeline.base_pipeline import BasePipeline
-from docling.pipeline.simple_pipeline import SimplePipeline
-from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
-from docling.utils.utils import chunkify
+from exceptions import ConversionError
+from pipeline.base_pipeline import BasePipeline
+from pipeline.standard_pdf_pipeline import StandardPdfPipeline
+from utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 _PIPELINE_CACHE_LOCK = threading.Lock()
@@ -84,52 +69,6 @@ class FormatOption(BaseFormatOption):
         return self
 
 
-class CsvFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = CsvDocumentBackend
-
-
-class ExcelFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = MsExcelDocumentBackend
-
-
-class WordFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = MsWordDocumentBackend
-
-
-class PowerpointFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = MsPowerpointDocumentBackend
-
-
-class MarkdownFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = MarkdownDocumentBackend
-    backend_options: Optional[MarkdownBackendOptions] = None
-
-
-class AsciiDocFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = AsciiDocBackend
-
-
-class HTMLFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = HTMLDocumentBackend
-    backend_options: Optional[HTMLBackendOptions] = None
-
-
-class PatentUsptoFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[PatentUsptoDocumentBackend] = PatentUsptoDocumentBackend
-
-
-class XMLJatsFormatOption(FormatOption):
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = JatsDocumentBackend
-
 
 class ImageFormatOption(FormatOption):
     pipeline_cls: Type = StandardPdfPipeline
@@ -142,43 +81,13 @@ class PdfFormatOption(FormatOption):
     backend_options: Optional[PdfBackendOptions] = None
 
 
-class AudioFormatOption(FormatOption):
-    pipeline_cls: Type = AsrPipeline
-    backend: Type[AbstractDocumentBackend] = NoOpBackend
-
-
-class LatexFormatOption(FormatOption):
-    """Format options for LaTeX documents."""
-
-    pipeline_cls: Type = SimplePipeline
-    backend: Type[AbstractDocumentBackend] = LatexDocumentBackend
-    backend_options: Optional[LatexBackendOptions] = None
-
 
 def _get_default_option(format: InputFormat) -> FormatOption:
     format_to_default_options = {
-        InputFormat.CSV: CsvFormatOption(),
-        InputFormat.XLSX: ExcelFormatOption(),
-        InputFormat.DOCX: WordFormatOption(),
-        InputFormat.PPTX: PowerpointFormatOption(),
-        InputFormat.MD: MarkdownFormatOption(),
-        InputFormat.ASCIIDOC: AsciiDocFormatOption(),
-        InputFormat.HTML: HTMLFormatOption(),
-        InputFormat.XML_USPTO: PatentUsptoFormatOption(),
-        InputFormat.XML_JATS: XMLJatsFormatOption(),
-        InputFormat.METS_GBS: FormatOption(
-            pipeline_cls=StandardPdfPipeline, backend=MetsGbsDocumentBackend
-        ),
+       
         InputFormat.IMAGE: ImageFormatOption(),
         InputFormat.PDF: PdfFormatOption(),
-        InputFormat.JSON_DOCLING: FormatOption(
-            pipeline_cls=SimplePipeline, backend=DoclingJSONBackend
-        ),
-        InputFormat.AUDIO: AudioFormatOption(),
-        InputFormat.VTT: FormatOption(
-            pipeline_cls=SimplePipeline, backend=WebVTTDocumentBackend
-        ),
-        InputFormat.LATEX: LatexFormatOption(),
+        
     }
     if (options := format_to_default_options.get(format)) is not None:
         return options
