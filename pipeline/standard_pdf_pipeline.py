@@ -1,17 +1,3 @@
-"""Thread-safe, production-ready PDF pipeline
-================================================
-A self-contained, thread-safe PDF conversion pipeline exploiting parallelism between pipeline stages and models.
-
-* **Per-run isolation** - every :py:meth:`execute` call uses its own bounded queues and worker
-  threads so that concurrent invocations never share mutable state.
-* **Deterministic run identifiers** - pages are tracked with an internal *run-id* instead of
-  relying on :pyfunc:`id`, which may clash after garbage collection.
-* **Explicit back-pressure & shutdown** - producers block on full queues; queue *close()*
-  propagates downstream so stages terminate deterministically without sentinels.
-* **Minimal shared state** - heavyweight models are initialised once per pipeline instance
-  and only read by worker threads; no runtime mutability is exposed.
-* **Strict typing & clean API usage** - code is fully annotated and respects *coding_rules.md*.
-"""
 
 from __future__ import annotations
 

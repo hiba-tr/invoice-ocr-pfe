@@ -1,0 +1,1465 @@
+{
+  "file": "C:\\Factures\\facture_png.png",
+  "format": "image",
+  "status": "success",
+  "metadata": {
+    "page_count": 1,
+    "document_hash": "c2becc3b763a8d10c188c1344c6fcd56aeda6debf9554f969dbafa1d303bdee6"
+  },
+  "pages": [
+    {
+      "page_no": 1,
+      "size": {
+        "width": 1087.0,
+        "height": 805.0
+      },
+      "headers": [
+        {
+          "text": "4 of 13",
+          "label": "page_header"
+        }
+      ],
+      "info_block": [],
+      "key_values": [
+        {
+          "type": "key_value_region",
+          "cells": [
+            {
+              "text": "OMV(Tunesien)ProductionGmbH",
+              "from_ocr": true,
+              "confidence": 0.96344,
+              "bbox": {
+                "l": 111.2202657063802,
+                "t": 67.8125,
+                "r": 308.4581705729167,
+                "b": 80.390625
+              }
+            },
+            {
+              "text": "Concession",
+              "from_ocr": true,
+              "confidence": 0.99678,
+              "bbox": {
+                "l": 430.0882161458333,
+                "t": 67.265625,
+                "r": 476.1103922526042,
+                "b": 78.75
+              }
+            },
+            {
+              "text": "JOINTINTERESTBILLINGDETAIL",
+              "from_ocr": true,
+              "confidence": 0.97759,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 85.859375,
+                "r": 262.4359944661458,
+                "b": 95.15625
+              }
+            },
+            {
+              "text": "CHEROUQ",
+              "from_ocr": true,
+              "confidence": 0.99854,
+              "bbox": {
+                "l": 427.3487955729167,
+                "t": 83.125,
+                "r": 477.7540283203125,
+                "b": 97.34375
+              }
+            },
+            {
+              "text": "MONTH ENDED: 31 January 2025",
+              "from_ocr": true,
+              "confidence": 0.96469,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 101.171875,
+                "r": 224.08416748046875,
+                "b": 112.109375
+              }
+            },
+            {
+              "text": "Development",
+              "from_ocr": true,
+              "confidence": 0.99883,
+              "bbox": {
+                "l": 426.8009033203125,
+                "t": 100.078125,
+                "r": 478.8498128255208,
+                "b": 111.5625
+              }
+            }
+          ]
+        }
+      ],
+      "text_cells": [
+        {
+          "text": "4 of 13",
+          "label": "page_header"
+        },
+        {
+          "text": "U.S. Dollars Source",
+          "label": "text"
+        }
+      ],
+      "tables": [
+        {
+          "table_id": 0,
+          "num_rows": 39,
+          "num_cols": 6,
+          "cells": [
+            {
+              "row": 0,
+              "col": 1,
+              "text": "Year To Date Expenditure As of Current Month",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 340.78326416015625,
+                "t": 139.453125,
+                "r": 444.3331705729167,
+                "b": 165.15625
+              }
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "text": "Year To Date Expenditure As of Previous Month",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 457.4823811848958,
+                "t": 139.453125,
+                "r": 561.5801595052084,
+                "b": 165.15625
+              }
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "text": "Current Month Expenditure 100%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 576.3730061848959,
+                "t": 139.453125,
+                "r": 687.59326171875,
+                "b": 165.703125
+              }
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "text": "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 705.12548828125,
+                "t": 139.453125,
+                "r": 871.1341145833334,
+                "b": 165.15625
+              }
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "text": "Current Month Expenditure ETAP Share @ 50%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 890.85791015625,
+                "t": 139.453125,
+                "r": 1001.5302734375,
+                "b": 164.609375
+              }
+            },
+            {
+              "row": 0,
+              "col": 0,
+              "text": "DESCRIPTION",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 189.56754557291666,
+                "t": 147.65625,
+                "r": 243.26009114583334,
+                "b": 156.953125
+              }
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "text": "Item Description",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 182.9929402669271,
+                "t": 177.734375,
+                "r": 260.79233805338544,
+                "b": 190.859375
+              }
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "text": "Wells",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 202.34375,
+                "r": 133.13558959960938,
+                "b": 213.828125
+              }
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "text": "Farah 2 Stimulation",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 214.375,
+                "r": 182.9929402669271,
+                "b": 226.40625
+              }
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "text": "Shaheen 2 drilling",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.3850809733073,
+                "t": 227.5,
+                "r": 182.445068359375,
+                "b": 241.71875
+              }
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "text": "WAHA 3 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 241.71875,
+                "r": 233.9460652669271,
+                "b": 253.75
+              }
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "text": "FARAH 2 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 254.296875,
+                "r": 236.68548583984375,
+                "b": 266.875
+              }
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "text": "EL BADR 6 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 267.421875,
+                "r": 244.3558553059896,
+                "b": 279.453125
+              }
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "text": "Waha -1 Acid Stinmulation Job",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 281.09375,
+                "r": 220.796875,
+                "b": 292.03125
+              }
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "text": "Facilities",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 307.34375,
+                "r": 145.18901570638022,
+                "b": 316.640625
+              }
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "text": "(148,271.43)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 391.1885172526042,
+                "t": 305.703125,
+                "r": 447.0725911458333,
+                "b": 318.28125
+              }
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "text": "(148,271.43)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 635.5443522135416,
+                "t": 305.703125,
+                "r": 691.976318359375,
+                "b": 318.28125
+              }
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "text": "(74,135.72)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 828.9471028645834,
+                "t": 305.703125,
+                "r": 880.9960123697916,
+                "b": 318.828125
+              }
+            },
+            {
+              "row": 9,
+              "col": 5,
+              "text": "(74,135.72)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 957.1516927083334,
+                "t": 306.25,
+                "r": 1007.5569661458334,
+                "b": 317.734375
+              }
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "text": "CHEROUQ Concession-WAHA PROD F",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 320.46875,
+                "r": 260.2444661458333,
+                "b": 329.765625
+              }
+            },
+            {
+              "row": 11,
+              "col": 0,
+              "text": "ESDV Valves location as per firefighting rating (IGRR)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 333.59375,
+                "r": 310.6496988932292,
+                "b": 344.53125
+              }
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "text": "(31,149.52)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 399.9546305338542,
+                "t": 332.5,
+                "r": 447.0725911458333,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 3,
+              "text": "(31,149.52)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 644.8583577473959,
+                "t": 332.5,
+                "r": 691.976318359375,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 4,
+              "text": "(15,574.76)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 832.7823079427084,
+                "t": 332.5,
+                "r": 879.9002278645834,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 5,
+              "text": "(15,574.76)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 960.9868977864584,
+                "t": 332.5,
+                "r": 1008.1048177083334,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 12,
+              "col": 0,
+              "text": "Camp upgrade 23",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 346.71875,
+                "r": 175.32259114583334,
+                "b": 357.109375
+              }
+            },
+            {
+              "row": 13,
+              "col": 0,
+              "text": "Salt water well disposal FCLT",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 358.75,
+                "r": 220.796875,
+                "b": 371.328125
+              }
+            },
+            {
+              "row": 14,
+              "col": 0,
+              "text": "Hook up CQ Dev W 13 FARAH2",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 372.421875,
+                "r": 231.7545369466146,
+                "b": 383.359375
+              }
+            },
+            {
+              "row": 15,
+              "col": 0,
+              "text": "Hook up CQ Dev W 13 EL BADR6",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 385.546875,
+                "r": 239.9727783203125,
+                "b": 396.484375
+              }
+            },
+            {
+              "row": 16,
+              "col": 0,
+              "text": "CHEROUQ Gas Valorisation ( FGR",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 399.21875,
+                "r": 241.06854248046875,
+                "b": 408.515625
+              }
+            },
+            {
+              "row": 17,
+              "col": 0,
+              "text": "WAZE Execute Phase",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 411.25,
+                "r": 191.2112019856771,
+                "b": 422.1875
+              }
+            },
+            {
+              "row": 18,
+              "col": 0,
+              "text": "CHEROUQ Upgrade",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 423.828125,
+                "r": 187.37601725260416,
+                "b": 436.953125
+              }
+            },
+            {
+              "row": 19,
+              "col": 0,
+              "text": "South Tunisia Oil Development",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 437.5,
+                "r": 225.72782389322916,
+                "b": 448.4375
+              }
+            },
+            {
+              "row": 20,
+              "col": 0,
+              "text": "CHEROUQ Temporary Facilities",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 450.078125,
+                "r": 231.2066650390625,
+                "b": 462.65625
+              }
+            },
+            {
+              "row": 21,
+              "col": 0,
+              "text": "Repair Fire Fighting System (Safety)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 463.203125,
+                "r": 242.71219889322916,
+                "b": 475.78125
+              }
+            },
+            {
+              "row": 22,
+              "col": 0,
+              "text": "Inegrate Telemetry in PI",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 476.328125,
+                "r": 199.9773152669271,
+                "b": 487.8125
+              }
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "text": "Process Safety",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 487.8125,
+                "r": 163.26915486653647,
+                "b": 501.484375
+              }
+            },
+            {
+              "row": 24,
+              "col": 0,
+              "text": "Waha CPF LP&HP Flare Tips Replacement",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 501.484375,
+                "r": 269.0105794270833,
+                "b": 513.515625
+              }
+            },
+            {
+              "row": 25,
+              "col": 0,
+              "text": "Renew DCS System",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 515.703125,
+                "r": 184.08870442708334,
+                "b": 526.640625
+              }
+            },
+            {
+              "row": 26,
+              "col": 0,
+              "text": "WAHA corroded pipes replacement",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 527.1875,
+                "r": 241.6164347330729,
+                "b": 540.3125
+              }
+            },
+            {
+              "row": 27,
+              "col": 0,
+              "text": "Waha CPF TA",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 541.40625,
+                "r": 164.91280110677084,
+                "b": 552.34375
+              }
+            },
+            {
+              "row": 27,
+              "col": 1,
+              "text": "20,132.69",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 402.6940511067708,
+                "t": 540.3125,
+                "r": 444.3331705729167,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 3,
+              "text": "20,132.69",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 647.5977783203125,
+                "t": 540.3125,
+                "r": 689.2368977864584,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 4,
+              "text": "10,066.35",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 836.069580078125,
+                "t": 540.859375,
+                "r": 877.7086588541666,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 5,
+              "text": "10,066.35",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 964.274169921875,
+                "t": 540.3125,
+                "r": 1005.365478515625,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 28,
+              "col": 0,
+              "text": "Overhaul Rotating Equipment",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 553.4375,
+                "r": 219.70111083984375,
+                "b": 566.5625
+              }
+            },
+            {
+              "row": 28,
+              "col": 1,
+              "text": "(137,254.60)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 395.023681640625,
+                "t": 553.4375,
+                "r": 447.0725911458333,
+                "b": 564.921875
+              }
+            },
+            {
+              "row": 28,
+              "col": 3,
+              "text": "(137,254.60)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 638.8316650390625,
+                "t": 551.796875,
+                "r": 692.524169921875,
+                "b": 566.015625
+              }
+            },
+            {
+              "row": 28,
+              "col": 4,
+              "text": "(68,627.30)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 833.3301595052084,
+                "t": 553.984375,
+                "r": 879.9002278645834,
+                "b": 565.46875
+              }
+            },
+            {
+              "row": 28,
+              "col": 5,
+              "text": "(68,627.30)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 960.9868977864584,
+                "t": 553.984375,
+                "r": 1008.1048177083334,
+                "b": 564.921875
+              }
+            },
+            {
+              "row": 29,
+              "col": 0,
+              "text": "Lightning Protection System for WAHA & AGP Fields",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 567.65625,
+                "r": 309.55393473307294,
+                "b": 578.59375
+              }
+            },
+            {
+              "row": 30,
+              "col": 0,
+              "text": "Other CAPEX",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 591.171875,
+                "r": 167.10433959960938,
+                "b": 602.109375
+              }
+            },
+            {
+              "row": 31,
+              "col": 0,
+              "text": "CHEROUQ Temporary Facilities I",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 603.75,
+                "r": 236.68548583984375,
+                "b": 615.78125
+              }
+            },
+            {
+              "row": 32,
+              "col": 0,
+              "text": "2008/07 JENEIN NORD 3D SEISMIC",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 617.96875,
+                "r": 249.83467610677084,
+                "b": 627.265625
+              }
+            },
+            {
+              "row": 33,
+              "col": 0,
+              "text": "Camp&Kitchen refurbishment",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 628.90625,
+                "r": 221.34476725260416,
+                "b": 642.578125
+              }
+            },
+            {
+              "row": 34,
+              "col": 0,
+              "text": "Replacement old Pickups",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 642.03125,
+                "r": 203.2646280924479,
+                "b": 655.703125
+              }
+            },
+            {
+              "row": 35,
+              "col": 0,
+              "text": "General & Administration",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 668.28125,
+                "r": 212.0307413736979,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 1,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 419.6784261067708,
+                "t": 667.1875,
+                "r": 447.0725911458333,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 3,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 665.1300455729166,
+                "t": 667.1875,
+                "r": 691.976318359375,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 4,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 853.053955078125,
+                "t": 667.1875,
+                "r": 880.4480794270834,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 5,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 980.162841796875,
+                "t": 666.640625,
+                "r": 1008.6527506510416,
+                "b": 680.3125
+              }
+            },
+            {
+              "row": 36,
+              "col": 0,
+              "text": "Carry Over",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 681.40625,
+                "r": 151.76361083984375,
+                "b": 692.890625
+              }
+            },
+            {
+              "row": 37,
+              "col": 0,
+              "text": "Admin staff",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 693.984375,
+                "r": 154.5030314127604,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 1,
+              "text": "(00'0)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 421.8699544270833,
+                "t": 693.4375,
+                "r": 447.6204833984375,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 3,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 666.225830078125,
+                "t": 693.4375,
+                "r": 692.524169921875,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 4,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 855.2454427083334,
+                "t": 693.4375,
+                "r": 880.4480794270834,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 5,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 982.9022623697916,
+                "t": 693.4375,
+                "r": 1008.6527506510416,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 38,
+              "col": 0,
+              "text": "Tunis Office Lac",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 706.015625,
+                "r": 172.58317057291666,
+                "b": 718.59375
+              }
+            }
+          ],
+          "matrix": [
+            [
+              "DESCRIPTION",
+              "Year To Date Expenditure As of Current Month",
+              "Year To Date Expenditure As of Previous Month",
+              "Current Month Expenditure 100%",
+              "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
+              "Current Month Expenditure ETAP Share @ 50%"
+            ],
+            [
+              "Item Description",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Wells",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Farah 2 Stimulation",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Shaheen 2 drilling",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "WAHA 3 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "FARAH 2 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "EL BADR 6 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Waha -1 Acid Stinmulation Job",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Facilities",
+              "(148,271.43)",
+              null,
+              "(148,271.43)",
+              "(74,135.72)",
+              "(74,135.72)"
+            ],
+            [
+              "CHEROUQ Concession-WAHA PROD F",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "ESDV Valves location as per firefighting rating (IGRR)",
+              "(31,149.52)",
+              null,
+              "(31,149.52)",
+              "(15,574.76)",
+              "(15,574.76)"
+            ],
+            [
+              "Camp upgrade 23",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Salt water well disposal FCLT",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Hook up CQ Dev W 13 FARAH2",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Hook up CQ Dev W 13 EL BADR6",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "CHEROUQ Gas Valorisation ( FGR",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "WAZE Execute Phase",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "CHEROUQ Upgrade",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "South Tunisia Oil Development",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "CHEROUQ Temporary Facilities",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Repair Fire Fighting System (Safety)",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Inegrate Telemetry in PI",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Process Safety",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Waha CPF LP&HP Flare Tips Replacement",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Renew DCS System",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "WAHA corroded pipes replacement",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Waha CPF TA",
+              "20,132.69",
+              null,
+              "20,132.69",
+              "10,066.35",
+              "10,066.35"
+            ],
+            [
+              "Overhaul Rotating Equipment",
+              "(137,254.60)",
+              null,
+              "(137,254.60)",
+              "(68,627.30)",
+              "(68,627.30)"
+            ],
+            [
+              "Lightning Protection System for WAHA & AGP Fields",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Other CAPEX",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "CHEROUQ Temporary Facilities I",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "2008/07 JENEIN NORD 3D SEISMIC",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Camp&Kitchen refurbishment",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Replacement old Pickups",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "General & Administration",
+              "(0.00)",
+              null,
+              "(0.00)",
+              "(0.00)",
+              "(0.00)"
+            ],
+            [
+              "Carry Over",
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "Admin staff",
+              "(00'0)",
+              null,
+              "(0.00)",
+              "(0.00)",
+              "(0.00)"
+            ],
+            [
+              "Tunis Office Lac",
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          ]
+        }
+      ],
+      "raw_text": "[EN-TETE] 4 of 13\n[INFO] OMV(Tunesien)ProductionGmbH\n[INFO] Concession\n[INFO] JOINTINTERESTBILLINGDETAIL\n[INFO] CHEROUQ\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Development\nYear To Date Expenditure As of Current Month\nYear To Date Expenditure As of Previous Month\nCurrent Month Expenditure 100%\nCurrent Month Expenditure OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nDESCRIPTION\nItem Description\nWells\nFarah 2 Stimulation\nShaheen 2 drilling\nWAHA 3 Drilling & Completion\nFARAH 2 Drilling & Completion\nEL BADR 6 Drilling & Completion\nWaha -1 Acid Stinmulation Job\nFacilities\n(148,271.43)\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAH2\nHook up CQ Dev W 13 EL BADR6\nCHEROUQ Gas Valorisation ( FGR\nWAZE Execute Phase\nCHEROUQ Upgrade\nSouth Tunisia Oil Development\nCHEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&HP Flare Tips Replacement\nRenew DCS System\nWAHA corroded pipes replacement\nWaha CPF TA\n20,132.69\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\nOther CAPEX\nCHEROUQ Temporary Facilities I\n2008/07 JENEIN NORD 3D SEISMIC\nCamp&Kitchen refurbishment\nReplacement old Pickups\nGeneral & Administration\n(0.00)\n(0.00)\n(0.00)\n(0.00)\nCarry Over\nAdmin staff\n(00'0)\n(0.00)\n(0.00)\n(0.00)\nTunis Office Lac\n4 of 13\nU.S. Dollars Source"
+    }
+  ],
+  "all_text": "--- Page 1 ---\n[EN-TETE] 4 of 13\n[INFO] OMV(Tunesien)ProductionGmbH\n[INFO] Concession\n[INFO] JOINTINTERESTBILLINGDETAIL\n[INFO] CHEROUQ\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Development\nYear To Date Expenditure As of Current Month\nYear To Date Expenditure As of Previous Month\nCurrent Month Expenditure 100%\nCurrent Month Expenditure OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nDESCRIPTION\nItem Description\nWells\nFarah 2 Stimulation\nShaheen 2 drilling\nWAHA 3 Drilling & Completion\nFARAH 2 Drilling & Completion\nEL BADR 6 Drilling & Completion\nWaha -1 Acid Stinmulation Job\nFacilities\n(148,271.43)\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAH2\nHook up CQ Dev W 13 EL BADR6\nCHEROUQ Gas Valorisation ( FGR\nWAZE Execute Phase\nCHEROUQ Upgrade\nSouth Tunisia Oil Development\nCHEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&HP Flare Tips Replacement\nRenew DCS System\nWAHA corroded pipes replacement\nWaha CPF TA\n20,132.69\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\nOther CAPEX\nCHEROUQ Temporary Facilities I\n2008/07 JENEIN NORD 3D SEISMIC\nCamp&Kitchen refurbishment\nReplacement old Pickups\nGeneral & Administration\n(0.00)\n(0.00)\n(0.00)\n(0.00)\nCarry Over\nAdmin staff\n(00'0)\n(0.00)\n(0.00)\n(0.00)\nTunis Office Lac\n4 of 13\nU.S. Dollars Source",
+  "totals": {
+    "total_usd": null,
+    "total_omv_share": null,
+    "total_etap_share": null
+  },
+  "invoice_info": {
+    "company": "OMV(Tunesien)ProductionGmbH",
+    "concession": "JOINTINTERESTBILLINGDETAIL",
+    "document_type": null,
+    "month_ended": "31 January 2025",
+    "docusign_id": null
+  }
+}
