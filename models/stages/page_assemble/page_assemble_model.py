@@ -3,13 +3,11 @@ import re
 from collections.abc import Iterable
 from typing import List
 
-import numpy as np
 from pydantic import BaseModel
 
 from datamodel.base_models import (
     AssembledUnit,
     ContainerElement,
-    FigureElement,
     Page,
     PageElement,
     Table,
@@ -55,14 +53,14 @@ class PageAssembleModel(BasePageModel):
         sanitized_text = "".join(lines)
 
         # Text normalization
-        sanitized_text = sanitized_text.replace("⁄", "/")  # noqa: RUF001
-        sanitized_text = sanitized_text.replace("’", "'")  # noqa: RUF001
-        sanitized_text = sanitized_text.replace("‘", "'")  # noqa: RUF001
+        sanitized_text = sanitized_text.replace("⁄", "/")
+        sanitized_text = sanitized_text.replace("’", "'")
+        sanitized_text = sanitized_text.replace("‘", "'")
         sanitized_text = sanitized_text.replace("“", '"')
         sanitized_text = sanitized_text.replace("”", '"')
         sanitized_text = sanitized_text.replace("•", "·")
 
-        return sanitized_text.strip()  # Strip any leading or trailing whitespace
+        return sanitized_text.strip()
 
     def __call__(
         self, conv_res: ConversionResult, page_batch: Iterable[Page]
@@ -73,16 +71,14 @@ class PageAssembleModel(BasePageModel):
                 yield page
             else:
                 with TimeRecorder(conv_res, "page_assemble"):
+                    # layout must be present (even if empty)
                     assert page.predictions.layout is not None
-
-                    # assembles some JSON output page by page.
 
                     elements: List[PageElement] = []
                     headers: List[PageElement] = []
                     body: List[PageElement] = []
 
                     for cluster in page.predictions.layout.clusters:
-                        # _log.info("Cluster label seen:", cluster.label)
                         if cluster.label in LayoutModel.TEXT_ELEM_LABELS:
                             textlines = [
                                 cell.text.replace("\x02", "-").strip()
@@ -104,12 +100,13 @@ class PageAssembleModel(BasePageModel):
                             else:
                                 body.append(text_el)
                         elif cluster.label in LayoutModel.TABLE_LABELS:
+                            # Try to get structured table from predictions
                             tbl = None
                             if page.predictions.tablestructure:
                                 tbl = page.predictions.tablestructure.table_map.get(
                                     cluster.id, None
                                 )
-                            if not tbl:  # fallback: add table without structure, if it isn't present
+                            if not tbl:  # fallback: add table without structure
                                 tbl = Table(
                                     label=cluster.label,
                                     id=cluster.id,
@@ -119,27 +116,10 @@ class PageAssembleModel(BasePageModel):
                                     cluster=cluster,
                                     page_no=page.page_no,
                                 )
-
                             elements.append(tbl)
                             body.append(tbl)
-                        elif cluster.label == LayoutModel.FIGURE_LABEL:
-                            fig = None
-                            if page.predictions.figures_classification:
-                                fig = page.predictions.figures_classification.figure_map.get(
-                                    cluster.id, None
-                                )
-                            if not fig:  # fallback: add figure without classification, if it isn't present
-                                fig = FigureElement(
-                                    label=cluster.label,
-                                    id=cluster.id,
-                                    text="",
-                                    data=None,
-                                    cluster=cluster,
-                                    page_no=page.page_no,
-                                )
-                            elements.append(fig)
-                            body.append(fig)
                         elif cluster.label in LayoutModel.CONTAINER_LABELS:
+                            # Used for key_value_region, etc.
                             container_el = ContainerElement(
                                 label=cluster.label,
                                 id=cluster.id,
@@ -148,6 +128,7 @@ class PageAssembleModel(BasePageModel):
                             )
                             elements.append(container_el)
                             body.append(container_el)
+                        # NOTE: FIGURE_LABEL block removed (not needed for invoices)
 
                     page.assembled = AssembledUnit(
                         elements=elements, headers=headers, body=body

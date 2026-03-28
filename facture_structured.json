@@ -1,0 +1,341 @@
+{
+  "file": "C:\\Factures\\facture_png.png",
+  "format": "image",
+  "status": "success",
+  "metadata": {
+    "page_count": 1,
+    "document_hash": "c2becc3b763a8d10c188c1344c6fcd56aeda6debf9554f969dbafa1d303bdee6"
+  },
+  "document": {
+    "headers": [
+      "4 of 13"
+    ],
+    "company_info": {
+      "omv(tunesien)productiongmbh": "Concession",
+      "concession": "JOINTINTERESTBILLINGDETAIL",
+      "jointinterestbillingdetail": "CHEROUQ",
+      "month_ended": "31 January 2025"
+    },
+    "tables": [
+      {
+        "headers": [
+          "DESCRIPTION",
+          "Year To Date Expenditure As of Current Month",
+          "Year To Date Expenditure As of Previous Month",
+          "Current Month Expenditure 100%",
+          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
+          "Current Month Expenditure ETAP Share @ 50%"
+        ],
+        "data": [
+          [
+            "Item Description",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Wells",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Farah 2 Stimulation",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Shaheen 2 drilling",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "3 Drilling & Completion",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "FARAH 2 Drilling & Completion",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "EL BADR 6 Drilling & Completion",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "-1 Acid Stinmulation Job",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities",
+            "(148,271.43)",
+            "",
+            "(148,271.43)",
+            "(74,135.72)",
+            "(74,135.72)"
+          ],
+          [
+            "Concession-WAHA PROD F",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "ESDV Valves location as per firefighting rating (IGRR)",
+            "(31,149.52)",
+            "",
+            "(31,149.52)",
+            "(15,574.76)",
+            "(15,574.76)"
+          ],
+          [
+            "Camp upgrade 23",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Salt water well disposal FCLT",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "CQ Dev W 13 FARAH2",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "CQ Dev W 13 EL BADR6",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Gas Valorisation ( FGR",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "WAZE Execute Phase",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Upgrade",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "South Tunisia Oil Development",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Repair Fire Fighting System (Safety)",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Inegrate Telemetry in PI",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Process Safety",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "LP&HP Flare Tips Replacement",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Renew DCS System",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "corroded pipes replacement",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "TA",
+            "20,132.69",
+            "",
+            "20,132.69",
+            "10,066.35",
+            "10,066.35"
+          ],
+          [
+            "Overhaul Rotating Equipment",
+            "(137,254.60)",
+            "",
+            "(137,254.60)",
+            "(68,627.30)",
+            "(68,627.30)"
+          ],
+          [
+            "Lightning Protection System for WAHA & AGP Fields",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Other CAPEX",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities I",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "2008/07 JENEIN NORD 3D SEISMIC",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Camp&Kitchen refurbishment",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Replacement old Pickups",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "General & Administration",
+            "(0.00)",
+            "",
+            "(0.00)",
+            "(0.00)",
+            "(0.00)"
+          ],
+          [
+            "Carry Over",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Admin staff",
+            "(00'0)",
+            "",
+            "(0.00)",
+            "(0.00)",
+            "(0.00)"
+          ],
+          [
+            "Tunis Office Lac",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        ],
+        "rows": 38,
+        "columns": 6
+      }
+    ],
+    "totals": {}
+  }
+}

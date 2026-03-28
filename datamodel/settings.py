@@ -44,7 +44,7 @@ class DebugSettings(BaseModel):
     visualize_raw_layout: bool = False
     visualize_tables: bool = False
 
-    profile_pipeline_timings: bool = False
+    profile_pipeline_timings: bool = True
 
     # Path used to output debug information.
     debug_output_path: str = str(Path.cwd() / "debug")

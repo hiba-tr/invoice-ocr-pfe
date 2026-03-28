@@ -54,66 +54,16 @@ class ConversionStatus(str, Enum):
 
 class InputFormat(str, Enum):
     """A document format supported by document backend parsers."""
-
-    DOCX = "docx"
-    PPTX = "pptx"
-    HTML = "html"
     IMAGE = "image"
     PDF = "pdf"
-    ASCIIDOC = "asciidoc"
-    MD = "md"
-    CSV = "csv"
-    XLSX = "xlsx"
-    XML_USPTO = "xml_uspto"
-    XML_JATS = "xml_jats"
-    METS_GBS = "mets_gbs"
-    JSON_DOCLING = "json_docling"
-    AUDIO = "audio"
-    VTT = "vtt"
-    LATEX = "latex"
-
-
-class OutputFormat(str, Enum):
-    MARKDOWN = "md"
-    JSON = "json"
-    YAML = "yaml"
-    HTML = "html"
-    HTML_SPLIT_PAGE = "html_split_page"
-    TEXT = "text"
-    DOCTAGS = "doctags"
 
 
 FormatToExtensions: dict[InputFormat, list[str]] = {
-    InputFormat.DOCX: ["docx", "dotx", "docm", "dotm"],
-    InputFormat.PPTX: ["pptx", "potx", "ppsx", "pptm", "potm", "ppsm"],
     InputFormat.PDF: ["pdf"],
-    InputFormat.MD: ["md"],
-    InputFormat.HTML: ["html", "htm", "xhtml"],
-    InputFormat.XML_JATS: ["xml", "nxml"],
     InputFormat.IMAGE: ["jpg", "jpeg", "png", "tif", "tiff", "bmp", "webp"],
-    InputFormat.ASCIIDOC: ["adoc", "asciidoc", "asc"],
-    InputFormat.CSV: ["csv"],
-    InputFormat.XLSX: ["xlsx", "xlsm"],
-    InputFormat.XML_USPTO: ["xml", "txt"],
-    InputFormat.METS_GBS: ["tar.gz"],
-    InputFormat.JSON_DOCLING: ["json"],
-    InputFormat.AUDIO: ["wav", "mp3", "m4a", "aac", "ogg", "flac", "mp4", "avi", "mov"],
-    InputFormat.VTT: ["vtt"],
-    InputFormat.LATEX: ["tex", "latex"],
 }
 
 FormatToMimeType: dict[InputFormat, list[str]] = {
-    InputFormat.DOCX: [
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-    ],
-    InputFormat.PPTX: [
-        "application/vnd.openxmlformats-officedocument.presentationml.template",
-        "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    ],
-    InputFormat.HTML: ["text/html", "application/xhtml+xml"],
-    InputFormat.XML_JATS: ["application/xml"],
     InputFormat.IMAGE: [
         "image/png",
         "image/jpeg",
@@ -123,33 +73,6 @@ FormatToMimeType: dict[InputFormat, list[str]] = {
         "image/webp",
     ],
     InputFormat.PDF: ["application/pdf"],
-    InputFormat.ASCIIDOC: ["text/asciidoc"],
-    InputFormat.MD: ["text/markdown", "text/x-markdown"],
-    InputFormat.CSV: ["text/csv"],
-    InputFormat.XLSX: [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ],
-    InputFormat.XML_USPTO: ["application/xml", "text/plain"],
-    InputFormat.METS_GBS: ["application/mets+xml"],
-    InputFormat.JSON_DOCLING: ["application/json"],
-    InputFormat.AUDIO: [
-        "audio/x-wav",
-        "audio/mpeg",
-        "audio/wav",
-        "audio/mp3",
-        "audio/mp4",
-        "audio/m4a",
-        "audio/aac",
-        "audio/ogg",
-        "audio/flac",
-        "audio/x-flac",
-        "video/mp4",
-        "video/avi",
-        "video/x-msvideo",
-        "video/quicktime",
-    ],
-    InputFormat.VTT: ["text/vtt"],
-    InputFormat.LATEX: ["text/x-tex", "application/x-tex", "text/x-latex"],
 }
 
 MimeTypeToFormat: dict[str, list[InputFormat]] = {
@@ -159,24 +82,12 @@ MimeTypeToFormat: dict[str, list[InputFormat]] = {
 }
 
 
-class DocInputType(str, Enum):
-    PATH = "path"
-    STREAM = "stream"
-
-
 class DoclingComponentType(str, Enum):
     DOCUMENT_BACKEND = "document_backend"
     MODEL = "model"
     DOC_ASSEMBLER = "doc_assembler"
     USER_INPUT = "user_input"
     PIPELINE = "pipeline"
-
-
-class VlmStopReason(str, Enum):
-    LENGTH = "length"  # max tokens reached
-    STOP_SEQUENCE = "stop_sequence"  # Custom stopping criteria met
-    END_OF_SEQUENCE = "end_of_sequence"  # Model generated end-of-text token
-    UNSPECIFIED = "unspecified"  # Defaul none value
 
 
 class ErrorItem(BaseModel):
@@ -210,21 +121,6 @@ class LayoutPrediction(BaseModel):
     clusters: list[Cluster] = []
 
 
-class VlmPredictionToken(BaseModel):
-    text: str = ""
-    token: int = -1
-    logprob: float = -1
-
-
-class VlmPrediction(BaseModel):
-    text: str = ""
-    generated_tokens: list[VlmPredictionToken] = []
-    generation_time: float = -1
-    num_tokens: Optional[int] = None
-    stop_reason: VlmStopReason = VlmStopReason.UNSPECIFIED
-    input_prompt: Optional[str] = None
-
-
 class ContainerElement(
     BasePageElement
 ):  # Used for Form and Key-Value-Regions, only for typing.
@@ -246,56 +142,18 @@ class TextElement(BasePageElement):
     text: str
 
 
-class FigureElement(BasePageElement):
-    annotations: list[PictureDataType] = []
-    provenance: Optional[str] = None
-    predicted_class: Optional[str] = None
-    confidence: Optional[float] = None
-
-    @field_serializer("confidence")
-    def _serialize(
-        self, value: Optional[float], info: FieldSerializationInfo
-    ) -> Optional[float]:
-        return (
-            round_pydantic_float(value, info.context, PydanticSerCtxKey.CONFID_PREC)
-            if value is not None
-            else None
-        )
-
-
-class FigureClassificationPrediction(BaseModel):
-    figure_count: int = 0
-    figure_map: dict[int, FigureElement] = {}
-
-
-class EquationPrediction(BaseModel):
-    equation_count: int = 0
-    equation_map: dict[int, TextElement] = {}
-
-
 class PagePredictions(BaseModel):
     layout: Optional[LayoutPrediction] = None
     tablestructure: Optional[TableStructurePrediction] = None
-    figures_classification: Optional[FigureClassificationPrediction] = None
-    equations_prediction: Optional[EquationPrediction] = None
-    vlm_response: Optional[VlmPrediction] = None
 
 
-PageElement = Union[TextElement, Table, FigureElement, ContainerElement]
+PageElement = Union[TextElement, Table, ContainerElement]
 
 
 class AssembledUnit(BaseModel):
     elements: list[PageElement] = []
     body: list[PageElement] = []
     headers: list[PageElement] = []
-
-
-class ItemAndImageEnrichmentElement(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    item: NodeItem
-    image: Image
-
 
 class Page(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -358,49 +216,13 @@ class Page(BaseModel):
         return self.get_image(scale=self._default_image_scale)
 
 
-## OpenAI API Request / Response Models ##
-
-
-class OpenAiChatMessage(BaseModel):
-    role: str
-    content: str
-
-
-class OpenAiResponseChoice(BaseModel):
-    index: int
-    message: OpenAiChatMessage
-    finish_reason: Optional[str]
-
-
-class OpenAiResponseUsage(BaseModel):
-    prompt_tokens: int
-    completion_tokens: int
-    total_tokens: int
-
-
-class OpenAiApiResponse(BaseModel):
-    model_config = ConfigDict(
-        protected_namespaces=(),
-    )
-
-    id: str
-    model: Optional[str] = None  # returned by openai
-    choices: list[OpenAiResponseChoice]
-    created: int
-    usage: OpenAiResponseUsage
-
 
 # Create a type alias for score values
+# =========================================================
+# CONFIDENCE SCORES (minimal pour compatibilité)
+# =========================================================
+
 ScoreValue = float
-
-
-class QualityGrade(str, Enum):
-    POOR = "poor"
-    FAIR = "fair"
-    GOOD = "good"
-    EXCELLENT = "excellent"
-    UNSPECIFIED = "unspecified"
-
 
 class PageConfidenceScores(BaseModel):
     parse_score: ScoreValue = np.nan
@@ -408,10 +230,7 @@ class PageConfidenceScores(BaseModel):
     table_score: ScoreValue = np.nan
     ocr_score: ScoreValue = np.nan
 
-    # Accept null/None or string "NaN" values on input and coerce to np.nan
-    @field_validator(
-        "parse_score", "layout_score", "table_score", "ocr_score", mode="before"
-    )
+    @field_validator("parse_score", "layout_score", "table_score", "ocr_score", mode="before")
     @classmethod
     def _coerce_none_or_nan_str(cls, v):
         if v is None:
@@ -420,77 +239,10 @@ class PageConfidenceScores(BaseModel):
             return np.nan
         return v
 
-    def _score_to_grade(self, score: ScoreValue) -> QualityGrade:
-        if score < 0.5:
-            return QualityGrade.POOR
-        elif score < 0.8:
-            return QualityGrade.FAIR
-        elif score < 0.9:
-            return QualityGrade.GOOD
-        elif score >= 0.9:
-            return QualityGrade.EXCELLENT
-
-        return QualityGrade.UNSPECIFIED
-
-    @computed_field  # type: ignore
-    @property
-    def mean_grade(self) -> QualityGrade:
-        return self._score_to_grade(self.mean_score)
-
-    @computed_field  # type: ignore
-    @property
-    def low_grade(self) -> QualityGrade:
-        return self._score_to_grade(self.low_score)
-
-    @computed_field  # type: ignore
-    @property
-    def mean_score(self) -> ScoreValue:
-        return ScoreValue(
-            np.nanmean(
-                [
-                    self.ocr_score,
-                    self.table_score,
-                    self.layout_score,
-                    self.parse_score,
-                ]
-            )
-        )
-
-    @computed_field  # type: ignore
-    @property
-    def low_score(self) -> ScoreValue:
-        return ScoreValue(
-            np.nanquantile(
-                [
-                    self.ocr_score,
-                    self.table_score,
-                    self.layout_score,
-                    self.parse_score,
-                ],
-                q=0.05,
-            )
-        )
-
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 class ConfidenceReport(PageConfidenceScores):
     pages: dict[int, PageConfidenceScores] = Field(
         default_factory=lambda: defaultdict(PageConfidenceScores)
     )
-
-    @computed_field  # type: ignore
-    @property
-    def mean_score(self) -> ScoreValue:
-        return ScoreValue(
-            np.nanmean(
-                [c.mean_score for c in self.pages.values()],
-            )
-        )
-
-    @computed_field  # type: ignore
-    @property
-    def low_score(self) -> ScoreValue:
-        return ScoreValue(
-            np.nanmean(
-                [c.low_score for c in self.pages.values()],
-            )
-        )
+    model_config = ConfigDict(arbitrary_types_allowed=True)

@@ -456,7 +456,20 @@ def main():
         for line in preview_lines[:10]:
             print(line)
         print("-"*50)
+
         
+        # Afficher les temps d'exécution (profiling)
+        if result.get('timings'):
+            print("\n⏱️ TEMPS D'EXÉCUTION:")
+            for key, timing in result['timings'].items():
+                # timing peut être un dict (après JSON) ou un objet ProfilingItem
+                times = timing.get('times', []) if isinstance(timing, dict) else timing.times
+                count = timing.get('count', 0) if isinstance(timing, dict) else timing.count
+                if times:
+                    total = sum(times)
+                    avg = total / count
+                    print(f"   • {key}: {total:.3f}s ({count} mesures, moyenne: {avg:.3f}s)")
+                
     except Exception as e:
         print(f"\n❌ Erreur: {e}")
         import traceback

@@ -3,8 +3,6 @@ from io import BytesIO
 from itertools import islice
 from pathlib import Path
 from typing import List, Union
-
-
 import requests
 from tqdm import tqdm
 
@@ -42,7 +40,6 @@ def create_hash(string: str):
     hasher.update(string.encode("utf-8"))
 
     return hasher.hexdigest()
-
 
 
 def download_url_with_progress(url: str, progress: bool = False) -> BytesIO:
