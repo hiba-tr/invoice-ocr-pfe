@@ -1,0 +1,350 @@
+{
+  "file": "C:\\Factures\\facture4.jpeg",
+  "format": "image",
+  "status": "success",
+  "metadata": {
+    "page_count": 1,
+    "document_hash": "9553a3fec59ded8e340d9e79b1b19771f2186e87d738d7284c496329da1e352d"
+  },
+  "document": {
+    "headers": [
+      "12 of 13",
+      "AB"
+    ],
+    "company_info": {
+      "omv(tunesien)productiongmbh": "Concession",
+      "concession": "WORKINGCAPITALMOVEMENTDETAIL",
+      "workingcapitalmovementdetail": "CHEROUQ",
+      "month_ended": "31January 2025"
+    },
+    "tables": [
+      {
+        "headers": [
+          "DESCRIPTION",
+          "Working Capital As of Current Month",
+          "Working Capital As of Previous Month",
+          "Working Capital Current Month Expenditure",
+          "Working Capital OMV (Tunesien)Production Share @50%",
+          "Working Capital ETAP Share @ 50%"
+        ],
+        "data": [
+          [
+            "ItemDescription",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Wells",
+            "99,359.346",
+            "99,359.346",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Farah 2 Stimulation",
+            "(1,070.000)",
+            "(1,070.000)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Shaheen ¥2 drilling",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "#3 Drilling & Completion",
+            "28,467.572",
+            "28,467.572",
+            "",
+            "",
+            ""
+          ],
+          [
+            "FARAH 2 Drilling & Completion",
+            "(32,351.050)",
+            "(32,351.050)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "EL BADR 6 Drilling & Completion",
+            "104,312.824",
+            "104,312.824",
+            "",
+            "",
+            ""
+          ],
+          [
+            "-1 Acid Stimulation Job",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities",
+            "(360,067.105)",
+            "(606,795.678)",
+            "246,728.573",
+            "123,364.287",
+            "123,364.287"
+          ],
+          [
+            "Concession-WAHA PROD F",
+            "(0.998)",
+            "(0.998)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "ESDV Valves location as per firefighting rating (IGRR)",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Camp upgrade 23",
+            "(529.240)",
+            "(528.240)",
+            "(1.000)",
+            "(0.500)",
+            "(0.500)"
+          ],
+          [
+            "Salt water well disposal FCLT",
+            "(53,450.919)",
+            "(53,450.919)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "CQ Dev W 13 FARAH2",
+            "(11,340.000)",
+            "(11,340.000)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "CQ Dev W 13 EL BADR6",
+            "(4,537.000)",
+            "(4,537.000)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Gas Valorisation (FGR",
+            "(9,720.000)",
+            "(9,720.000)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "WAZE Execute Phase",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Upgrade",
+            "(15,022.400)",
+            "(15,022.400)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "South Tunisia Oil Development",
+            "(4,320.400)",
+            "(4,320.400)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities",
+            "(12,734.161)",
+            "(12,734.161)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Repair Fire Fighting System (Safety)",
+            "(46,200.000)",
+            "",
+            "(46,200.000)",
+            "(23,100.000)",
+            "(23,100.000)"
+          ],
+          [
+            "Inegrate Telemetry in PI",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Process Safety",
+            "",
+            "(17,800.000)",
+            "17,800.000",
+            "8,900.000",
+            "8,900.000"
+          ],
+          [
+            "LP&HP Flare Tips Replacement",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Renew DCS System",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "corroded pipes replacement",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "TA",
+            "(202,211.987)",
+            "(365,525.560)",
+            "163,313.573",
+            "81,656.787",
+            "81,656.787"
+          ],
+          [
+            "Overhaul Rotating Equipment",
+            "",
+            "(111,816.000)",
+            "111,816.000",
+            "55,908.000",
+            "55,908.000"
+          ],
+          [
+            "Lightning Protection System for WAHA & AGP Fields",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Other CAPEX",
+            "14,491.398",
+            "14,491.398",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Facilities I",
+            "14,491.399",
+            "14,491.399",
+            "",
+            "",
+            ""
+          ],
+          [
+            "2008/07 JENEIN NORD 3D SEISMIC",
+            "(0.001)",
+            "(0.001)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Camp&Kitchen refurbishment",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Replacement old Pickups",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "General & Administration",
+            "0.001",
+            "0.001",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Carry Over",
+            "100'0",
+            "100'0",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Admin staff",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tunis Office Lac",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Inventory",
+            "161,274.616",
+            "161,274.616",
+            "",
+            "",
+            ""
+          ]
+        ],
+        "rows": 39,
+        "columns": 6
+      }
+    ],
+    "totals": {}
+  }
+}

@@ -12,7 +12,7 @@ from pydantic import model_validator
 from typing_extensions import Self
 
 from backend.abstract_backend import AbstractDocumentBackend
-from backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
+from backend.pypdfium2_backend import PyPdfiumDocumentBackend
 from backend.image_backend import ImageDocumentBackend
 
 from datamodel.backend_options import BackendOptions, PdfBackendOptions
@@ -62,7 +62,7 @@ class ImageFormatOption(FormatOption):
 
 class PdfFormatOption(FormatOption):
     pipeline_cls: Type = StandardPdfPipeline
-    backend: Type[AbstractDocumentBackend] = DoclingParseV4DocumentBackend
+    backend: Type[AbstractDocumentBackend] = PyPdfiumDocumentBackend 
     backend_options: Optional[PdfBackendOptions] = None
 
 
