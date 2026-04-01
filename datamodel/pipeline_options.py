@@ -11,12 +11,6 @@ from pydantic import (
     Field,
 )
 
-from datamodel import (
-   
-    stage_model_specs,
-   
-)
-
 # Import the following for backwards compatibility
 from datamodel.accelerator_options import  AcceleratorOptions
 from datamodel.layout_model_specs import (
@@ -25,16 +19,7 @@ from datamodel.layout_model_specs import (
  
     LayoutModelConfig,
 )
-from datamodel.object_detection_engine_options import (
-    BaseObjectDetectionEngineOptions,
-)
 
-from datamodel.stage_model_specs import (
-    ObjectDetectionModelSpec,
-    ObjectDetectionStagePresetMixin,
-
-    
-)
 
 from typing_extensions import deprecated
 
@@ -387,42 +372,6 @@ class TesseractOcrOptions(OcrOptions):
         extra="forbid",
     )
 
-
-class OcrMacOptions(OcrOptions):
-    """Configuration for native macOS OCR using Vision framework."""
-
-    kind: ClassVar[Literal["ocrmac"]] = "ocrmac"
-    lang: Annotated[
-        list[str],
-        Field(
-            description=(
-                "List of language locale codes for macOS OCR. Use format `language-REGION` (e.g., `en-US`, `fr-FR`). "
-                "Leverages native macOS Vision framework for OCR on Apple platforms."
-            )
-        ),
-    ] = ["fr-FR", "de-DE", "es-ES", "en-US"]
-    recognition: Annotated[
-        str,
-        Field(
-            description=(
-                "Recognition accuracy level. Options: `accurate` (higher quality, slower) or `fast` (lower quality, "
-                "faster). Choose based on speed vs. accuracy requirements."
-            )
-        ),
-    ] = "accurate"
-    framework: Annotated[
-        str,
-        Field(
-            description=(
-                "macOS framework to use for OCR. Currently supports `vision` (Apple Vision framework). "
-                "Future versions may support additional frameworks."
-            )
-        ),
-    ] = "vision"
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-
 # =============================================================================
 # MODULE-LEVEL DEFAULTS FOR NEW PRESET SYSTEM
 # =============================================================================
@@ -544,39 +493,6 @@ class LayoutOptions(BaseLayoutOptions):
             )
         ),
     ] = DOCLING_LAYOUT_HERON
-
-
-class LayoutObjectDetectionOptions(ObjectDetectionStagePresetMixin, BaseLayoutOptions):
-    """Options for layout detection using object-detection runtimes."""
-
-    kind: ClassVar[str] = "layout_object_detection"
-
-    create_orphan_clusters: Annotated[
-        bool,
-        Field(
-            description=(
-                "Create clusters for orphaned elements not assigned to any structure. When True, isolated text or "
-                "elements are grouped into their own clusters. Recommended for complete document coverage."
-            )
-        ),
-    ] = False
-
-    model_spec: ObjectDetectionModelSpec = Field(
-        default_factory=lambda: stage_model_specs.OBJECT_DETECTION_LAYOUT_HERON.model_spec.model_copy(
-            deep=True
-        ),
-        description="Object-detection model specification for layout analysis",
-    )
-
-    engine_options: BaseObjectDetectionEngineOptions = Field(
-        description="Runtime configuration for the object-detection engine",
-    )
-
-
-LayoutObjectDetectionOptions.register_preset(
-    stage_model_specs.OBJECT_DETECTION_LAYOUT_HERON
-)
-
 
 
 class ConvertPipelineOptions(PipelineOptions):
