@@ -108,15 +108,8 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
                 
         elif self.plugin_attr_name == "layout_engines":
             try:
-                from models.stages.layout.layout_model import LayoutModel                
+                from models.stages.layout.layout_model import LayoutModel
                 engines = [LayoutModel]
-                
-                try:
-                    from experimental.models.table_crops_layout_model import TableCropsLayoutModel
-                    engines.append(TableCropsLayoutModel)
-                except ImportError:
-                    pass
-                    
                 for engine in engines:
                     try:
                         self.register(engine, "local", "models.stages.layout")
