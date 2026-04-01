@@ -51,7 +51,6 @@ class EasyOcrModel(BaseOcrModel):
             except ImportError:
                 raise ImportError(
                     "EasyOCR is not installed. Please install it via `pip install easyocr` to use this OCR engine. "
-                    "Alternatively, Docling has support for other OCR engines. See the documentation."
                 )
 
             if self.options.use_gpu is None:

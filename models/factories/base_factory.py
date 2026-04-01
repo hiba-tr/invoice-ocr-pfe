@@ -93,10 +93,9 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
             try:
                 from models.stages.ocr.auto_ocr_model import OcrAutoModel
                 from models.stages.ocr.easyocr_model import EasyOcrModel
-                from models.stages.ocr.ocr_mac_model import OcrMacModel
                 from models.stages.ocr.rapid_ocr_model import RapidOcrModel
                 
-                engines = [OcrAutoModel, EasyOcrModel, OcrMacModel, RapidOcrModel]
+                engines = [OcrAutoModel, EasyOcrModel, RapidOcrModel]
                 
                 for engine in engines:
                     try:
