@@ -1,25 +1,21 @@
 {
-  "file": "C:\\Factures\\facture.pdf",
-  "format": "pdf",
+  "file": "C:\\Factures\\facture_png.png",
+  "format": "image",
   "status": "success",
   "metadata": {
     "page_count": 1,
-    "document_hash": "53d9b8278ef1d86237c7d9063a4a57d9e05ed48e4c06fd49f7e96897a41297db"
+    "document_hash": "c2becc3b763a8d10c188c1344c6fcd56aeda6debf9554f969dbafa1d303bdee6"
   },
   "pages": [
     {
       "page_no": 1,
       "size": {
-        "width": 792.0,
-        "height": 612.0
+        "width": 1087.0,
+        "height": 805.0
       },
       "headers": [
         {
           "text": "4 of 13",
-          "label": "page_header"
-        },
-        {
-          "text": "Docusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221",
           "label": "page_header"
         }
       ],
@@ -29,69 +25,69 @@
           "type": "key_value_region",
           "cells": [
             {
-              "text": "OMV (Tunesien) Production GmbH",
-              "from_ocr": false,
-              "confidence": 1.0,
+              "text": "OMV(Tunesien)ProductionGmbH",
+              "from_ocr": true,
+              "confidence": 0.96344,
               "bbox": {
-                "l": 87.52523803710938,
-                "t": 74.69744873046875,
-                "r": 226.5801544189453,
-                "b": 82.68072509765625
-              }
-            },
-            {
-              "text": "JOINT INTEREST BILLING DETAIL",
-              "from_ocr": false,
-              "confidence": 1.0,
-              "bbox": {
-                "l": 86.49396514892578,
-                "t": 87.5079345703125,
-                "r": 193.67904663085938,
-                "b": 91.9154052734375
-              }
-            },
-            {
-              "text": "MONTH ENDED: 31 January 2025",
-              "from_ocr": false,
-              "confidence": 1.0,
-              "bbox": {
-                "l": 86.40959930419922,
-                "t": 98.805419921875,
-                "r": 166.47024536132812,
-                "b": 103.51519775390625
+                "l": 111.2202657063802,
+                "t": 67.8125,
+                "r": 308.4581705729167,
+                "b": 80.390625
               }
             },
             {
               "text": "Concession",
-              "from_ocr": false,
-              "confidence": 1.0,
+              "from_ocr": true,
+              "confidence": 0.99678,
               "bbox": {
-                "l": 315.18438720703125,
-                "t": 75.387939453125,
-                "r": 345.0127868652344,
-                "b": 79.7890625
+                "l": 430.0882161458333,
+                "t": 67.265625,
+                "r": 476.1103922526042,
+                "b": 78.75
+              }
+            },
+            {
+              "text": "JOINTINTERESTBILLINGDETAIL",
+              "from_ocr": true,
+              "confidence": 0.97759,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 85.859375,
+                "r": 262.4359944661458,
+                "b": 95.15625
               }
             },
             {
               "text": "CHEROUQ",
-              "from_ocr": false,
-              "confidence": 1.0,
+              "from_ocr": true,
+              "confidence": 0.99854,
               "bbox": {
-                "l": 313.8643798828125,
-                "t": 87.0343017578125,
-                "r": 346.0587158203125,
-                "b": 92.48480224609375
+                "l": 427.3487955729167,
+                "t": 83.125,
+                "r": 477.7540283203125,
+                "b": 97.34375
+              }
+            },
+            {
+              "text": "MONTH ENDED: 31 January 2025",
+              "from_ocr": true,
+              "confidence": 0.96469,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 101.171875,
+                "r": 224.08416748046875,
+                "b": 112.109375
               }
             },
             {
               "text": "Development",
-              "from_ocr": false,
-              "confidence": 1.0,
+              "from_ocr": true,
+              "confidence": 0.99883,
               "bbox": {
-                "l": 312.3726806640625,
-                "t": 98.0496826171875,
-                "r": 347.43536376953125,
-                "b": 103.61468505859375
+                "l": 426.8009033203125,
+                "t": 100.078125,
+                "r": 478.8498128255208,
+                "b": 111.5625
               }
             }
           ]
@@ -103,36 +99,8 @@
           "label": "page_header"
         },
         {
-          "text": "USD",
-          "label": "text"
-        },
-        {
           "text": "U.S. Dollars Source",
           "label": "text"
-        },
-        {
-          "text": "101",
-          "label": "text"
-        },
-        {
-          "text": "103",
-          "label": "text"
-        },
-        {
-          "text": "201",
-          "label": "text"
-        },
-        {
-          "text": "299",
-          "label": "text"
-        },
-        {
-          "text": "200",
-          "label": "text"
-        },
-        {
-          "text": "Docusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221",
-          "label": "page_header"
         }
       ],
       "tables": [
@@ -144,61 +112,61 @@
             {
               "row": 0,
               "col": 1,
-              "text": "Year To Date Expenditure  As of Current Month",
+              "text": "Year To Date Expenditure As of Current Month",
               "row_span": 1,
               "col_span": 1,
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 251.14723205566406,
-                "t": 126.6279296875,
-                "r": 322.8117370605469,
-                "b": 140.98904418945312
+                "l": 340.78326416015625,
+                "t": 139.453125,
+                "r": 444.3331705729167,
+                "b": 165.15625
               }
             },
             {
               "row": 0,
               "col": 2,
-              "text": "Year To Date Expenditure  As of Previous Month",
+              "text": "Year To Date Expenditure As of Previous Month",
               "row_span": 1,
               "col_span": 1,
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 334.187255859375,
-                "t": 126.6279296875,
-                "r": 405.85174560546875,
-                "b": 140.982666015625
+                "l": 457.4823811848958,
+                "t": 139.453125,
+                "r": 561.5801595052084,
+                "b": 165.15625
               }
             },
             {
               "row": 0,
               "col": 3,
-              "text": "Current Month Expenditure  100%",
+              "text": "Current Month Expenditure 100%",
               "row_span": 1,
               "col_span": 1,
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 418.8843994140625,
-                "t": 126.6279296875,
-                "r": 495.1598815917969,
-                "b": 141.07171630859375
+                "l": 576.3730061848959,
+                "t": 139.453125,
+                "r": 687.59326171875,
+                "b": 165.703125
               }
             },
             {
               "row": 0,
               "col": 4,
-              "text": "Current Month Expenditure  OMV (Tunesien) Production Share @ 50%",
+              "text": "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
               "row_span": 1,
               "col_span": 1,
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 510.0780334472656,
-                "t": 126.6279296875,
-                "r": 625.9190673828125,
-                "b": 142.26739501953125
+                "l": 705.12548828125,
+                "t": 139.453125,
+                "r": 871.1341145833334,
+                "b": 165.15625
               }
             },
             {
@@ -210,3355 +178,10 @@
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 642.234375,
-                "t": 126.6279296875,
-                "r": 718.5098876953125,
-                "b": 142.26739501953125
-              }
-            },
-            {
-              "row": 1,
-              "col": 0,
-              "text": "Item Description",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 139.36880493164062,
-                "t": 153.37570190429688,
-                "r": 192.88473510742188,
-                "b": 160.00473022460938
-              }
-            },
-            {
-              "row": 2,
-              "col": 0,
-              "text": "Wells",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.48124694824219,
-                "t": 170.88967895507812,
-                "r": 101.49720764160156,
-                "b": 175.18905639648438
-              }
-            },
-            {
-              "row": 2,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 313.0685729980469,
-                "t": 173.37680053710938,
-                "r": 315.18896484375,
-                "b": 174.12823486328125
-              }
-            },
-            {
-              "row": 2,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 398.7485656738281,
-                "t": 173.37680053710938,
-                "r": 400.86895751953125,
-                "b": 174.12823486328125
-              }
-            },
-            {
-              "row": 2,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 486.96856689453125,
-                "t": 173.37680053710938,
-                "r": 489.0889587402344,
-                "b": 174.12823486328125
-              }
-            },
-            {
-              "row": 2,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 620.798583984375,
-                "t": 173.37680053710938,
-                "r": 622.9189453125,
-                "b": 174.12823486328125
-              }
-            },
-            {
-              "row": 2,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 711.5186157226562,
-                "t": 173.37680053710938,
-                "r": 713.6389770507812,
-                "b": 174.12823486328125
-              }
-            },
-            {
-              "row": 3,
-              "col": 0,
-              "text": "Farah 2 Stimulation",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.52576446533203,
-                "t": 179.80615234375,
-                "r": 137.01145935058594,
-                "b": 184.30905151367188
-              }
-            },
-            {
-              "row": 3,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 182.6434326171875,
-                "r": 315.8892822265625,
-                "b": 183.15151977539062
-              }
-            },
-            {
-              "row": 3,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 182.6434326171875,
-                "r": 401.56927490234375,
-                "b": 183.15151977539062
-              }
-            },
-            {
-              "row": 3,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 182.6434326171875,
-                "r": 489.7892761230469,
-                "b": 183.15151977539062
-              }
-            },
-            {
-              "row": 3,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 182.6434326171875,
-                "r": 623.6193237304688,
-                "b": 183.15151977539062
-              }
-            },
-            {
-              "row": 3,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 182.6434326171875,
-                "r": 714.3392944335938,
-                "b": 183.15151977539062
-              }
-            },
-            {
-              "row": 4,
-              "col": 0,
-              "text": "Shaheen #2 drilling",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.8246841430664,
-                "t": 189.07614135742188,
-                "r": 136.4263458251953,
-                "b": 194.85739135742188
-              }
-            },
-            {
-              "row": 4,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 191.9134521484375,
-                "r": 315.8892822265625,
-                "b": 192.42153930664062
-              }
-            },
-            {
-              "row": 4,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 191.9134521484375,
-                "r": 401.56927490234375,
-                "b": 192.42153930664062
-              }
-            },
-            {
-              "row": 4,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 191.9134521484375,
-                "r": 489.7892761230469,
-                "b": 192.42153930664062
-              }
-            },
-            {
-              "row": 4,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 191.9134521484375,
-                "r": 623.6193237304688,
-                "b": 192.42153930664062
-              }
-            },
-            {
-              "row": 4,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 191.9134521484375,
-                "r": 714.3392944335938,
-                "b": 192.42153930664062
-              }
-            },
-            {
-              "row": 5,
-              "col": 0,
-              "text": "WAHA #3 Drilling & Completion",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 198.316162109375,
-                "r": 173.47332763671875,
-                "b": 204.097412109375
-              }
-            },
-            {
-              "row": 5,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 201.1534423828125,
-                "r": 315.8892822265625,
-                "b": 201.66152954101562
-              }
-            },
-            {
-              "row": 5,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 201.1534423828125,
-                "r": 401.56927490234375,
-                "b": 201.66152954101562
-              }
-            },
-            {
-              "row": 5,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 201.1534423828125,
-                "r": 489.7892761230469,
-                "b": 201.66152954101562
-              }
-            },
-            {
-              "row": 5,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 201.1534423828125,
-                "r": 623.6193237304688,
-                "b": 201.66152954101562
-              }
-            },
-            {
-              "row": 5,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 201.1534423828125,
-                "r": 714.3392944335938,
-                "b": 201.66152954101562
-              }
-            },
-            {
-              "row": 6,
-              "col": 0,
-              "text": "FARAH #2 Drilling & Completion",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.52576446533203,
-                "t": 207.55615234375,
-                "r": 175.03790283203125,
-                "b": 213.33740234375
-              }
-            },
-            {
-              "row": 6,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 210.3934326171875,
-                "r": 315.8892822265625,
-                "b": 210.90151977539062
-              }
-            },
-            {
-              "row": 6,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 210.3934326171875,
-                "r": 401.56927490234375,
-                "b": 210.90151977539062
-              }
-            },
-            {
-              "row": 6,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 210.3934326171875,
-                "r": 489.7892761230469,
-                "b": 210.90151977539062
-              }
-            },
-            {
-              "row": 6,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 210.3934326171875,
-                "r": 623.6193237304688,
-                "b": 210.90151977539062
-              }
-            },
-            {
-              "row": 6,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 210.3934326171875,
-                "r": 714.3392944335938,
-                "b": 210.90151977539062
-              }
-            },
-            {
-              "row": 7,
-              "col": 0,
-              "text": "EL BADR #6 Drilling & Completion",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.55756378173828,
-                "t": 216.796142578125,
-                "r": 180.793701171875,
-                "b": 222.577392578125
-              }
-            },
-            {
-              "row": 7,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 219.63345336914062,
-                "r": 315.8892822265625,
-                "b": 220.14154052734375
-              }
-            },
-            {
-              "row": 7,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 219.63345336914062,
-                "r": 401.56927490234375,
-                "b": 220.14154052734375
-              }
-            },
-            {
-              "row": 7,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 219.63345336914062,
-                "r": 489.7892761230469,
-                "b": 220.14154052734375
-              }
-            },
-            {
-              "row": 7,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 219.63345336914062,
-                "r": 623.6193237304688,
-                "b": 220.14154052734375
-              }
-            },
-            {
-              "row": 7,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 219.63345336914062,
-                "r": 714.3392944335938,
-                "b": 220.14154052734375
-              }
-            },
-            {
-              "row": 8,
-              "col": 0,
-              "text": "Waha -1 Acid Stimulation Job",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 226.03616333007812,
-                "r": 163.76162719726562,
-                "b": 230.5390625
-              }
-            },
-            {
-              "row": 8,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 228.87344360351562,
-                "r": 315.8892822265625,
-                "b": 229.38153076171875
-              }
-            },
-            {
-              "row": 8,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 228.87344360351562,
-                "r": 401.56927490234375,
-                "b": 229.38153076171875
-              }
-            },
-            {
-              "row": 8,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 228.87344360351562,
-                "r": 489.7892761230469,
-                "b": 229.38153076171875
-              }
-            },
-            {
-              "row": 8,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 228.87344360351562,
-                "r": 623.6193237304688,
-                "b": 229.38153076171875
-              }
-            },
-            {
-              "row": 8,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 228.87344360351562,
-                "r": 714.3392944335938,
-                "b": 229.38153076171875
-              }
-            },
-            {
-              "row": 9,
-              "col": 0,
-              "text": "Facilities",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.56392669677734,
-                "t": 244.7379150390625,
-                "r": 110.94180297851562,
-                "b": 249.13265991210938
-              }
-            },
-            {
-              "row": 9,
-              "col": 1,
-              "text": "(148,271.43)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 287.0276184082031,
-                "t": 244.37313842773438,
-                "r": 325.0088195800781,
-                "b": 250.89056396484375
-              }
-            },
-            {
-              "row": 9,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 398.7485656738281,
-                "t": 247.32681274414062,
-                "r": 400.86895751953125,
-                "b": 248.0782470703125
-              }
-            },
-            {
-              "row": 9,
-              "col": 3,
-              "text": "(148,271.43)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 460.9276123046875,
-                "t": 244.37313842773438,
-                "r": 498.9088134765625,
-                "b": 250.89056396484375
-              }
-            },
-            {
-              "row": 9,
-              "col": 4,
-              "text": "(74,135.72)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 598.4776000976562,
-                "t": 244.37313842773438,
-                "r": 632.73876953125,
-                "b": 250.89056396484375
-              }
-            },
-            {
-              "row": 9,
-              "col": 5,
-              "text": "(74,135.72)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 689.1976318359375,
-                "t": 244.37313842773438,
-                "r": 723.4588012695312,
-                "b": 250.89056396484375
-              }
-            },
-            {
-              "row": 10,
-              "col": 0,
-              "text": "CHEROUQ Concession-WAHA PROD F",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.65296173095703,
-                "t": 253.75616455078125,
-                "r": 192.80136108398438,
-                "b": 259.41021728515625
-              }
-            },
-            {
-              "row": 10,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 256.59344482421875,
-                "r": 315.8892822265625,
-                "b": 257.1015319824219
-              }
-            },
-            {
-              "row": 10,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 256.59344482421875,
-                "r": 401.56927490234375,
-                "b": 257.1015319824219
-              }
-            },
-            {
-              "row": 10,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 256.59344482421875,
-                "r": 489.7892761230469,
-                "b": 257.1015319824219
-              }
-            },
-            {
-              "row": 10,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 256.59344482421875,
-                "r": 623.6193237304688,
-                "b": 257.1015319824219
-              }
-            },
-            {
-              "row": 10,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 256.59344482421875,
-                "r": 714.3392944335938,
-                "b": 257.1015319824219
-              }
-            },
-            {
-              "row": 11,
-              "col": 0,
-              "text": "ESDV Valves location as per firefighting rating (IGRR)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.55756378173828,
-                "t": 262.99615478515625,
-                "r": 228.48733520507812,
-                "b": 268.77740478515625
-              }
-            },
-            {
-              "row": 11,
-              "col": 1,
-              "text": "(31,149.52)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 293.1353759765625,
-                "t": 262.81976318359375,
-                "r": 325.1165771484375,
-                "b": 269.1324768066406
-              }
-            },
-            {
-              "row": 11,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 265.83343505859375,
-                "r": 401.56927490234375,
-                "b": 266.3415222167969
-              }
-            },
-            {
-              "row": 11,
-              "col": 3,
-              "text": "(31,149.52)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 467.0353698730469,
-                "t": 262.81976318359375,
-                "r": 499.01654052734375,
-                "b": 269.1324768066406
-              }
-            },
-            {
-              "row": 11,
-              "col": 4,
-              "text": "(15,574.76)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 600.8653564453125,
-                "t": 262.81976318359375,
-                "r": 632.8465576171875,
-                "b": 269.1324768066406
-              }
-            },
-            {
-              "row": 11,
-              "col": 5,
-              "text": "(15,574.76)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 691.5853271484375,
-                "t": 262.81976318359375,
-                "r": 723.5665283203125,
-                "b": 269.1324768066406
-              }
-            },
-            {
-              "row": 12,
-              "col": 0,
-              "text": "Camp upgrade 23",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.65296173095703,
-                "t": 272.23614501953125,
-                "r": 131.24929809570312,
-                "b": 278.01739501953125
-              }
-            },
-            {
-              "row": 12,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 275.0734558105469,
-                "r": 315.8892822265625,
-                "b": 275.58154296875
-              }
-            },
-            {
-              "row": 12,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 275.0734558105469,
-                "r": 401.56927490234375,
-                "b": 275.58154296875
-              }
-            },
-            {
-              "row": 12,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 275.0734558105469,
-                "r": 489.7892761230469,
-                "b": 275.58154296875
-              }
-            },
-            {
-              "row": 12,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 275.0734558105469,
-                "r": 623.6193237304688,
-                "b": 275.58154296875
-              }
-            },
-            {
-              "row": 12,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 275.0734558105469,
-                "r": 714.3392944335938,
-                "b": 275.58154296875
-              }
-            },
-            {
-              "row": 13,
-              "col": 0,
-              "text": "Salt water well disposal FCLT",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.8246841430664,
-                "t": 281.4761657714844,
-                "r": 163.84429931640625,
-                "b": 287.24468994140625
-              }
-            },
-            {
-              "row": 13,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 284.3134460449219,
-                "r": 315.8892822265625,
-                "b": 284.821533203125
-              }
-            },
-            {
-              "row": 13,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 284.3134460449219,
-                "r": 401.56927490234375,
-                "b": 284.821533203125
-              }
-            },
-            {
-              "row": 13,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 284.3134460449219,
-                "r": 489.7892761230469,
-                "b": 284.821533203125
-              }
-            },
-            {
-              "row": 13,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 284.3134460449219,
-                "r": 623.6193237304688,
-                "b": 284.821533203125
-              }
-            },
-            {
-              "row": 13,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 284.3134460449219,
-                "r": 714.3392944335938,
-                "b": 284.821533203125
-              }
-            },
-            {
-              "row": 14,
-              "col": 0,
-              "text": "Hook up CQ Dev W 13 FARAH2",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.5321273803711,
-                "t": 290.7161560058594,
-                "r": 172.0550537109375,
-                "b": 296.48468017578125
-              }
-            },
-            {
-              "row": 14,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 293.5534362792969,
-                "r": 315.8892822265625,
-                "b": 294.0615234375
-              }
-            },
-            {
-              "row": 14,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 293.5534362792969,
-                "r": 401.56927490234375,
-                "b": 294.0615234375
-              }
-            },
-            {
-              "row": 14,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 293.5534362792969,
-                "r": 489.7892761230469,
-                "b": 294.0615234375
-              }
-            },
-            {
-              "row": 14,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 293.5534362792969,
-                "r": 623.6193237304688,
-                "b": 294.0615234375
-              }
-            },
-            {
-              "row": 14,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 293.5534362792969,
-                "r": 714.3392944335938,
-                "b": 294.0615234375
-              }
-            },
-            {
-              "row": 15,
-              "col": 0,
-              "text": "Hook up CQ Dev W 13 EL BADR6",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.5321273803711,
-                "t": 299.9561462402344,
-                "r": 177.82994079589844,
-                "b": 305.72467041015625
-              }
-            },
-            {
-              "row": 15,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 302.7934265136719,
-                "r": 315.8892822265625,
-                "b": 303.301513671875
-              }
-            },
-            {
-              "row": 15,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 302.7934265136719,
-                "r": 401.56927490234375,
-                "b": 303.301513671875
-              }
-            },
-            {
-              "row": 15,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 302.7934265136719,
-                "r": 489.7892761230469,
-                "b": 303.301513671875
-              }
-            },
-            {
-              "row": 15,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 302.7934265136719,
-                "r": 623.6193237304688,
-                "b": 303.301513671875
-              }
-            },
-            {
-              "row": 15,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 302.7934265136719,
-                "r": 714.3392944335938,
-                "b": 303.301513671875
-              }
-            },
-            {
-              "row": 16,
-              "col": 0,
-              "text": "CHEROUQ Gas Valorisation ( FGR",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.65296173095703,
-                "t": 309.1961364746094,
-                "r": 179.0637664794922,
-                "b": 314.96466064453125
-              }
-            },
-            {
-              "row": 16,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 312.033447265625,
-                "r": 315.8892822265625,
-                "b": 312.5415344238281
-              }
-            },
-            {
-              "row": 16,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 312.033447265625,
-                "r": 401.56927490234375,
-                "b": 312.5415344238281
-              }
-            },
-            {
-              "row": 16,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 312.033447265625,
-                "r": 489.7892761230469,
-                "b": 312.5415344238281
-              }
-            },
-            {
-              "row": 16,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 312.033447265625,
-                "r": 623.6193237304688,
-                "b": 312.5415344238281
-              }
-            },
-            {
-              "row": 16,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 312.033447265625,
-                "r": 714.3392944335938,
-                "b": 312.5415344238281
-              }
-            },
-            {
-              "row": 17,
-              "col": 0,
-              "text": "WAZE Execute Phase",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 318.4561462402344,
-                "r": 143.3523712158203,
-                "b": 322.95904541015625
-              }
-            },
-            {
-              "row": 17,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 321.2934265136719,
-                "r": 315.8892822265625,
-                "b": 321.801513671875
-              }
-            },
-            {
-              "row": 17,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 321.2934265136719,
-                "r": 401.56927490234375,
-                "b": 321.801513671875
-              }
-            },
-            {
-              "row": 17,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 321.2934265136719,
-                "r": 489.7892761230469,
-                "b": 321.801513671875
-              }
-            },
-            {
-              "row": 17,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 321.2934265136719,
-                "r": 623.6193237304688,
-                "b": 321.801513671875
-              }
-            },
-            {
-              "row": 17,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 321.2934265136719,
-                "r": 714.3392944335938,
-                "b": 321.801513671875
-              }
-            },
-            {
-              "row": 18,
-              "col": 0,
-              "text": "CHEROUQ Upgrade",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.65296173095703,
-                "t": 327.6961364746094,
-                "r": 140.15965270996094,
-                "b": 333.4773864746094
-              }
-            },
-            {
-              "row": 18,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 330.533447265625,
-                "r": 315.8892822265625,
-                "b": 331.0415344238281
-              }
-            },
-            {
-              "row": 18,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 330.533447265625,
-                "r": 401.56927490234375,
-                "b": 331.0415344238281
-              }
-            },
-            {
-              "row": 18,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 330.533447265625,
-                "r": 489.7892761230469,
-                "b": 331.0415344238281
-              }
-            },
-            {
-              "row": 18,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 330.533447265625,
-                "r": 623.6193237304688,
-                "b": 331.0415344238281
-              }
-            },
-            {
-              "row": 18,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 330.533447265625,
-                "r": 714.3392944335938,
-                "b": 331.0415344238281
-              }
-            },
-            {
-              "row": 19,
-              "col": 0,
-              "text": "South Tunisia Oil Development",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.8246841430664,
-                "t": 336.9361572265625,
-                "r": 167.74298095703125,
-                "b": 342.7046813964844
-              }
-            },
-            {
-              "row": 19,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 339.7734375,
-                "r": 315.8892822265625,
-                "b": 340.2815246582031
-              }
-            },
-            {
-              "row": 19,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 339.7734375,
-                "r": 401.56927490234375,
-                "b": 340.2815246582031
-              }
-            },
-            {
-              "row": 19,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 339.7734375,
-                "r": 489.7892761230469,
-                "b": 340.2815246582031
-              }
-            },
-            {
-              "row": 19,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 339.7734375,
-                "r": 623.6193237304688,
-                "b": 340.2815246582031
-              }
-            },
-            {
-              "row": 19,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 339.7734375,
-                "r": 714.3392944335938,
-                "b": 340.2815246582031
-              }
-            },
-            {
-              "row": 20,
-              "col": 0,
-              "text": "CHEROUQ Temporary Facilities",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.65296173095703,
-                "t": 346.1761474609375,
-                "r": 171.38723754882812,
-                "b": 351.9573974609375
-              }
-            },
-            {
-              "row": 20,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 349.013427734375,
-                "r": 315.8892822265625,
-                "b": 349.5215148925781
-              }
-            },
-            {
-              "row": 20,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 349.013427734375,
-                "r": 401.56927490234375,
-                "b": 349.5215148925781
-              }
-            },
-            {
-              "row": 20,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 349.013427734375,
-                "r": 489.7892761230469,
-                "b": 349.5215148925781
-              }
-            },
-            {
-              "row": 20,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 349.013427734375,
-                "r": 623.6193237304688,
-                "b": 349.5215148925781
-              }
-            },
-            {
-              "row": 20,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 349.013427734375,
-                "r": 714.3392944335938,
-                "b": 349.5215148925781
-              }
-            },
-            {
-              "row": 21,
-              "col": 0,
-              "text": "Repair Fire Fighting System (Safety)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.5321273803711,
-                "t": 355.4161682128906,
-                "r": 180.19586181640625,
-                "b": 361.19740295410156
-              }
-            },
-            {
-              "row": 21,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 358.2534484863281,
-                "r": 315.8892822265625,
-                "b": 358.7615203857422
-              }
-            },
-            {
-              "row": 21,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 358.2534484863281,
-                "r": 401.56927490234375,
-                "b": 358.7615203857422
-              }
-            },
-            {
-              "row": 21,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 358.2534484863281,
-                "r": 489.7892761230469,
-                "b": 358.7615203857422
-              }
-            },
-            {
-              "row": 21,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 358.2534484863281,
-                "r": 623.6193237304688,
-                "b": 358.7615203857422
-              }
-            },
-            {
-              "row": 21,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 358.2534484863281,
-                "r": 714.3392944335938,
-                "b": 358.7615203857422
-              }
-            },
-            {
-              "row": 22,
-              "col": 0,
-              "text": "Inegrate Telemetry in PI",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.58300018310547,
-                "t": 364.6561737060547,
-                "r": 148.66297912597656,
-                "b": 370.4374084472656
-              }
-            },
-            {
-              "row": 22,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 367.4934387207031,
-                "r": 315.8892822265625,
-                "b": 368.0015106201172
-              }
-            },
-            {
-              "row": 22,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 367.4934387207031,
-                "r": 401.56927490234375,
-                "b": 368.0015106201172
-              }
-            },
-            {
-              "row": 22,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 367.4934387207031,
-                "r": 489.7892761230469,
-                "b": 368.0015106201172
-              }
-            },
-            {
-              "row": 22,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 367.4934387207031,
-                "r": 623.6193237304688,
-                "b": 368.0015106201172
-              }
-            },
-            {
-              "row": 22,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 367.4934387207031,
-                "r": 714.3392944335938,
-                "b": 368.0015106201172
-              }
-            },
-            {
-              "row": 23,
-              "col": 0,
-              "text": "Process Safety",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.5321273803711,
-                "t": 373.9025115966797,
-                "r": 123.941650390625,
-                "b": 379.6773986816406
-              }
-            },
-            {
-              "row": 23,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 376.7334442138672,
-                "r": 315.8892822265625,
-                "b": 377.24151611328125
-              }
-            },
-            {
-              "row": 23,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 376.7334442138672,
-                "r": 401.56927490234375,
-                "b": 377.24151611328125
-              }
-            },
-            {
-              "row": 23,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 376.7334442138672,
-                "r": 489.7892761230469,
-                "b": 377.24151611328125
-              }
-            },
-            {
-              "row": 23,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 376.7334442138672,
-                "r": 623.6193237304688,
-                "b": 377.24151611328125
-              }
-            },
-            {
-              "row": 23,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 376.7334442138672,
-                "r": 714.3392944335938,
-                "b": 377.24151611328125
-              }
-            },
-            {
-              "row": 24,
-              "col": 0,
-              "text": "Waha CPF LP&HP Flare Tips Replacement",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 383.13616943359375,
-                "r": 198.81155395507812,
-                "b": 388.90467834472656
-              }
-            },
-            {
-              "row": 24,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 385.9734344482422,
-                "r": 315.8892822265625,
-                "b": 386.48150634765625
-              }
-            },
-            {
-              "row": 24,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 385.9734344482422,
-                "r": 401.56927490234375,
-                "b": 386.48150634765625
-              }
-            },
-            {
-              "row": 24,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 385.9734344482422,
-                "r": 489.7892761230469,
-                "b": 386.48150634765625
-              }
-            },
-            {
-              "row": 24,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 385.9734344482422,
-                "r": 623.6193237304688,
-                "b": 386.48150634765625
-              }
-            },
-            {
-              "row": 24,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 385.9734344482422,
-                "r": 714.3392944335938,
-                "b": 386.48150634765625
-              }
-            },
-            {
-              "row": 25,
-              "col": 0,
-              "text": "Renew DCS System",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.5321273803711,
-                "t": 392.48426818847656,
-                "r": 138.0926513671875,
-                "b": 398.1573944091797
-              }
-            },
-            {
-              "row": 25,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 395.21343994140625,
-                "r": 315.8892822265625,
-                "b": 395.7215118408203
-              }
-            },
-            {
-              "row": 25,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 395.21343994140625,
-                "r": 401.56927490234375,
-                "b": 395.7215118408203
-              }
-            },
-            {
-              "row": 25,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 395.21343994140625,
-                "r": 489.7892761230469,
-                "b": 395.7215118408203
-              }
-            },
-            {
-              "row": 25,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 395.21343994140625,
-                "r": 623.6193237304688,
-                "b": 395.7215118408203
-              }
-            },
-            {
-              "row": 25,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 395.21343994140625,
-                "r": 714.3392944335938,
-                "b": 395.7215118408203
-              }
-            },
-            {
-              "row": 26,
-              "col": 0,
-              "text": "WAHA corroded pipes replacement",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 401.6161651611328,
-                "r": 178.40232849121094,
-                "b": 407.3846740722656
-              }
-            },
-            {
-              "row": 26,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 404.4534454345703,
-                "r": 315.8892822265625,
-                "b": 404.9615173339844
-              }
-            },
-            {
-              "row": 26,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 404.4534454345703,
-                "r": 401.56927490234375,
-                "b": 404.9615173339844
-              }
-            },
-            {
-              "row": 26,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 404.4534454345703,
-                "r": 489.7892761230469,
-                "b": 404.9615173339844
-              }
-            },
-            {
-              "row": 26,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 404.4534454345703,
-                "r": 623.6193237304688,
-                "b": 404.9615173339844
-              }
-            },
-            {
-              "row": 26,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 404.4534454345703,
-                "r": 714.3392944335938,
-                "b": 404.9615173339844
-              }
-            },
-            {
-              "row": 27,
-              "col": 0,
-              "text": "Waha CPF TA",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.50668334960938,
-                "t": 410.8561706542969,
-                "r": 124.3804931640625,
-                "b": 415.3590393066406
-              }
-            },
-            {
-              "row": 27,
-              "col": 1,
-              "text": "20,132.69",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 295.2761535644531,
-                "t": 410.80503845214844,
-                "r": 322.7820739746094,
-                "b": 416.6653594970703
-              }
-            },
-            {
-              "row": 27,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 413.6934356689453,
-                "r": 401.56927490234375,
-                "b": 414.2015075683594
-              }
-            },
-            {
-              "row": 27,
-              "col": 3,
-              "text": "20,132.69",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 469.1761474609375,
-                "t": 410.80503845214844,
-                "r": 496.68206787109375,
-                "b": 416.6653594970703
-              }
-            },
-            {
-              "row": 27,
-              "col": 4,
-              "text": "10,066.35",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 603.67431640625,
-                "t": 410.80503845214844,
-                "r": 630.3519897460938,
-                "b": 416.6653594970703
-              }
-            },
-            {
-              "row": 27,
-              "col": 5,
-              "text": "10,066.35",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 694.3943481445312,
-                "t": 410.80503845214844,
-                "r": 721.072021484375,
-                "b": 416.6653594970703
-              }
-            },
-            {
-              "row": 28,
-              "col": 0,
-              "text": "Overhaul Rotating Equipment",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.6466064453125,
-                "t": 420.0961608886719,
-                "r": 163.31640625,
-                "b": 425.8773956298828
-              }
-            },
-            {
-              "row": 28,
-              "col": 1,
-              "text": "(137,254.60)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 289.6553649902344,
-                "t": 419.9197540283203,
-                "r": 325.1165466308594,
-                "b": 426.23248291015625
-              }
-            },
-            {
-              "row": 28,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 422.9334411621094,
-                "r": 401.56927490234375,
-                "b": 423.44151306152344
-              }
-            },
-            {
-              "row": 28,
-              "col": 3,
-              "text": "(137,254.60)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 463.55535888671875,
-                "t": 419.9197540283203,
-                "r": 499.01654052734375,
-                "b": 426.23248291015625
-              }
-            },
-            {
-              "row": 28,
-              "col": 4,
-              "text": "(68,627.30)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 600.8653564453125,
-                "t": 419.9197540283203,
-                "r": 632.8465576171875,
-                "b": 426.23248291015625
-              }
-            },
-            {
-              "row": 28,
-              "col": 5,
-              "text": "(68,627.30)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 691.5853271484375,
-                "t": 419.9197540283203,
-                "r": 723.5665283203125,
-                "b": 426.23248291015625
-              }
-            },
-            {
-              "row": 29,
-              "col": 0,
-              "text": "Lightning Protection System for WAHA & AGP Fields",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.55120086669922,
-                "t": 429.33616638183594,
-                "r": 227.20895385742188,
-                "b": 435.1174011230469
-              }
-            },
-            {
-              "row": 29,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 432.17344665527344,
-                "r": 315.8892822265625,
-                "b": 432.6815185546875
-              }
-            },
-            {
-              "row": 29,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 432.17344665527344,
-                "r": 401.56927490234375,
-                "b": 432.6815185546875
-              }
-            },
-            {
-              "row": 29,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 432.17344665527344,
-                "r": 489.7892761230469,
-                "b": 432.6815185546875
-              }
-            },
-            {
-              "row": 29,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 432.17344665527344,
-                "r": 623.6193237304688,
-                "b": 432.6815185546875
-              }
-            },
-            {
-              "row": 29,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 432.17344665527344,
-                "r": 714.3392944335938,
-                "b": 432.6815185546875
-              }
-            },
-            {
-              "row": 30,
-              "col": 0,
-              "text": "Other CAPEX",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.67204284667969,
-                "t": 446.874267578125,
-                "r": 125.98956298828125,
-                "b": 451.26902770996094
-              }
-            },
-            {
-              "row": 30,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 313.0685729980469,
-                "t": 449.456787109375,
-                "r": 315.18896484375,
-                "b": 450.20823669433594
-              }
-            },
-            {
-              "row": 30,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 398.7485656738281,
-                "t": 449.456787109375,
-                "r": 400.86895751953125,
-                "b": 450.20823669433594
-              }
-            },
-            {
-              "row": 30,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 487.2150573730469,
-                "t": 449.47816467285156,
-                "r": 489.0899353027344,
-                "b": 450.0212707519531
-              }
-            },
-            {
-              "row": 30,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.0450439453125,
-                "t": 449.47816467285156,
-                "r": 622.919921875,
-                "b": 450.0212707519531
-              }
-            },
-            {
-              "row": 30,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 711.7650756835938,
-                "t": 449.47816467285156,
-                "r": 713.6399536132812,
-                "b": 450.0212707519531
-              }
-            },
-            {
-              "row": 31,
-              "col": 0,
-              "text": "Tunis Office Prod CHEROUQ  is Office Prod CHEROUQ Temporary Facilities I",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.1214370727539,
-                "t": 455.88616943359375,
-                "r": 175.1714324951172,
-                "b": 461.6674041748047
-              }
-            },
-            {
-              "row": 31,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 458.7234344482422,
-                "r": 315.8892822265625,
-                "b": 459.23150634765625
-              }
-            },
-            {
-              "row": 31,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 458.7234344482422,
-                "r": 401.56927490234375,
-                "b": 459.23150634765625
-              }
-            },
-            {
-              "row": 31,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 458.7234344482422,
-                "r": 489.7892761230469,
-                "b": 459.23150634765625
-              }
-            },
-            {
-              "row": 31,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 458.7234344482422,
-                "r": 623.6193237304688,
-                "b": 459.23150634765625
-              }
-            },
-            {
-              "row": 31,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 458.7234344482422,
-                "r": 714.3392944335938,
-                "b": 459.23150634765625
-              }
-            },
-            {
-              "row": 32,
-              "col": 0,
-              "text": "Tunis Office Prod 2008/07 JEN nis Office Prod 2008/07 JENEIN NORD 3D SEISMIC",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.1214370727539,
-                "t": 465.12615966796875,
-                "r": 185.40469360351562,
-                "b": 470.6780700683594
-              }
-            },
-            {
-              "row": 32,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 467.96343994140625,
-                "r": 315.8892822265625,
-                "b": 468.4715118408203
-              }
-            },
-            {
-              "row": 32,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 467.96343994140625,
-                "r": 401.56927490234375,
-                "b": 468.4715118408203
-              }
-            },
-            {
-              "row": 32,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 467.96343994140625,
-                "r": 489.7892761230469,
-                "b": 468.4715118408203
-              }
-            },
-            {
-              "row": 32,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 467.96343994140625,
-                "r": 623.6193237304688,
-                "b": 468.4715118408203
-              }
-            },
-            {
-              "row": 32,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 467.96343994140625,
-                "r": 714.3392944335938,
-                "b": 468.4715118408203
-              }
-            },
-            {
-              "row": 33,
-              "col": 0,
-              "text": "Tunis Office Prod Camp&Kitch is Office Prod Camp&Kitchen refurbishment",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.1214370727539,
-                "t": 474.3661651611328,
-                "r": 164.27676391601562,
-                "b": 480.1346740722656
-              }
-            },
-            {
-              "row": 33,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 477.2034454345703,
-                "r": 315.8892822265625,
-                "b": 477.7115173339844
-              }
-            },
-            {
-              "row": 33,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 477.2034454345703,
-                "r": 401.56927490234375,
-                "b": 477.7115173339844
-              }
-            },
-            {
-              "row": 33,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 477.2034454345703,
-                "r": 489.7892761230469,
-                "b": 477.7115173339844
-              }
-            },
-            {
-              "row": 33,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 477.2034454345703,
-                "r": 623.6193237304688,
-                "b": 477.7115173339844
-              }
-            },
-            {
-              "row": 33,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 477.2034454345703,
-                "r": 714.3392944335938,
-                "b": 477.7115173339844
-              }
-            },
-            {
-              "row": 34,
-              "col": 0,
-              "text": "Tunis Office Prod Replacement  nis Office Prod Replacement old Pickups",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.1214370727539,
-                "t": 483.6061553955078,
-                "r": 151.08615112304688,
-                "b": 489.3746795654297
-              }
-            },
-            {
-              "row": 34,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 486.44344329833984,
-                "r": 315.8892822265625,
-                "b": 486.95152282714844
-              }
-            },
-            {
-              "row": 34,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 486.44344329833984,
-                "r": 401.56927490234375,
-                "b": 486.95152282714844
-              }
-            },
-            {
-              "row": 34,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 486.44344329833984,
-                "r": 489.7892761230469,
-                "b": 486.95152282714844
-              }
-            },
-            {
-              "row": 34,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 486.44344329833984,
-                "r": 623.6193237304688,
-                "b": 486.95152282714844
-              }
-            },
-            {
-              "row": 34,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 486.44344329833984,
-                "r": 714.3392944335938,
-                "b": 486.95152282714844
-              }
-            },
-            {
-              "row": 35,
-              "col": 0,
-              "text": "General & Administration",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 86.68476104736328,
-                "t": 501.10791778564453,
-                "r": 157.85316467285156,
-                "b": 505.51539611816406
-              }
-            },
-            {
-              "row": 35,
-              "col": 1,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 307.547607421875,
-                "t": 500.7431182861328,
-                "r": 325.0167236328125,
-                "b": 507.26055908203125
-              }
-            },
-            {
-              "row": 35,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 398.7485656738281,
-                "t": 503.6968002319336,
-                "r": 400.86895751953125,
-                "b": 504.4482421875
-              }
-            },
-            {
-              "row": 35,
-              "col": 3,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 481.4476013183594,
-                "t": 500.7431182861328,
-                "r": 498.9167175292969,
-                "b": 507.26055908203125
-              }
-            },
-            {
-              "row": 35,
-              "col": 4,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 615.277587890625,
-                "t": 500.7431182861328,
-                "r": 632.7467041015625,
-                "b": 507.26055908203125
-              }
-            },
-            {
-              "row": 35,
-              "col": 5,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 705.9976196289062,
-                "t": 500.7431182861328,
-                "r": 723.4667358398438,
-                "b": 507.26055908203125
-              }
-            },
-            {
-              "row": 36,
-              "col": 0,
-              "text": "Staff Prod Carry  ff Prod Carry Over",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.23760223388672,
-                "t": 510.23028564453125,
-                "r": 115.08216857910156,
-                "b": 515.9034042358398
-              }
-            },
-            {
-              "row": 36,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 512.9594421386719,
-                "r": 315.8892822265625,
-                "b": 513.4675216674805
-              }
-            },
-            {
-              "row": 36,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 512.9594421386719,
-                "r": 401.56927490234375,
-                "b": 513.4675216674805
-              }
-            },
-            {
-              "row": 36,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 512.9594421386719,
-                "r": 489.7892761230469,
-                "b": 513.4675216674805
-              }
-            },
-            {
-              "row": 36,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 512.9594421386719,
-                "r": 623.6193237304688,
-                "b": 513.4675216674805
-              }
-            },
-            {
-              "row": 36,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 512.9594421386719,
-                "r": 714.3392944335938,
-                "b": 513.4675216674805
-              }
-            },
-            {
-              "row": 37,
-              "col": 0,
-              "text": "Staff Prod Admin  ff Prod Admin staff",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.23760223388672,
-                "t": 519.3621597290039,
-                "r": 117.4671630859375,
-                "b": 524.9140853881836
-              }
-            },
-            {
-              "row": 37,
-              "col": 1,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 308.8553771972656,
-                "t": 519.1857604980469,
-                "r": 325.1208801269531,
-                "b": 525.4984817504883
-              }
-            },
-            {
-              "row": 37,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 522.1994400024414,
-                "r": 401.56927490234375,
-                "b": 522.70751953125
-              }
-            },
-            {
-              "row": 37,
-              "col": 3,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 482.75537109375,
-                "t": 519.1857604980469,
-                "r": 499.0208740234375,
-                "b": 525.4984817504883
-              }
-            },
-            {
-              "row": 37,
-              "col": 4,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 616.5853271484375,
-                "t": 519.1857604980469,
-                "r": 632.8508911132812,
-                "b": 525.4984817504883
-              }
-            },
-            {
-              "row": 37,
-              "col": 5,
-              "text": "(0.00)",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 707.3053588867188,
-                "t": 519.1857604980469,
-                "r": 723.5709228515625,
-                "b": 525.4984817504883
-              }
-            },
-            {
-              "row": 38,
-              "col": 0,
-              "text": "Tunis Office Prod Tunis Office  is Office Prod Tunis Office Lac",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": true,
-              "bbox": {
-                "l": 78.1214370727539,
-                "t": 528.6021575927734,
-                "r": 129.78012084960938,
-                "b": 534.1540832519531
-              }
-            },
-            {
-              "row": 38,
-              "col": 1,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 314.1353759765625,
-                "t": 531.4394378662109,
-                "r": 315.8892822265625,
-                "b": 531.9475173950195
-              }
-            },
-            {
-              "row": 38,
-              "col": 2,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 399.81536865234375,
-                "t": 531.4394378662109,
-                "r": 401.56927490234375,
-                "b": 531.9475173950195
-              }
-            },
-            {
-              "row": 38,
-              "col": 3,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 488.0353698730469,
-                "t": 531.4394378662109,
-                "r": 489.7892761230469,
-                "b": 531.9475173950195
-              }
-            },
-            {
-              "row": 38,
-              "col": 4,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 621.8653564453125,
-                "t": 531.4394378662109,
-                "r": 623.6193237304688,
-                "b": 531.9475173950195
-              }
-            },
-            {
-              "row": 38,
-              "col": 5,
-              "text": "-",
-              "row_span": 1,
-              "col_span": 1,
-              "column_header": false,
-              "row_header": false,
-              "bbox": {
-                "l": 712.5853271484375,
-                "t": 531.4394378662109,
-                "r": 714.3392944335938,
-                "b": 531.9475173950195
+                "l": 890.85791015625,
+                "t": 139.453125,
+                "r": 1001.5302734375,
+                "b": 164.609375
               }
             },
             {
@@ -3570,20 +193,950 @@
               "column_header": true,
               "row_header": false,
               "bbox": {
-                "l": 143.9686279296875,
-                "t": 131.4454345703125,
-                "r": 180.2052764892578,
-                "b": 135.09918212890625
+                "l": 189.56754557291666,
+                "t": 147.65625,
+                "r": 243.26009114583334,
+                "b": 156.953125
+              }
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "text": "Item Description",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 182.9929402669271,
+                "t": 177.734375,
+                "r": 260.79233805338544,
+                "b": 190.859375
+              }
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "text": "Wells",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 202.34375,
+                "r": 133.13558959960938,
+                "b": 213.828125
+              }
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "text": "Farah 2 Stimulation",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 214.375,
+                "r": 182.9929402669271,
+                "b": 226.40625
+              }
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "text": "Shaheen 2 drilling",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.3850809733073,
+                "t": 227.5,
+                "r": 182.445068359375,
+                "b": 241.71875
+              }
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "text": "WAHA 3 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 241.71875,
+                "r": 233.9460652669271,
+                "b": 253.75
+              }
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "text": "FARAH 2 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 254.296875,
+                "r": 236.68548583984375,
+                "b": 266.875
+              }
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "text": "EL BADR 6 Drilling & Completion",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 267.421875,
+                "r": 244.3558553059896,
+                "b": 279.453125
+              }
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "text": "Waha -1 Acid Stinmulation Job",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 281.09375,
+                "r": 220.796875,
+                "b": 292.03125
+              }
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "text": "Facilities",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 307.34375,
+                "r": 145.18901570638022,
+                "b": 316.640625
+              }
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "text": "(148,271.43)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 391.1885172526042,
+                "t": 305.703125,
+                "r": 447.0725911458333,
+                "b": 318.28125
+              }
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "text": "(148,271.43)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 635.5443522135416,
+                "t": 305.703125,
+                "r": 691.976318359375,
+                "b": 318.28125
+              }
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "text": "(74,135.72)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 828.9471028645834,
+                "t": 305.703125,
+                "r": 880.9960123697916,
+                "b": 318.828125
+              }
+            },
+            {
+              "row": 9,
+              "col": 5,
+              "text": "(74,135.72)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 957.1516927083334,
+                "t": 306.25,
+                "r": 1007.5569661458334,
+                "b": 317.734375
+              }
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "text": "CHEROUQ Concession-WAHA PROD F",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 320.46875,
+                "r": 260.2444661458333,
+                "b": 329.765625
+              }
+            },
+            {
+              "row": 11,
+              "col": 0,
+              "text": "ESDV Valves location as per firefighting rating (IGRR)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 333.59375,
+                "r": 310.6496988932292,
+                "b": 344.53125
+              }
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "text": "(31,149.52)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 399.9546305338542,
+                "t": 332.5,
+                "r": 447.0725911458333,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 3,
+              "text": "(31,149.52)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 644.8583577473959,
+                "t": 332.5,
+                "r": 691.976318359375,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 4,
+              "text": "(15,574.76)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 832.7823079427084,
+                "t": 332.5,
+                "r": 879.9002278645834,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 11,
+              "col": 5,
+              "text": "(15,574.76)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 960.9868977864584,
+                "t": 332.5,
+                "r": 1008.1048177083334,
+                "b": 343.984375
+              }
+            },
+            {
+              "row": 12,
+              "col": 0,
+              "text": "Camp upgrade 23",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 346.71875,
+                "r": 175.32259114583334,
+                "b": 357.109375
+              }
+            },
+            {
+              "row": 13,
+              "col": 0,
+              "text": "Salt water well disposal FCLT",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 358.75,
+                "r": 220.796875,
+                "b": 371.328125
+              }
+            },
+            {
+              "row": 14,
+              "col": 0,
+              "text": "Hook up CQ Dev W 13 FARAH2",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 372.421875,
+                "r": 231.7545369466146,
+                "b": 383.359375
+              }
+            },
+            {
+              "row": 15,
+              "col": 0,
+              "text": "Hook up CQ Dev W 13 EL BADR6",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 385.546875,
+                "r": 239.9727783203125,
+                "b": 396.484375
+              }
+            },
+            {
+              "row": 16,
+              "col": 0,
+              "text": "CHEROUQ Gas Valorisation ( FGR",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 399.21875,
+                "r": 241.06854248046875,
+                "b": 408.515625
+              }
+            },
+            {
+              "row": 17,
+              "col": 0,
+              "text": "WAZE Execute Phase",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 411.25,
+                "r": 191.2112019856771,
+                "b": 422.1875
+              }
+            },
+            {
+              "row": 18,
+              "col": 0,
+              "text": "CHEROUQ Upgrade",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 423.828125,
+                "r": 187.37601725260416,
+                "b": 436.953125
+              }
+            },
+            {
+              "row": 19,
+              "col": 0,
+              "text": "South Tunisia Oil Development",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 437.5,
+                "r": 225.72782389322916,
+                "b": 448.4375
+              }
+            },
+            {
+              "row": 20,
+              "col": 0,
+              "text": "CHEROUQ Temporary Facilities",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 450.078125,
+                "r": 231.2066650390625,
+                "b": 462.65625
+              }
+            },
+            {
+              "row": 21,
+              "col": 0,
+              "text": "Repair Fire Fighting System (Safety)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 463.203125,
+                "r": 242.71219889322916,
+                "b": 475.78125
+              }
+            },
+            {
+              "row": 22,
+              "col": 0,
+              "text": "Inegrate Telemetry in PI",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 476.328125,
+                "r": 199.9773152669271,
+                "b": 487.8125
+              }
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "text": "Process Safety",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 487.8125,
+                "r": 163.26915486653647,
+                "b": 501.484375
+              }
+            },
+            {
+              "row": 24,
+              "col": 0,
+              "text": "Waha CPF LP&HP Flare Tips Replacement",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 501.484375,
+                "r": 269.0105794270833,
+                "b": 513.515625
+              }
+            },
+            {
+              "row": 25,
+              "col": 0,
+              "text": "Renew DCS System",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 515.703125,
+                "r": 184.08870442708334,
+                "b": 526.640625
+              }
+            },
+            {
+              "row": 26,
+              "col": 0,
+              "text": "WAHA corroded pipes replacement",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 527.1875,
+                "r": 241.6164347330729,
+                "b": 540.3125
+              }
+            },
+            {
+              "row": 27,
+              "col": 0,
+              "text": "Waha CPF TA",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 541.40625,
+                "r": 164.91280110677084,
+                "b": 552.34375
+              }
+            },
+            {
+              "row": 27,
+              "col": 1,
+              "text": "20,132.69",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 402.6940511067708,
+                "t": 540.3125,
+                "r": 444.3331705729167,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 3,
+              "text": "20,132.69",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 647.5977783203125,
+                "t": 540.3125,
+                "r": 689.2368977864584,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 4,
+              "text": "10,066.35",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 836.069580078125,
+                "t": 540.859375,
+                "r": 877.7086588541666,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 27,
+              "col": 5,
+              "text": "10,066.35",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 964.274169921875,
+                "t": 540.3125,
+                "r": 1005.365478515625,
+                "b": 551.796875
+              }
+            },
+            {
+              "row": 28,
+              "col": 0,
+              "text": "Overhaul Rotating Equipment",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 553.4375,
+                "r": 219.70111083984375,
+                "b": 566.5625
+              }
+            },
+            {
+              "row": 28,
+              "col": 1,
+              "text": "(137,254.60)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 395.023681640625,
+                "t": 553.4375,
+                "r": 447.0725911458333,
+                "b": 564.921875
+              }
+            },
+            {
+              "row": 28,
+              "col": 3,
+              "text": "(137,254.60)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 638.8316650390625,
+                "t": 551.796875,
+                "r": 692.524169921875,
+                "b": 566.015625
+              }
+            },
+            {
+              "row": 28,
+              "col": 4,
+              "text": "(68,627.30)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 833.3301595052084,
+                "t": 553.984375,
+                "r": 879.9002278645834,
+                "b": 565.46875
+              }
+            },
+            {
+              "row": 28,
+              "col": 5,
+              "text": "(68,627.30)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 960.9868977864584,
+                "t": 553.984375,
+                "r": 1008.1048177083334,
+                "b": 564.921875
+              }
+            },
+            {
+              "row": 29,
+              "col": 0,
+              "text": "Lightning Protection System for WAHA & AGP Fields",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 567.65625,
+                "r": 309.55393473307294,
+                "b": 578.59375
+              }
+            },
+            {
+              "row": 30,
+              "col": 0,
+              "text": "Other CAPEX",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.02872721354167,
+                "t": 591.171875,
+                "r": 167.10433959960938,
+                "b": 602.109375
+              }
+            },
+            {
+              "row": 31,
+              "col": 0,
+              "text": "CHEROUQ Temporary Facilities I",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 603.75,
+                "r": 236.68548583984375,
+                "b": 615.78125
+              }
+            },
+            {
+              "row": 32,
+              "col": 0,
+              "text": "2008/07 JENEIN NORD 3D SEISMIC",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 617.96875,
+                "r": 249.83467610677084,
+                "b": 627.265625
+              }
+            },
+            {
+              "row": 33,
+              "col": 0,
+              "text": "Camp&Kitchen refurbishment",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 628.90625,
+                "r": 221.34476725260416,
+                "b": 642.578125
+              }
+            },
+            {
+              "row": 34,
+              "col": 0,
+              "text": "Replacement old Pickups",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 642.03125,
+                "r": 203.2646280924479,
+                "b": 655.703125
+              }
+            },
+            {
+              "row": 35,
+              "col": 0,
+              "text": "General & Administration",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 109.57661946614583,
+                "t": 668.28125,
+                "r": 212.0307413736979,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 1,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 419.6784261067708,
+                "t": 667.1875,
+                "r": 447.0725911458333,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 3,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 665.1300455729166,
+                "t": 667.1875,
+                "r": 691.976318359375,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 4,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 853.053955078125,
+                "t": 667.1875,
+                "r": 880.4480794270834,
+                "b": 679.21875
+              }
+            },
+            {
+              "row": 35,
+              "col": 5,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 980.162841796875,
+                "t": 666.640625,
+                "r": 1008.6527506510416,
+                "b": 680.3125
+              }
+            },
+            {
+              "row": 36,
+              "col": 0,
+              "text": "Carry Over",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 681.40625,
+                "r": 151.76361083984375,
+                "b": 692.890625
+              }
+            },
+            {
+              "row": 37,
+              "col": 0,
+              "text": "Admin staff",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 108.48084513346355,
+                "t": 693.984375,
+                "r": 154.5030314127604,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 1,
+              "text": "(00'0)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 421.8699544270833,
+                "t": 693.4375,
+                "r": 447.6204833984375,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 3,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 666.225830078125,
+                "t": 693.4375,
+                "r": 692.524169921875,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 4,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 855.2454427083334,
+                "t": 693.4375,
+                "r": 880.4480794270834,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 37,
+              "col": 5,
+              "text": "(0.00)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 982.9022623697916,
+                "t": 693.4375,
+                "r": 1008.6527506510416,
+                "b": 705.46875
+              }
+            },
+            {
+              "row": 38,
+              "col": 0,
+              "text": "Tunis Office Lac",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 107.93296305338542,
+                "t": 706.015625,
+                "r": 172.58317057291666,
+                "b": 718.59375
               }
             }
           ],
           "matrix": [
             [
               "DESCRIPTION",
-              "Year To Date Expenditure  As of Current Month",
-              "Year To Date Expenditure  As of Previous Month",
-              "Current Month Expenditure  100%",
-              "Current Month Expenditure  OMV (Tunesien) Production Share @ 50%",
+              "Year To Date Expenditure As of Current Month",
+              "Year To Date Expenditure As of Previous Month",
+              "Current Month Expenditure 100%",
+              "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
               "Current Month Expenditure ETAP Share @ 50%"
             ],
             [
@@ -3596,208 +1149,208 @@
             ],
             [
               "Wells",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Farah 2 Stimulation",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Shaheen #2 drilling",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Shaheen 2 drilling",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "WAHA #3 Drilling & Completion",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "WAHA 3 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "FARAH #2 Drilling & Completion",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "FARAH 2 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "EL BADR #6 Drilling & Completion",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "EL BADR 6 Drilling & Completion",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Waha -1 Acid Stimulation Job",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Waha -1 Acid Stinmulation Job",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Facilities",
               "(148,271.43)",
-              "-",
+              null,
               "(148,271.43)",
               "(74,135.72)",
               "(74,135.72)"
             ],
             [
               "CHEROUQ Concession-WAHA PROD F",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "ESDV Valves location as per firefighting rating (IGRR)",
               "(31,149.52)",
-              "-",
+              null,
               "(31,149.52)",
               "(15,574.76)",
               "(15,574.76)"
             ],
             [
               "Camp upgrade 23",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Salt water well disposal FCLT",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Hook up CQ Dev W 13 FARAH2",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Hook up CQ Dev W 13 EL BADR6",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "CHEROUQ Gas Valorisation ( FGR",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "WAZE Execute Phase",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "CHEROUQ Upgrade",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "South Tunisia Oil Development",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "CHEROUQ Temporary Facilities",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Repair Fire Fighting System (Safety)",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Inegrate Telemetry in PI",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Process Safety",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Waha CPF LP&HP Flare Tips Replacement",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Renew DCS System",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "WAHA corroded pipes replacement",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Waha CPF TA",
               "20,132.69",
-              "-",
+              null,
               "20,132.69",
               "10,066.35",
               "10,066.35"
@@ -3805,125 +1358,125 @@
             [
               "Overhaul Rotating Equipment",
               "(137,254.60)",
-              "-",
+              null,
               "(137,254.60)",
               "(68,627.30)",
               "(68,627.30)"
             ],
             [
               "Lightning Protection System for WAHA & AGP Fields",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "Other CAPEX",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Tunis Office Prod CHEROUQ  is Office Prod CHEROUQ Temporary Facilities I",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "CHEROUQ Temporary Facilities I",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Tunis Office Prod 2008/07 JEN nis Office Prod 2008/07 JENEIN NORD 3D SEISMIC",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "2008/07 JENEIN NORD 3D SEISMIC",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Tunis Office Prod Camp&Kitch is Office Prod Camp&Kitchen refurbishment",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Camp&Kitchen refurbishment",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Tunis Office Prod Replacement  nis Office Prod Replacement old Pickups",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Replacement old Pickups",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
               "General & Administration",
               "(0.00)",
-              "-",
+              null,
               "(0.00)",
               "(0.00)",
               "(0.00)"
             ],
             [
-              "Staff Prod Carry  ff Prod Carry Over",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Carry Over",
+              null,
+              null,
+              null,
+              null,
+              null
             ],
             [
-              "Staff Prod Admin  ff Prod Admin staff",
-              "(0.00)",
-              "-",
+              "Admin staff",
+              "(00'0)",
+              null,
               "(0.00)",
               "(0.00)",
               "(0.00)"
             ],
             [
-              "Tunis Office Prod Tunis Office  is Office Prod Tunis Office Lac",
-              "-",
-              "-",
-              "-",
-              "-",
-              "-"
+              "Tunis Office Lac",
+              null,
+              null,
+              null,
+              null,
+              null
             ]
           ]
         }
       ],
-      "raw_text": "[EN-TETE] 4 of 13\n[EN-TETE] Docusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221\n[INFO] OMV (Tunesien) Production GmbH\n[INFO] JOINT INTEREST BILLING DETAIL\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Concession\n[INFO] CHEROUQ\n[INFO] Development\nYear To Date Expenditure  As of Current Month\nYear To Date Expenditure  As of Previous Month\nCurrent Month Expenditure  100%\nCurrent Month Expenditure  OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nItem Description\nWells\n-\n-\n-\n-\n-\nFarah 2 Stimulation\n-\n-\n-\n-\n-\nShaheen #2 drilling\n-\n-\n-\n-\n-\nWAHA #3 Drilling & Completion\n-\n-\n-\n-\n-\nFARAH #2 Drilling & Completion\n-\n-\n-\n-\n-\nEL BADR #6 Drilling & Completion\n-\n-\n-\n-\n-\nWaha -1 Acid Stimulation Job\n-\n-\n-\n-\n-\nFacilities\n(148,271.43)\n-\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\n-\n-\n-\n-\n-\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n-\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\n-\n-\n-\n-\n-\nSalt water well disposal FCLT\n-\n-\n-\n-\n-\nHook up CQ Dev W 13 FARAH2\n-\n-\n-\n-\n-\nHook up CQ Dev W 13 EL BADR6\n-\n-\n-\n-\n-\nCHEROUQ Gas Valorisation ( FGR\n-\n-\n-\n-\n-\nWAZE Execute Phase\n-\n-\n-\n-\n-\nCHEROUQ Upgrade\n-\n-\n-\n-\n-\nSouth Tunisia Oil Development\n-\n-\n-\n-\n-\nCHEROUQ Temporary Facilities\n-\n-\n-\n-\n-\nRepair Fire Fighting System (Safety)\n-\n-\n-\n-\n-\nInegrate Telemetry in PI\n-\n-\n-\n-\n-\nProcess Safety\n-\n-\n-\n-\n-\nWaha CPF LP&HP Flare Tips Replacement\n-\n-\n-\n-\n-\nRenew DCS System\n-\n-\n-\n-\n-\nWAHA corroded pipes replacement\n-\n-\n-\n-\n-\nWaha CPF TA\n20,132.69\n-\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n-\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\n-\n-\n-\n-\n-\nOther CAPEX\n-\n-\n-\n-\n-\nTunis Office Prod CHEROUQ  is Office Prod CHEROUQ Temporary Facilities I\n-\n-\n-\n-\n-\nTunis Office Prod 2008/07 JEN nis Office Prod 2008/07 JENEIN NORD 3D SEISMIC\n-\n-\n-\n-\n-\nTunis Office Prod Camp&Kitch is Office Prod Camp&Kitchen refurbishment\n-\n-\n-\n-\n-\nTunis Office Prod Replacement  nis Office Prod Replacement old Pickups\n-\n-\n-\n-\n-\nGeneral & Administration\n(0.00)\n-\n(0.00)\n(0.00)\n(0.00)\nStaff Prod Carry  ff Prod Carry Over\n-\n-\n-\n-\n-\nStaff Prod Admin  ff Prod Admin staff\n(0.00)\n-\n(0.00)\n(0.00)\n(0.00)\nTunis Office Prod Tunis Office  is Office Prod Tunis Office Lac\n-\n-\n-\n-\n-\nDESCRIPTION\n4 of 13\nUSD\nU.S. Dollars Source\n101\n103\n201\n299\n200\nDocusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221"
+      "raw_text": "[EN-TETE] 4 of 13\n[INFO] OMV(Tunesien)ProductionGmbH\n[INFO] Concession\n[INFO] JOINTINTERESTBILLINGDETAIL\n[INFO] CHEROUQ\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Development\nYear To Date Expenditure As of Current Month\nYear To Date Expenditure As of Previous Month\nCurrent Month Expenditure 100%\nCurrent Month Expenditure OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nDESCRIPTION\nItem Description\nWells\nFarah 2 Stimulation\nShaheen 2 drilling\nWAHA 3 Drilling & Completion\nFARAH 2 Drilling & Completion\nEL BADR 6 Drilling & Completion\nWaha -1 Acid Stinmulation Job\nFacilities\n(148,271.43)\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAH2\nHook up CQ Dev W 13 EL BADR6\nCHEROUQ Gas Valorisation ( FGR\nWAZE Execute Phase\nCHEROUQ Upgrade\nSouth Tunisia Oil Development\nCHEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&HP Flare Tips Replacement\nRenew DCS System\nWAHA corroded pipes replacement\nWaha CPF TA\n20,132.69\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\nOther CAPEX\nCHEROUQ Temporary Facilities I\n2008/07 JENEIN NORD 3D SEISMIC\nCamp&Kitchen refurbishment\nReplacement old Pickups\nGeneral & Administration\n(0.00)\n(0.00)\n(0.00)\n(0.00)\nCarry Over\nAdmin staff\n(00'0)\n(0.00)\n(0.00)\n(0.00)\nTunis Office Lac\n4 of 13\nU.S. Dollars Source"
     }
   ],
-  "all_text": "--- Page 1 ---\n[EN-TETE] 4 of 13\n[EN-TETE] Docusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221\n[INFO] OMV (Tunesien) Production GmbH\n[INFO] JOINT INTEREST BILLING DETAIL\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Concession\n[INFO] CHEROUQ\n[INFO] Development\nYear To Date Expenditure  As of Current Month\nYear To Date Expenditure  As of Previous Month\nCurrent Month Expenditure  100%\nCurrent Month Expenditure  OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nItem Description\nWells\n-\n-\n-\n-\n-\nFarah 2 Stimulation\n-\n-\n-\n-\n-\nShaheen #2 drilling\n-\n-\n-\n-\n-\nWAHA #3 Drilling & Completion\n-\n-\n-\n-\n-\nFARAH #2 Drilling & Completion\n-\n-\n-\n-\n-\nEL BADR #6 Drilling & Completion\n-\n-\n-\n-\n-\nWaha -1 Acid Stimulation Job\n-\n-\n-\n-\n-\nFacilities\n(148,271.43)\n-\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\n-\n-\n-\n-\n-\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n-\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\n-\n-\n-\n-\n-\nSalt water well disposal FCLT\n-\n-\n-\n-\n-\nHook up CQ Dev W 13 FARAH2\n-\n-\n-\n-\n-\nHook up CQ Dev W 13 EL BADR6\n-\n-\n-\n-\n-\nCHEROUQ Gas Valorisation ( FGR\n-\n-\n-\n-\n-\nWAZE Execute Phase\n-\n-\n-\n-\n-\nCHEROUQ Upgrade\n-\n-\n-\n-\n-\nSouth Tunisia Oil Development\n-\n-\n-\n-\n-\nCHEROUQ Temporary Facilities\n-\n-\n-\n-\n-\nRepair Fire Fighting System (Safety)\n-\n-\n-\n-\n-\nInegrate Telemetry in PI\n-\n-\n-\n-\n-\nProcess Safety\n-\n-\n-\n-\n-\nWaha CPF LP&HP Flare Tips Replacement\n-\n-\n-\n-\n-\nRenew DCS System\n-\n-\n-\n-\n-\nWAHA corroded pipes replacement\n-\n-\n-\n-\n-\nWaha CPF TA\n20,132.69\n-\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n-\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\n-\n-\n-\n-\n-\nOther CAPEX\n-\n-\n-\n-\n-\nTunis Office Prod CHEROUQ  is Office Prod CHEROUQ Temporary Facilities I\n-\n-\n-\n-\n-\nTunis Office Prod 2008/07 JEN nis Office Prod 2008/07 JENEIN NORD 3D SEISMIC\n-\n-\n-\n-\n-\nTunis Office Prod Camp&Kitch is Office Prod Camp&Kitchen refurbishment\n-\n-\n-\n-\n-\nTunis Office Prod Replacement  nis Office Prod Replacement old Pickups\n-\n-\n-\n-\n-\nGeneral & Administration\n(0.00)\n-\n(0.00)\n(0.00)\n(0.00)\nStaff Prod Carry  ff Prod Carry Over\n-\n-\n-\n-\n-\nStaff Prod Admin  ff Prod Admin staff\n(0.00)\n-\n(0.00)\n(0.00)\n(0.00)\nTunis Office Prod Tunis Office  is Office Prod Tunis Office Lac\n-\n-\n-\n-\n-\nDESCRIPTION\n4 of 13\nUSD\nU.S. Dollars Source\n101\n103\n201\n299\n200\nDocusign Envelope ID: 8C1205E1-1427-4485-AECB-E420FBAF1221",
+  "all_text": "--- Page 1 ---\n[EN-TETE] 4 of 13\n[INFO] OMV(Tunesien)ProductionGmbH\n[INFO] Concession\n[INFO] JOINTINTERESTBILLINGDETAIL\n[INFO] CHEROUQ\n[INFO] MONTH ENDED: 31 January 2025\n[INFO] Development\nYear To Date Expenditure As of Current Month\nYear To Date Expenditure As of Previous Month\nCurrent Month Expenditure 100%\nCurrent Month Expenditure OMV (Tunesien) Production Share @ 50%\nCurrent Month Expenditure ETAP Share @ 50%\nDESCRIPTION\nItem Description\nWells\nFarah 2 Stimulation\nShaheen 2 drilling\nWAHA 3 Drilling & Completion\nFARAH 2 Drilling & Completion\nEL BADR 6 Drilling & Completion\nWaha -1 Acid Stinmulation Job\nFacilities\n(148,271.43)\n(148,271.43)\n(74,135.72)\n(74,135.72)\nCHEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\n(31,149.52)\n(31,149.52)\n(15,574.76)\n(15,574.76)\nCamp upgrade 23\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAH2\nHook up CQ Dev W 13 EL BADR6\nCHEROUQ Gas Valorisation ( FGR\nWAZE Execute Phase\nCHEROUQ Upgrade\nSouth Tunisia Oil Development\nCHEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&HP Flare Tips Replacement\nRenew DCS System\nWAHA corroded pipes replacement\nWaha CPF TA\n20,132.69\n20,132.69\n10,066.35\n10,066.35\nOverhaul Rotating Equipment\n(137,254.60)\n(137,254.60)\n(68,627.30)\n(68,627.30)\nLightning Protection System for WAHA & AGP Fields\nOther CAPEX\nCHEROUQ Temporary Facilities I\n2008/07 JENEIN NORD 3D SEISMIC\nCamp&Kitchen refurbishment\nReplacement old Pickups\nGeneral & Administration\n(0.00)\n(0.00)\n(0.00)\n(0.00)\nCarry Over\nAdmin staff\n(00'0)\n(0.00)\n(0.00)\n(0.00)\nTunis Office Lac\n4 of 13\nU.S. Dollars Source",
   "totals": {
-    "total_usd": "13",
+    "total_usd": null,
     "total_omv_share": null,
     "total_etap_share": null
   },
   "timings": {
     "page_parse": {
       "times": [
-        0.04700000000048021
+        0.0
       ],
       "count": 1
     },
     "ocr": {
       "times": [
-        0.10999999999967258
+        4.375
       ],
       "count": 1
     },
     "layout": {
       "times": [
-        0.8119999999998981
+        0.8130000000001019
       ],
       "count": 1
     },
     "table_structure": {
       "times": [
-        9.82800000000043
+        9.640999999999622
       ],
       "count": 1
     },
@@ -3935,9 +1488,9 @@
     }
   },
   "invoice_info": {
-    "company": "OMV (Tunesien) Production GmbH",
-    "concession": "CHEROUQ",
-    "document_type": "JOINT INTEREST BILLING DETAIL",
+    "company": "OMV(Tunesien)ProductionGmbH",
+    "concession": "JOINTINTERESTBILLINGDETAIL",
+    "document_type": null,
     "month_ended": "31 January 2025",
     "docusign_id": null
   }

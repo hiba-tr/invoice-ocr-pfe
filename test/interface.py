@@ -1,318 +1,355 @@
-#!/usr/bin/env python3
-"""
-Interface utilisateur pour DocCore
-Gère les fichiers uniques et les dossiers avec conversion parallèle automatique
-"""
-
-import sys
-import time
-import logging
-import argparse
-from pathlib import Path
-from typing import List, Union
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
-from datetime import datetime
-
-sys.path.insert(0, str(Path(__file__).parent))
-
-from document_converter import DocumentConverter
-from datamodel.base_models import InputFormat
-from datamodel.settings import settings
-
-# Configuration des logs
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(message)s',
-    datefmt='%H:%M:%S'
-)
-_log = logging.getLogger(__name__)
+def extract_cells_from_cluster(cluster) -> List[Dict[str, Any]]:
+    """Extrait toutes les cellules d'un cluster avec leurs métadonnées"""
+    cells = []
+    if hasattr(cluster, 'cells') and cluster.cells:
+        for cell in cluster.cells:
+            if hasattr(cell, 'text') and cell.text and cell.text.strip():
+                cell_data = {
+                    "text": cell.text.strip(),
+                    "from_ocr": getattr(cell, 'from_ocr', False),
+                    "confidence": getattr(cell, 'confidence', 1.0)
+                }
+                if hasattr(cell, 'rect') and cell.rect:
+                    bbox = cell.rect.to_bounding_box()
+                    cell_data["bbox"] = {
+                        "l": bbox.l,
+                        "t": bbox.t,
+                        "r": bbox.r,
+                        "b": bbox.b
+                    }
+                cells.append(cell_data)
+    return cells
 
 
-@dataclass
-class ConversionResult:
-    """Résultat simplifié pour l'interface"""
-    file: str
-    status: str
-    pages: int
-    error: str = None
-    time: float = 0
-    output_file: str = None
-
-
-class DocCoreInterface:
-    """Interface utilisateur pour DocCore"""
+def extract_invoice_complete(
+    input_path: str,
+    output_path: Optional[str] = None,
+    max_pages: int = 100,
+    page_range: tuple = (1, 999999)
+) -> Dict[str, Any]:
+    """
+    Extraction COMPLÈTE de la facture avec toutes les informations
+    """
     
-    def __init__(self, max_workers: int = 4):
-        """
-        Initialise l'interface
-        
-        Args:
-            max_workers: Nombre maximum de conversions en parallèle
-        """
-        self.converter = DocumentConverter(
-            allowed_formats=[InputFormat.PDF, InputFormat.IMAGE]
-        )
-        self.max_workers = max_workers
-        
-        # Configurer les paramètres de parallélisation
-        settings.perf.doc_batch_size = max_workers
-        settings.perf.doc_batch_concurrency = max_workers
-        
-        _log.info(f"Interface initialisée avec {max_workers} workers parallèles")
+    input_file = Path(input_path)
     
-    def process_file(self, file_path: Path, output_dir: Path = None) -> ConversionResult:
-        """
-        Traite un fichier unique
-        
-        Args:
-            file_path: Chemin du fichier
-            output_dir: Dossier de sortie (optionnel)
-        
-        Returns:
-            ConversionResult: Résultat de la conversion
-        """
-        start_time = time.time()
-        output_file = None
-        
-        try:
-            # Générer le nom du fichier de sortie
-            if output_dir:
-                output_dir.mkdir(parents=True, exist_ok=True)
-                output_file = output_dir / f"{file_path.stem}_result.json"
-            else:
-                output_file = file_path.parent / f"{file_path.stem}_result.json"
-            
-            # Convertir
-            result = self.converter.convert(
-                source=file_path,
-                raises_on_error=False
-            )
-            
-            elapsed = time.time() - start_time
-            
-            return ConversionResult(
-                file=str(file_path),
-                status=result.status.value,
-                pages=len(result.pages) if result.pages else 0,
-                time=elapsed,
-                output_file=str(output_file)
-            )
-            
-        except Exception as e:
-            elapsed = time.time() - start_time
-            return ConversionResult(
-                file=str(file_path),
-                status="FAILURE",
-                pages=0,
-                error=str(e),
-                time=elapsed
-            )
+    if not input_file.exists():
+        raise FileNotFoundError(f"Fichier introuvable: {input_path}")
     
-    def process_folder(self, folder_path: Path, output_dir: Path = None) -> List[ConversionResult]:
-        """
-        Traite un dossier EN PARALLÈLE
-        
-        Args:
-            folder_path: Chemin du dossier
-            output_dir: Dossier de sortie (optionnel)
-        
-        Returns:
-            List[ConversionResult]: Liste des résultats
-        """
-        # Récupérer tous les fichiers supportés
-        supported_extensions = {'.pdf', '.jpg', '.jpeg', '.png', '.tiff', '.bmp'}
-        
-        files = []
-        for ext in supported_extensions:
-            files.extend(folder_path.glob(f"*{ext}"))
-            files.extend(folder_path.glob(f"*{ext.upper()}"))
-        
-        # Enlever les doublons
-        files = list(set(files))
-        
-        if not files:
-            _log.warning(f"Aucun fichier supporté trouvé dans {folder_path}")
-            return []
-        
-        _log.info(f"📁 {len(files)} fichiers trouvés dans {folder_path}")
-        _log.info(f"⚡ Conversion en parallèle avec {self.max_workers} workers...")
-        
-        # ✅ CONVERSION PARALLÈLE AUTOMATIQUE
-        results = []
-        
-        # Méthode 1: Utiliser convert_all (recommandé)
-        start_time = time.time()
-        
-        for result in self.converter.convert_all(files, raises_on_error=False):
-            elapsed = time.time() - start_time
-            
-            # Sauvegarder le résultat si output_dir est spécifié
-            output_file = None
-            if output_dir and result.status == ConversionStatus.SUCCESS:
-                output_dir.mkdir(parents=True, exist_ok=True)
-                output_file = output_dir / f"{Path(result.input.file).stem}_result.json"
-                # Sauvegarde déjà faite dans main.py, ou à faire ici
-            
-            results.append(ConversionResult(
-                file=str(result.input.file),
-                status=result.status.value,
-                pages=len(result.pages) if result.pages else 0,
-                time=elapsed,
-                output_file=str(output_file) if output_file else None
-            ))
-        
-        total_time = time.time() - start_time
-        _log.info(f"✅ Conversion terminée en {total_time:.2f}s")
-        
-        return results
+    suffix = input_file.suffix.lower()
+    if suffix in ['.pdf']:
+        input_format = InputFormat.PDF
+    elif suffix in ['.jpg', '.jpeg', '.png', '.tiff', '.tif', '.bmp', '.webp']:
+        input_format = InputFormat.IMAGE
+    else:
+        raise ValueError(f"Format non supporté: {suffix}")
     
-    def process(self, path: str, output_dir: str = None, recursive: bool = False) -> List[ConversionResult]:
-        """
-        Point d'entrée principal - détecte automatiquement si c'est un fichier ou dossier
-        
-        Args:
-            path: Chemin du fichier ou dossier
-            output_dir: Dossier de sortie (optionnel)
-            recursive: Traiter les sous-dossiers (si dossier)
-        
-        Returns:
-            List[ConversionResult]: Liste des résultats
-        """
-        input_path = Path(path)
-        output_path = Path(output_dir) if output_dir else None
-        
-        if not input_path.exists():
-            raise FileNotFoundError(f"Le chemin n'existe pas: {path}")
-        
-        # ✅ DÉTECTION AUTOMATIQUE
-        if input_path.is_file():
-            _log.info(f"📄 Traitement d'un fichier unique: {input_path.name}")
-            result = self.process_file(input_path, output_path)
-            return [result]
-        
-        elif input_path.is_dir():
-            _log.info(f"📁 Traitement d'un dossier: {input_path}")
-            
-            if recursive:
-                # Traiter tous les sous-dossiers récursivement
-                all_results = []
-                for subdir in input_path.rglob("*"):
-                    if subdir.is_dir():
-                        results = self.process_folder(subdir, output_path)
-                        all_results.extend(results)
-                return all_results
-            else:
-                return self.process_folder(input_path, output_path)
-        
-        else:
-            raise ValueError(f"Le chemin n'est ni un fichier ni un dossier: {path}")
-
-
-def print_results(results: List[ConversionResult]):
-    """Affiche les résultats de manière lisible"""
+    _log.info(f"Traitement du fichier: {input_file.name}")
     
-    if not results:
-        print("\n❌ Aucun résultat")
-        return
-    
-    print("\n" + "=" * 80)
-    print("📊 RÉSULTATS DE LA CONVERSION")
-    print("=" * 80)
-    
-    success = [r for r in results if r.status == "success"]
-    failed = [r for r in results if r.status != "success"]
-    
-    print(f"\n✅ Succès: {len(success)}")
-    print(f"❌ Échecs: {len(failed)}")
-    print(f"⏱️  Temps total: {sum(r.time for r in results):.2f}s")
-    
-    if success:
-        print("\n" + "-" * 50)
-        print("📄 FICHIERS CONVERTIS AVEC SUCCÈS:")
-        print("-" * 50)
-        for r in success[:10]:  # Afficher les 10 premiers
-            print(f"   ✓ {Path(r.file).name}")
-            print(f"     - Pages: {r.pages}")
-            print(f"     - Temps: {r.time:.2f}s")
-            if r.output_file:
-                print(f"     - Sortie: {Path(r.output_file).name}")
-    
-    if failed:
-        print("\n" + "-" * 50)
-        print("❌ FICHIERS EN ÉCHEC:")
-        print("-" * 50)
-        for r in failed[:10]:
-            print(f"   ✗ {Path(r.file).name}")
-            print(f"     - Erreur: {r.error}")
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description='DocCore - Interface utilisateur',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-EXEMPLES:
-  # Fichier unique
-  python interface.py facture.pdf -o resultats/
-  
-  # Dossier (conversion parallèle automatique)
-  python interface.py d:/factures/ -o resultats/
-  
-  # Dossier avec sous-dossiers
-  python interface.py d:/factures/ -o resultats/ -r
-  
-  # Avec plus de parallélisme
-  python interface.py d:/factures/ -o resultats/ -w 8
-        """
+    converter = DocumentConverter(
+        allowed_formats=[InputFormat.PDF, InputFormat.IMAGE]
     )
     
-    parser.add_argument('input', help='Chemin du fichier ou dossier')
-    parser.add_argument('-o', '--output', help='Dossier de sortie (optionnel)')
-    parser.add_argument('-r', '--recursive', action='store_true', 
-                        help='Traiter les sous-dossiers récursivement')
-    parser.add_argument('-w', '--workers', type=int, default=4,
-                        help='Nombre de conversions en parallèle (défaut: 4)')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='Afficher les logs détaillés')
-    
-    args = parser.parse_args()
-    
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
-    
     try:
-        # Créer l'interface
-        interface = DocCoreInterface(max_workers=args.workers)
+        result = converter.convert(
+            source=input_file,
+            raises_on_error=False,
+            max_num_pages=max_pages,
+            page_range=page_range
+        )
         
-        # Traiter (détection automatique fichier/dossier)
-        results = interface.process(args.input, args.output, args.recursive)
+        _log.info(f"Statut de conversion: {result.status.value}")
         
-        # Afficher les résultats
-        print_results(results)
-        
-        # Sauvegarder un rapport récapitulatif
-        if args.output:
-            output_path = Path(args.output)
-            output_path.mkdir(parents=True, exist_ok=True)
-            report_file = output_path / f"rapport_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+
+        # Structure complète du résultat
+        output_data = {
+            "file": str(input_file),
+            "format": input_format.value,
+            "status": result.status.value,
+            "metadata": {
+                "page_count": len(result.pages),
+                "document_hash": result.input.document_hash if result.input else None
+            },
+            "pages": [],
             
-            with open(report_file, 'w', encoding='utf-8') as f:
-                f.write("RAPPORT DE CONVERSION DOCORE\n")
-                f.write("=" * 50 + "\n\n")
-                f.write(f"Fichiers traités: {len(results)}\n")
-                f.write(f"Succès: {len([r for r in results if r.status == 'success'])}\n")
-                f.write(f"Échecs: {len([r for r in results if r.status != 'success'])}\n\n")
+            "all_text": "",
+            "totals": {
+                "total_usd": None,
+                "total_omv_share": None,
+                "total_etap_share": None
+                }
+        }
+        
+
+        # Ajout des timings (après la création de output_data)
+        if hasattr(result, 'timings') and result.timings:
+            timings_serializable = {}
+            for k, v in result.timings.items():
+                if hasattr(v, 'times') and hasattr(v, 'count'):
+                    timings_serializable[k] = {"times": v.times, "count": v.count}
+                else:
+                    timings_serializable[k] = v
+            output_data["timings"] = timings_serializable
+
+        full_text_parts = []
+        
+        for page_idx, page in enumerate(result.pages):
+            page_data = {
+                "page_no": page.page_no,
+                "size": {
+                    "width": page.size.width if page.size else 0,
+                    "height": page.size.height if page.size else 0
+                } if page.size else None,
+                "headers": [],
+                "info_block": [],
+                "key_values": [],
+                "text_cells": [],
+                "tables": [],
+                "raw_text": ""
+            }
+            
+            page_text_parts = []
+            
+            # =========================================================
+            # 1. EXTRAIRE LES EN-TÊTES DE PAGE
+            # =========================================================
+            if hasattr(page, 'assembled') and page.assembled:
+                if hasattr(page.assembled, 'headers') and page.assembled.headers:
+                    for header in page.assembled.headers:
+                        if hasattr(header, 'text') and header.text and header.text.strip():
+                            header_text = header.text.strip()
+                            page_data["headers"].append({
+                                "text": header_text,
+                                "label": header.label.value if hasattr(header, 'label') else "page_header"
+                            })
+                            page_text_parts.append(f"[EN-TETE] {header_text}")
                 
-                for r in results:
-                    f.write(f"- {Path(r.file).name}: {r.status}\n")
+                # =========================================================
+                # 2. EXTRAIRE LE BLOC D'INFORMATIONS (key_value_region)
+                # =========================================================
+                if hasattr(page.assembled, 'body') and page.assembled.body:
+                    for element in page.assembled.body:
+                        elem_label = ""
+                        if hasattr(element, 'label'):
+                            elem_label = element.label.value if hasattr(element.label, 'value') else str(element.label)
+                        
+                        if elem_label == "key_value_region":
+                            kv_info = {
+                                "type": "key_value_region",
+                                "cells": []
+                            }
+                            
+                            # Extraire les cellules du cluster
+                            if hasattr(element, 'cluster') and element.cluster:
+                                cells = extract_cells_from_cluster(element.cluster)
+                                kv_info["cells"] = cells
+                                page_data["key_values"].append(kv_info)
+                                
+                                for cell in cells:
+                                    page_text_parts.append(f"[INFO] {cell['text']}")
+                            
+                            # Texte direct
+                            if hasattr(element, 'text') and element.text and element.text.strip():
+                                kv_info["text"] = element.text.strip()
+                                page_text_parts.append(f"[INFO] {element.text.strip()}")
             
-            print(f"\n📝 Rapport sauvegardé: {report_file}")
+            # =========================================================
+            # 3. EXTRAIRE TOUTES LES CELLULES TEXTE (parsed_page)
+            # =========================================================
+            if hasattr(page, 'parsed_page') and page.parsed_page:
+                if hasattr(page.parsed_page, 'textline_cells'):
+                    for cell in page.parsed_page.textline_cells:
+                        if cell.text and cell.text.strip():
+                            cell_data = {
+                                "text": cell.text.strip(),
+                                "from_ocr": getattr(cell, 'from_ocr', False),
+                                "confidence": getattr(cell, 'confidence', 1.0)
+                            }
+                            if hasattr(cell, 'rect') and cell.rect:
+                                bbox = cell.rect.to_bounding_box()
+                                cell_data["bbox"] = {
+                                    "l": bbox.l,
+                                    "t": bbox.t,
+                                    "r": bbox.r,
+                                    "b": bbox.b
+                                }
+                            page_data["text_cells"].append(cell_data)
+                            page_text_parts.append(cell.text.strip())
+            
+            # =========================================================
+            # 4. EXTRAIRE LES TABLEAUX AVEC TOUTES LES CELLULES
+            # =========================================================
+            if hasattr(page, 'predictions') and page.predictions:
+                if hasattr(page.predictions, 'tablestructure') and page.predictions.tablestructure:
+                    for table_id, table in page.predictions.tablestructure.table_map.items():
+                        table_data = {
+                            "table_id": table_id,
+                            "num_rows": table.num_rows,
+                            "num_cols": table.num_cols,
+                            "cells": [],
+                            "matrix": []
+                        }
+                        
+                        # Créer une matrice pour faciliter l'analyse
+                        matrix = [[None for _ in range(table.num_cols)] for _ in range(table.num_rows)]
+                        
+                        for cell in table.table_cells:
+                            row = cell.start_row_offset_idx if hasattr(cell, 'start_row_offset_idx') else 0
+                            col = cell.start_col_offset_idx if hasattr(cell, 'start_col_offset_idx') else 0
+                            
+                            cell_text = ""
+                            if hasattr(cell, 'text'):
+                                cell_text = cell.text or ""
+                            elif hasattr(cell, 'token'):
+                                cell_text = cell.token or ""
+                            
+                            cell_data = {
+                                "row": row,
+                                "col": col,
+                                "text": cell_text,
+                                "row_span": cell.row_span if hasattr(cell, 'row_span') else 1,
+                                "col_span": cell.col_span if hasattr(cell, 'col_span') else 1,
+                                "column_header": cell.column_header if hasattr(cell, 'column_header') else False,
+                                "row_header": cell.row_header if hasattr(cell, 'row_header') else False
+                            }
+                            
+                            if hasattr(cell, 'bbox') and cell.bbox:
+                                cell_data["bbox"] = {
+                                    "l": cell.bbox.l,
+                                    "t": cell.bbox.t,
+                                    "r": cell.bbox.r,
+                                    "b": cell.bbox.b
+                                }
+                            
+                            table_data["cells"].append(cell_data)
+                            
+                            # Remplir la matrice
+                            if row < table.num_rows and col < table.num_cols:
+                                matrix[row][col] = cell_text
+                            
+                            # Ajouter le texte au flux principal
+                            if cell_text and cell_text.strip():
+                                page_text_parts.append(cell_text.strip())
+                        
+                        # Construire la matrice complète
+                        table_data["matrix"] = matrix
+                        
+                        # Calculer les totaux si présents
+                        matrix_str = str(matrix).upper()
+                        if "TOTAL" in matrix_str:
+                            # Chercher les totaux dans la dernière ligne ou colonne
+                            for row_idx, row in enumerate(matrix):
+                                for col_idx, cell in enumerate(row):
+                                    if cell and "TOTAL" in str(cell).upper():
+                                        # Essayer d'extraire les montants dans la même ligne
+                                        for c_idx, val in enumerate(row):
+                                            if val and re.match(r'^[\d,\.\-\(\)]+$', str(val)):
+                                                if "OMV" in str(row).upper():
+                                                    output_data["totals"]["total_omv_share"] = val
+                                                elif "ETAP" in str(row).upper():
+                                                    output_data["totals"]["total_etap_share"] = val
+                                                elif "USD" in str(row).upper() or c_idx == len(row)-1:
+                                                    output_data["totals"]["total_usd"] = val
+                        
+                        page_data["tables"].append(table_data)
+            
+            # =========================================================
+            # 5. EXTRAIRE LES ÉLÉMENTS ASSEMBLÉS (pour les blocs de texte)
+            # =========================================================
+            if hasattr(page, 'assembled') and page.assembled:
+                if hasattr(page.assembled, 'elements') and page.assembled.elements:
+                    for element in page.assembled.elements:
+                        if hasattr(element, 'text') and element.text and element.text.strip():
+                            elem_text = element.text.strip()
+                            if not any(cell.get("text") == elem_text for cell in page_data["text_cells"]):
+                                elem_data = {
+                                    "text": elem_text,
+                                    "label": element.label.value if hasattr(element, 'label') else "unknown"
+                                }
+                                page_data["text_cells"].append(elem_data)
+                                page_text_parts.append(elem_text)
+            
+            # =========================================================
+            # 6. ASSEMBLER LE TEXTE DE LA PAGE
+            # =========================================================
+            page_data["raw_text"] = "\n".join(page_text_parts)
+            full_text_parts.append(f"--- Page {page.page_no} ---\n{page_data['raw_text']}")
+            output_data["pages"].append(page_data)
+        
+        output_data["all_text"] = "\n".join(full_text_parts)
+        
+        # =========================================================
+        # 7. ANALYSE DES TOTAUX DANS LE TEXTE GLOBAL
+        # =========================================================
+        all_text = output_data["all_text"]
+        
+        # Définir les patterns de recherche (pattern, key)
+        total_patterns: List[Tuple[str, str]] = [
+            (r'TOTAL\s+USD\s*:?\s*([\d,\.\-\(\)]+)', "total_usd"),
+            (r'Total\s+USD\s*:?\s*([\d,\.\-\(\)]+)', "total_usd"),
+            (r'Grand\s+Total\s*:?\s*([\d,\.\-\(\)]+)', "total_usd"),
+            (r'OMV\s+Share\s*:?\s*([\d,\.\-\(\)]+)', "total_omv_share"),
+            (r'ETAP\s+Share\s*:?\s*([\d,\.\-\(\)]+)', "total_etap_share"),
+        ]
+        
+        # Chercher aussi des motifs comme "xxx USD" en fin de ligne
+        usd_pattern = re.compile(r'([\d,\.]+)\s+USD', re.IGNORECASE)
+        usd_matches = usd_pattern.findall(all_text)
+        if usd_matches and not output_data["totals"]["total_usd"]:
+            # Prendre le dernier montant USD trouvé comme total probable
+            output_data["totals"]["total_usd"] = usd_matches[-1]
+        
+        for pattern, key in total_patterns:
+            match = re.search(pattern, all_text, re.IGNORECASE)
+            if match and not output_data["totals"][key]:
+                output_data["totals"][key] = match.group(1)
+        
+        # =========================================================
+        # 8. EXTRAIRE LES INFORMATIONS CLÉS DE LA FACTURE
+        # =========================================================
+        invoice_info = {
+            "company": None,
+            "concession": None,
+            "document_type": None,
+            "month_ended": None,
+            "docusign_id": None
+        }
+        
+        for page in output_data["pages"]:
+            for kv in page.get("key_values", []):
+                for cell in kv.get("cells", []):
+                    text = cell.get("text", "")
+                    if "OMV" in text:
+                        invoice_info["company"] = text
+                    elif "Concession" in text and not invoice_info["concession"]:
+                        # Chercher la concession dans les cellules suivantes
+                        idx = kv["cells"].index(cell) if cell in kv["cells"] else -1
+                        if idx >= 0 and idx + 1 < len(kv["cells"]):
+                            invoice_info["concession"] = kv["cells"][idx + 1]["text"]
+                    elif "JOINT INTEREST" in text:
+                        invoice_info["document_type"] = text
+                    elif "MONTH ENDED" in text:
+                        month_part = text.replace("MONTH ENDED:", "").strip()
+                        invoice_info["month_ended"] = month_part
+                    elif "Docusign" in text:
+                        docu_part = text.replace("Docusign Envelope ID:", "").strip()
+                        invoice_info["docusign_id"] = docu_part
+        
+        output_data["invoice_info"] = invoice_info
+        
+        # =========================================================
+        # 9. SAUVEGARDE EN JSON
+        # =========================================================
+        if output_path:
+            output_file = Path(output_path)
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, ensure_ascii=False, indent=2)
+            _log.info(f"Résultat sauvegardé dans: {output_file}")
+        
+        return output_data
         
     except Exception as e:
-        print(f"\n❌ Erreur: {e}")
-        sys.exit(1)
+        _log.error(f"Erreur lors de la conversion: {e}")
+        raise
 
-
-if __name__ == "__main__":
-    main()
