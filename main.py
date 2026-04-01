@@ -85,6 +85,7 @@ def extract_invoice_complete(
         
         _log.info(f"Statut de conversion: {result.status.value}")
         
+
         # Structure complète du résultat
         output_data = {
             "file": str(input_file),
@@ -104,6 +105,17 @@ def extract_invoice_complete(
                 }
         }
         
+
+        # Ajout des timings (après la création de output_data)
+        if hasattr(result, 'timings') and result.timings:
+            timings_serializable = {}
+            for k, v in result.timings.items():
+                if hasattr(v, 'times') and hasattr(v, 'count'):
+                    timings_serializable[k] = {"times": v.times, "count": v.count}
+                else:
+                    timings_serializable[k] = v
+            output_data["timings"] = timings_serializable
+
         full_text_parts = []
         
         for page_idx, page in enumerate(result.pages):
@@ -392,6 +404,10 @@ def main():
             output_path=output_path,
             max_pages=args.max_pages
         )
+        
+        from datamodel.accelerator_options import AcceleratorOptions
+        accel = AcceleratorOptions()
+        print(f"⚡ Accélération matérielle : {accel.device} (détecté automatiquement) | Threads CPU : {accel.num_threads}")
         
         print("\n" + "="*70)
         print("✅ EXTRACTION COMPLÈTE DE LA FACTURE")

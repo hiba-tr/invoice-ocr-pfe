@@ -109,10 +109,8 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
                 
         elif self.plugin_attr_name == "layout_engines":
             try:
-                from models.stages.layout.layout_model import LayoutModel
-                from models.stages.layout.layout_object_detection_model import LayoutObjectDetectionModel
-                
-                engines = [LayoutObjectDetectionModel, LayoutModel]
+                from models.stages.layout.layout_model import LayoutModel                
+                engines = [LayoutModel]
                 
                 try:
                     from experimental.models.table_crops_layout_model import TableCropsLayoutModel

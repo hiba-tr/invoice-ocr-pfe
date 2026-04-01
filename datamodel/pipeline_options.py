@@ -48,17 +48,6 @@ class BaseOptions(BaseModel):
 
 
 class TableFormerMode(str, Enum):
-    """Operating modes for TableFormer table structure extraction model.
-
-    Controls the trade-off between processing speed and extraction accuracy.
-    Choose based on your performance requirements and document complexity.
-
-    Attributes:
-        FAST: Fast mode prioritizes speed over precision. Suitable for simple tables or high-volume
-            processing.
-        ACCURATE: Accurate mode provides higher quality results with slower processing. Recommended for complex
-            tables and production use.
-    """
 
     FAST = "fast"
     ACCURATE = "accurate"
@@ -434,23 +423,6 @@ class OcrMacOptions(OcrOptions):
         extra="forbid",
     )
 
-
-
-
-
-
-
-
-
-
-
-
-# =============================================================================
-# PRESET REGISTRATION
-# =============================================================================
-
-
-
 # =============================================================================
 # MODULE-LEVEL DEFAULTS FOR NEW PRESET SYSTEM
 # =============================================================================
@@ -459,49 +431,12 @@ class OcrMacOptions(OcrOptions):
 
 # Define an enum for the backend options
 class PdfBackend(str, Enum):
-    """Available PDF parsing backends for document processing.
-
-    Different backends offer varying levels of text extraction quality, layout preservation,
-    and processing speed. Choose based on your document complexity and quality requirements.
-
-    Attributes:
-        PYPDFIUM2: Standard PDF parser using PyPDFium2 library. Fast and reliable for basic text extraction.
-        DLPARSE_V1: Docling Parse v1 backend with enhanced layout analysis and structure preservation.
-        DLPARSE_V2: Docling Parse v2 backend with improved table detection and complex layout handling.
-        DLPARSE_V4: Docling Parse v4 backend (latest) with advanced features and best accuracy for complex documents.
-    """
-
+ 
     PYPDFIUM2 = "pypdfium2"
     DLPARSE_V1 = "dlparse_v1"
     DLPARSE_V2 = "dlparse_v2"
     DLPARSE_V4 = "dlparse_v4"
 
-
-# Define an enum for the ocr engines
-@deprecated(
-    "Use get_ocr_factory().registered_kind to get a list of registered OCR engines."
-)
-class OcrEngine(str, Enum):
-    """Available OCR (Optical Character Recognition) engines for text extraction from images.
-
-    Each engine has different characteristics in terms of accuracy, speed, language support,
-    and platform compatibility. Choose based on your specific requirements.
-
-    Attributes:
-        AUTO: Automatically select the best available OCR engine based on platform and installed libraries.
-        EASYOCR: Deep learning-based OCR supporting 80+ languages with GPU acceleration.
-        TESSERACT_CLI: Tesseract OCR via command-line interface (requires system installation).
-        TESSERACT: Tesseract OCR via Python bindings (tesserocr library).
-        OCRMAC: Native macOS Vision framework OCR (Apple platforms only).
-        RAPIDOCR: Lightweight OCR with multiple backend options (ONNX, OpenVINO, PaddlePaddle).
-    """
-
-    AUTO = "auto"
-    EASYOCR = "easyocr"
-    TESSERACT_CLI = "tesseract_cli"
-    TESSERACT = "tesseract"
-    OCRMAC = "ocrmac"
-    RAPIDOCR = "rapidocr"
 
 
 class PipelineOptions(BaseOptions):
@@ -665,22 +600,6 @@ class PaginatedPipelineOptions(ConvertPipelineOptions):
     generate_picture_images: bool = False
     generate_table_images: bool = False
 class PdfPipelineOptions(PaginatedPipelineOptions):
-    """Configuration options for the PDF document processing pipeline.
-
-    Notes:
-        - Enabling multiple features (OCR, table structure, formulas) increases the processing time significantly.
-            Enable only necessary features for your use case.
-        - For production systems processing large document volumes, implement a timeout protection (for instance, 90-120
-            seconds via `document_timeout` parameter).
-        - OCR requires a system installation of engines (Tesseract, EasyOCR). Verify the installation before enabling
-            OCR via `do_ocr=True`.
-        - RapidOCR has known issues with read-only filesystems (e.g., Databricks). Consider Tesseract or alternative
-            backends for distributed systems.
-
-    See Also:
-        - `examples/pipeline_options_advanced.py`: Comprehensive configuration examples.
-    """
-
     do_table_structure: Annotated[
         bool,
         Field(
@@ -809,23 +728,6 @@ class PdfPipelineOptions(PaginatedPipelineOptions):
         ),
     ] = 100
 
-
-class ProcessingPipeline(str, Enum):
-    """Available document processing pipeline types for different use cases.
-
-    Each pipeline is optimized for specific document types and processing requirements.
-    Select the appropriate pipeline based on your input format and desired output.
-
-    Attributes:
-        LEGACY: Legacy pipeline for backward compatibility with older document processing workflows.
-        STANDARD: Standard pipeline for general document processing (PDF, DOCX, images, etc.) with layout analysis.
-        VLM: Vision-Language Model pipeline for advanced document understanding using multimodal AI models.
-        ASR: Automatic Speech Recognition pipeline for audio and video transcription to text.
-    """
-
-    LEGACY = "legacy"
-    STANDARD = "standard"
-    
 
 class ThreadedPdfPipelineOptions(PdfPipelineOptions):
     """Pipeline options for the threaded PDF pipeline with batching and backpressure control"""
