@@ -1,29 +1,22 @@
 {
-  "file": "C:\\Factures\\facture_png.png",
+  "file": "C:\\doc_core\\uploads\\facture.png",
   "format": "image",
   "status": "success",
   "metadata": {
     "page_count": 1,
-    "document_hash": "c2becc3b763a8d10c188c1344c6fcd56aeda6debf9554f969dbafa1d303bdee6"
+    "document_hash": "c9c588c49e88d0f7fa12048c4749d148a337069a16cf93df1bb03e8b4ee83bb2"
   },
   "document": {
-    "headers": [
-      "4 of 13"
-    ],
-    "company_info": {
-      "omv(tunesien)productiongmbh": "Concession",
-      "concession": "JOINTINTERESTBILLINGDETAIL",
-      "jointinterestbillingdetail": "CHEROUQ",
-      "month_ended": "31 January 2025"
-    },
+    "headers": [],
+    "company_info": {},
     "tables": [
       {
         "headers": [
           "DESCRIPTION",
-          "Year To Date Expenditure As of Current Month",
-          "Year To Date Expenditure As of Previous Month",
+          "YearToDate Expenditure As of Current Month",
+          "YearToDate Expenditure As of Previous Month",
           "Current Month Expenditure 100%",
-          "Current Month Expenditure OMV (Tunesien) Production Share @ 50%",
+          "Current Month Expenditure OMV (Tunesien)ProductionShare @50%",
           "Current Month Expenditure ETAP Share @ 50%"
         ],
         "data": [
@@ -52,7 +45,7 @@
             ""
           ],
           [
-            "Shaheen 2 drilling",
+            "Shaheen #2 drilling",
             "",
             "",
             "",
@@ -60,7 +53,7 @@
             ""
           ],
           [
-            "3 Drilling & Completion",
+            "#3Drilling&Completion",
             "",
             "",
             "",
@@ -68,7 +61,7 @@
             ""
           ],
           [
-            "FARAH 2 Drilling & Completion",
+            "FARAH#2 Drilling& Completion",
             "",
             "",
             "",
@@ -76,7 +69,7 @@
             ""
           ],
           [
-            "EL BADR 6 Drilling & Completion",
+            "EL BADR #6 Drilling & Completion",
             "",
             "",
             "",
@@ -84,7 +77,7 @@
             ""
           ],
           [
-            "-1 Acid Stinmulation Job",
+            "-1 Acid Stimulation Job",
             "",
             "",
             "",
@@ -100,7 +93,7 @@
             "(74,135.72)"
           ],
           [
-            "Concession-WAHA PROD F",
+            "Concession-WAHAPROD F",
             "",
             "",
             "",
@@ -140,7 +133,7 @@
             ""
           ],
           [
-            "CQ Dev W 13 EL BADR6",
+            "CQDev W 13 EL BADR6",
             "",
             "",
             "",
@@ -148,7 +141,7 @@
             ""
           ],
           [
-            "Gas Valorisation ( FGR",
+            "GasValorisation(FGR",
             "",
             "",
             "",
@@ -276,7 +269,7 @@
             ""
           ],
           [
-            "2008/07 JENEIN NORD 3D SEISMIC",
+            "2008/07JENEINNORD3DSEISMIC",
             "",
             "",
             "",
@@ -284,7 +277,7 @@
             ""
           ],
           [
-            "Camp&Kitchen refurbishment",
+            "Camp&Kitchenrefurbishment",
             "",
             "",
             "",
@@ -300,7 +293,7 @@
             ""
           ],
           [
-            "General & Administration",
+            "General &Administration",
             "(0.00)",
             "",
             "(0.00)",
@@ -317,7 +310,7 @@
           ],
           [
             "Admin staff",
-            "(00'0)",
+            "(0.00)",
             "",
             "(0.00)",
             "(0.00)",

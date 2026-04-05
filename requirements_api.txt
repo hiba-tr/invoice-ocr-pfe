@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+oracledb
+python-multipart
+sentence-transformers
+faiss-cpu
+numpy
+streamlit
+pandas
+Pillow

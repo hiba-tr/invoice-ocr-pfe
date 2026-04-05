@@ -1,0 +1,21 @@
+je dois ouvrir la bd 
+sqlplus doccore/doccore@//localhost:1521/xepdb1
+
+1. Activer l'environnement virtuel
+cmd
+cd C:\doc_core
+venv\Scripts\activate
+2. Démarrer l'API FastAPI (dans un terminal)
+cmd
+uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+Laissez ce terminal ouvert.
+
+3. Ouvrir un deuxième terminal (toujours dans C:\doc_core, avec l'environnement activé) et lancer Streamlit
+cmd
+cd C:\doc_core
+venv\Scripts\activate
+streamlit run streamlit_app.py
+4. Accéder à l'interface
+API : http://localhost:8000/docs (pour les tests)
+
+Interface utilisateur : http://localhost:8501
