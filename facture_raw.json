@@ -1406,6 +1406,38 @@
     "total_omv_share": null,
     "total_etap_share": null
   },
+  "timings": {
+    "page_parse": {
+      "times": [
+        0.0
+      ],
+      "count": 1
+    },
+    "ocr": {
+      "times": [
+        4.375
+      ],
+      "count": 1
+    },
+    "layout": {
+      "times": [
+        0.8130000000001019
+      ],
+      "count": 1
+    },
+    "table_structure": {
+      "times": [
+        9.640999999999622
+      ],
+      "count": 1
+    },
+    "page_assemble": {
+      "times": [
+        0.0
+      ],
+      "count": 1
+    }
+  },
   "invoice_info": {
     "company": null,
     "concession": null,

@@ -9,7 +9,6 @@ from rtree import index
 
 from datamodel.base_models import BoundingBox, Cluster, Page
 from datamodel.pipeline_options import (
-    LayoutObjectDetectionOptions,
     LayoutOptions,
 )
 
@@ -201,7 +200,7 @@ class LayoutPostprocessor:
         self,
         page: Page,
         clusters: list[Cluster],
-        options: LayoutOptions | LayoutObjectDetectionOptions,
+        options: LayoutOptions,
     ) -> None:
         """Initialize processor with page and clusters."""
 

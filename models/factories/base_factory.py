@@ -93,10 +93,9 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
             try:
                 from models.stages.ocr.auto_ocr_model import OcrAutoModel
                 from models.stages.ocr.easyocr_model import EasyOcrModel
-                from models.stages.ocr.ocr_mac_model import OcrMacModel
                 from models.stages.ocr.rapid_ocr_model import RapidOcrModel
                 
-                engines = [OcrAutoModel, EasyOcrModel, OcrMacModel, RapidOcrModel]
+                engines = [OcrAutoModel, EasyOcrModel, RapidOcrModel]
                 
                 for engine in engines:
                     try:
@@ -110,16 +109,7 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
         elif self.plugin_attr_name == "layout_engines":
             try:
                 from models.stages.layout.layout_model import LayoutModel
-                from models.stages.layout.layout_object_detection_model import LayoutObjectDetectionModel
-                
-                engines = [LayoutObjectDetectionModel, LayoutModel]
-                
-                try:
-                    from experimental.models.table_crops_layout_model import TableCropsLayoutModel
-                    engines.append(TableCropsLayoutModel)
-                except ImportError:
-                    pass
-                    
+                engines = [LayoutModel]
                 for engine in engines:
                     try:
                         self.register(engine, "local", "models.stages.layout")

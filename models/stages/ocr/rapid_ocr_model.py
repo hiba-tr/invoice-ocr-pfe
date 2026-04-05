@@ -110,7 +110,6 @@ class RapidOcrModel(BaseOcrModel):
             except ImportError:
                 raise ImportError(
                     "RapidOCR is not installed. Please install it via `pip install rapidocr onnxruntime` to use this OCR engine. "
-                    "Alternatively, Docling has support for other OCR engines. See the documentation."
                 )
 
             # Decide the accelerator devices

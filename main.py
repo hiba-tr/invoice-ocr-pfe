@@ -3,9 +3,8 @@
 DocCore - Facture Extraction Tool
 Extraction complète de toutes les informations d'une facture PDF
 """
-
-import json
 import logging
+import json
 import sys
 import re
 from pathlib import Path
@@ -16,13 +15,18 @@ sys.path.insert(0, str(Path(__file__).parent))
 from document_converter import DocumentConverter
 from datamodel.base_models import InputFormat
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+# ------------------------------------------------------------
+# Logger global
+# ------------------------------------------------------------
 _log = logging.getLogger(__name__)
 
+# ------------------------------------------------------------
+# CONFIGURATION DES LOGS
+# ------------------------------------------------------------
 
+# ------------------------------------------------------------
+# FONCTIONS D'EXTRACTION
+# ------------------------------------------------------------
 def extract_cells_from_cluster(cluster) -> List[Dict[str, Any]]:
     """Extrait toutes les cellules d'un cluster avec leurs métadonnées"""
     cells = []
@@ -85,6 +89,7 @@ def extract_invoice_complete(
         
         _log.info(f"Statut de conversion: {result.status.value}")
         
+
         # Structure complète du résultat
         output_data = {
             "file": str(input_file),
@@ -104,6 +109,17 @@ def extract_invoice_complete(
                 }
         }
         
+
+        # Ajout des timings (après la création de output_data)
+        if hasattr(result, 'timings') and result.timings:
+            timings_serializable = {}
+            for k, v in result.timings.items():
+                if hasattr(v, 'times') and hasattr(v, 'count'):
+                    timings_serializable[k] = {"times": v.times, "count": v.count}
+                else:
+                    timings_serializable[k] = v
+            output_data["timings"] = timings_serializable
+
         full_text_parts = []
         
         for page_idx, page in enumerate(result.pages):
@@ -365,34 +381,45 @@ def extract_invoice_complete(
     except Exception as e:
         _log.error(f"Erreur lors de la conversion: {e}")
         raise
-
-
-def main():
-    import argparse
     
+
+import time;
+def main():
+    start_time = time.perf_counter()
+
+    import argparse
+
     parser = argparse.ArgumentParser(description='DocCore - Extraction complète de factures')
     parser.add_argument('input', help='Chemin vers le fichier PDF ou image')
     parser.add_argument('-o', '--output', help='Chemin de sortie pour le JSON (optionnel)')
     parser.add_argument('--max-pages', type=int, default=100, help='Nombre maximum de pages')
     parser.add_argument('-v', '--verbose', action='store_true', help='Afficher les logs détaillés')
-    
     args = parser.parse_args()
-    
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
-    
+
+
     output_path = args.output
     if not output_path:
         input_file = Path(args.input)
         output_path = input_file.stem + "_complete.json"
-    
+
     try:
         result = extract_invoice_complete(
             input_path=args.input,
             output_path=output_path,
             max_pages=args.max_pages
         )
-        
+
+        # Afficher le résumé (code inchangé)
+        from utils.accelerator_utils import decide_device
+        from datamodel.accelerator_options import AcceleratorOptions
+        accel = AcceleratorOptions()
+        effective_device = decide_device(accel.device)   # détermine le périphérique effectif (cpu, cuda:0, mps, etc.)
+
+        if effective_device == "cpu":
+            print(f"⚡ Accélération matérielle : CPU | Threads CPU : {accel.num_threads}")
+        else:
+            print(f"⚡ Accélération matérielle : GPU ({effective_device})")
+
         print("\n" + "="*70)
         print("✅ EXTRACTION COMPLÈTE DE LA FACTURE")
         print("="*70)
@@ -401,6 +428,7 @@ def main():
         print(f"📑 Pages traitées: {result['metadata']['page_count']}")
         
         # Afficher les informations de la facture
+        
         info = result.get('invoice_info', {})
         if any(info.values()):
             print("\n📋 INFORMATIONS FACTURE:")
@@ -456,26 +484,27 @@ def main():
         for line in preview_lines[:10]:
             print(line)
         print("-"*50)
-
         
         # Afficher les temps d'exécution (profiling)
         if result.get('timings'):
             print("\n⏱️ TEMPS D'EXÉCUTION:")
             for key, timing in result['timings'].items():
-                # timing peut être un dict (après JSON) ou un objet ProfilingItem
                 times = timing.get('times', []) if isinstance(timing, dict) else timing.times
                 count = timing.get('count', 0) if isinstance(timing, dict) else timing.count
                 if times:
                     total = sum(times)
                     avg = total / count
                     print(f"   • {key}: {total:.3f}s ({count} mesures, moyenne: {avg:.3f}s)")
-                
-    except Exception as e:
-        print(f"\n❌ Erreur: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
+        # ... affichage des timings ...
+        total_time = time.perf_counter() - start_time
+        print(f"\n⏱️ TEMPS TOTAL D'EXÉCUTION: {total_time:.3f}s")
 
+    except Exception as e:
+        _log.error(f"Erreur: {e}")
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,3 @@
-"""
-Backend PDF simplifié mais complet pour DocCore
-- Extrait le texte natif avec ses coordonnées
-- Gère les mots de passe
-- Implémente toutes les méthodes abstraites requises
-"""
 
 import logging
 from collections.abc import Iterable

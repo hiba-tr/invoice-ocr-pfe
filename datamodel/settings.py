@@ -52,13 +52,13 @@ class DebugSettings(BaseModel):
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="DOCLING_", env_nested_delimiter="_", env_nested_max_split=1
+        env_prefix="DOCCORE_", env_nested_delimiter="_", env_nested_max_split=1
     )
 
     perf: BatchConcurrencySettings = BatchConcurrencySettings()
     debug: DebugSettings = DebugSettings()
 
-    cache_dir: Path = Path.home() / ".cache" / "docling"
+    cache_dir: Path = Path.home() / ".cache" / "DocCore" #le nom d’un sous‑dossier où sont stockés les modèles téléchargés
     artifacts_path: Optional[Path] = None
 
 

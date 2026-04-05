@@ -10,13 +10,11 @@ from datamodel.document import ConversionResult
 from datamodel.pipeline_options import (
     EasyOcrOptions,
     OcrAutoOptions,
-    OcrMacOptions,
     OcrOptions,
     RapidOcrOptions,
 )
 from models.base_ocr_model import BaseOcrModel
 from models.stages.ocr.easyocr_model import EasyOcrModel
-from models.stages.ocr.ocr_mac_model import OcrMacModel
 from models.stages.ocr.rapid_ocr_model import RapidOcrModel
 
 _log = logging.getLogger(__name__)
@@ -40,26 +38,6 @@ class OcrAutoModel(BaseOcrModel):
 
         self._engine: Optional[BaseOcrModel] = None
         if self.enabled:
-            if "darwin" == sys.platform:
-                try:
-                    try:
-                        from ocrmac import ocrmac  # type: ignore
-                    except ImportError:
-                        ocrmac = None
-
-                    self._engine = OcrMacModel(
-                        enabled=self.enabled,
-                        artifacts_path=artifacts_path,
-                        options=OcrMacOptions(
-                            bitmap_area_threshold=self.options.bitmap_area_threshold,
-                            force_full_page_ocr=self.options.force_full_page_ocr,
-                        ),
-                        accelerator_options=accelerator_options,
-                    )
-                    _log.info("Auto OCR model selected ocrmac.")
-                except ImportError:
-                    _log.info("ocrmac cannot be used because ocrmac is not installed.")
-
             if self._engine is None:
                 try:
                     import onnxruntime
