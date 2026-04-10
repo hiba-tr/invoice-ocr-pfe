@@ -58,20 +58,23 @@ DocCore est une application complète d’extraction de données de factures (PD
 
 ## 🏗️ Architecture du projet
 doccore/
-├── api/ # Backend FastAPI
-│ ├── main.py # Endpoints
-│ ├── database.py # Connexion Oracle
-│ ├── models_sql.py # Modèles SQLAlchemy
-│ ├── schemas.py # Schémas Pydantic
-│ ├── crud.py # Opérations CRUD
-│ ├── semantic.py # Matching sémantique (FAISS + fuzzy)
-│ └── resume.py # Génération de résumé
-├── streamlit_app.py # Interface utilisateur
-├── postprocess.py # Post-traitement intelligent
-├── main.py # Extraction brute 
-├── requirements.txt
-├── requirements_api.txt
-└── table.txt # Script Oracle
+│
+├── api/                          # Backend FastAPI
+│   ├── main.py                  # points d’entrée API (endpoints)
+│   ├── database.py             # Connexion et configuration Oracle
+│   ├── models_sql.py           # Modèles SQLAlchemy (ORM)
+│   ├── schemas.py              # Schémas Pydantic (validation)
+│   ├── crud.py                 # Opérations CRUD (Create, Read, Update, Delete)
+│   ├── semantic.py             # Moteur de matching sémantique (FAISS + fuzzy)
+│   └── resume.py               # Génération de résumé de facture
+│
+├── streamlit_app.py            # Interface utilisateur (Streamlit)
+├── postprocess.py              # Post-traitement des données extraites
+├── main.py                     # Pipeline d’extraction OCR (Docling)
+│
+├── requirements.txt            # Dépendances du projet
+├── requirements_api.txt        # Dépendances backend/API
+├── table.txt                   # Script de création des tables Oracle
 
 ---
 
