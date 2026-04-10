@@ -1,15 +1,15 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
-
-# ── Facture ──────────────────────────────────────────────────────────────────
 
 class FactureBase(BaseModel):
     nom_fichier: Optional[str] = None
     date_facture: Optional[datetime] = None
     concession: Optional[str] = None
     devise: Optional[str] = "USD"
+    client: Optional[str] = None
+    objet: Optional[str] = None
 
 
 class FactureCreate(FactureBase):
@@ -18,12 +18,11 @@ class FactureCreate(FactureBase):
 
 class FactureOut(FactureBase):
     id_facture: int
+    date_creation: Optional[datetime] = None
 
     class Config:
         from_attributes = True
 
-
-# ── Item ─────────────────────────────────────────────────────────────────────
 
 class ItemBase(BaseModel):
     nom_item: str
@@ -40,8 +39,6 @@ class ItemOut(ItemBase):
         from_attributes = True
 
 
-# ── Colonne ───────────────────────────────────────────────────────────────────
-
 class ColonneBase(BaseModel):
     nom_colonne: str
 
@@ -57,13 +54,12 @@ class ColonneOut(ColonneBase):
         from_attributes = True
 
 
-# ── FactData ──────────────────────────────────────────────────────────────────
-
 class FactDataBase(BaseModel):
     id_facture: int
     id_item: int
     id_colonne: int
-    valeur: Optional[float] = None
+    valeurs: Dict[str, Optional[Any]]
+
 
 
 class FactDataOut(FactDataBase):
@@ -73,11 +69,10 @@ class FactDataOut(FactDataBase):
         from_attributes = True
 
 
-# ── Extraction (sortie de postprocess) ───────────────────────────────────────
-
 class ExtractionItem(BaseModel):
     description: str
-    valeurs: Dict[str, Optional[float]]  # nom_colonne -> valeur
+    valeurs: Dict[str, Optional[Any]]
+
 
 
 class ExtractionMetadata(BaseModel):
@@ -85,6 +80,7 @@ class ExtractionMetadata(BaseModel):
     concession: Optional[str] = None
     date: Optional[str] = None
     currency: Optional[str] = "USD"
+    first_column_name: Optional[str] = "Description"
 
 
 class ExtractionResult(BaseModel):
@@ -92,11 +88,10 @@ class ExtractionResult(BaseModel):
     items: List[ExtractionItem]
 
 
-# ── Payload unifié POST /facture ──────────────────────────────────────────────
-
 class FactureItemPayload(BaseModel):
     description: str
-    valeurs: Dict[str, Optional[float]]
+    valeurs: Dict[str, Optional[Any]]
+
 
 
 class FactureWithItems(BaseModel):
@@ -104,26 +99,38 @@ class FactureWithItems(BaseModel):
     items_data: List[FactureItemPayload]
 
 
-# ── Suggestion sémantique ─────────────────────────────────────────────────────
-
 class SuggestionResponse(BaseModel):
     item_id: Optional[int] = None
     nom_item: Optional[str] = None
-    confiance: Optional[float] = None  # score réel entre 0 et 1
+    confiance: Optional[float] = None
 
-
-# ── Résumé ────────────────────────────────────────────────────────────────────
 
 class ResumeDetail(BaseModel):
-    nom_fichier: Optional[str] = None
     numero: Optional[int] = None
-    date: Optional[str] = None
+    date_emission: Optional[str] = None
     fournisseur: Optional[str] = None
-    devise: Optional[str] = None
-    total: float = 0.0
-    nb_items: int = 0
-    modifications: List[Any] = []
-
+    client: Optional[str] = None
+    objet: Optional[str] = None
+    nb_articles: int = 0
+    categories_principales: List[str] = []
+    exemples_articles: List[str] = []
+    total_ht: float = 0.0
+    tva_taux: float = 0.0
+    tva_montant: float = 0.0
+    total_ttc: float = 0.0
+    devise: str = "USD"
+    date_insertion: Optional[str] = None
+    resume_texte: Optional[str] = None   # NOUVEAU : texte formaté
 
 class ResumeOut(BaseModel):
     resume: ResumeDetail
+    
+class FactureCreate(BaseModel):
+    nom_fichier: str
+    date_facture: Optional[str] = None
+    concession: Optional[str] = None
+    devise: Optional[str] = None
+    client: Optional[str] = None
+    objet: Optional[str] = None
+
+    

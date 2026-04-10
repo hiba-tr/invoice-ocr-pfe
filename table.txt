@@ -1,0 +1,90 @@
+-- ============================================================
+-- 1. Suppression des séquences et tables (si elles existent)
+-- ============================================================
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE facture_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE item_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE colonne_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE audit_seq';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE audit_log PURGE';
+    EXECUTE IMMEDIATE 'DROP TABLE fact_data PURGE';
+    EXECUTE IMMEDIATE 'DROP TABLE colonne PURGE';
+    EXECUTE IMMEDIATE 'DROP TABLE item PURGE';
+    EXECUTE IMMEDIATE 'DROP TABLE facture PURGE';
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+/
+
+-- ============================================================
+-- 2. Séquences pour l'auto-incrémentation
+-- ============================================================
+CREATE SEQUENCE facture_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE item_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE colonne_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE audit_seq START WITH 1 INCREMENT BY 1;
+
+-- ============================================================
+-- 3. Table facture
+-- ============================================================
+CREATE TABLE facture (
+    id_facture    NUMBER DEFAULT facture_seq.NEXTVAL PRIMARY KEY,
+    nom_fichier   VARCHAR2(500),
+    date_facture  DATE,
+    concession    VARCHAR2(255),
+    devise        VARCHAR2(10),
+    client        VARCHAR2(255),
+    objet         VARCHAR2(500),
+    date_creation DATE DEFAULT SYSDATE
+);
+
+-- ============================================================
+-- 4. Table item
+-- ============================================================
+CREATE TABLE item (
+    id_item   NUMBER DEFAULT item_seq.NEXTVAL PRIMARY KEY,
+    nom_item  VARCHAR2(500) UNIQUE NOT NULL
+);
+
+-- ============================================================
+-- 5. Table colonne
+-- ============================================================
+CREATE TABLE colonne (
+    id_colonne  NUMBER DEFAULT colonne_seq.NEXTVAL PRIMARY KEY,
+    nom_colonne VARCHAR2(500) UNIQUE NOT NULL
+);
+
+-- ============================================================
+-- 6. Table fact_data (liaison facture / item / colonne)
+-- ============================================================
+CREATE TABLE fact_data (
+    id_facture    NUMBER NOT NULL,
+    id_item       NUMBER NOT NULL,
+    id_colonne    NUMBER NOT NULL,
+    valeur        NUMBER,
+    date_insertion DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_fact_data PRIMARY KEY (id_facture, id_item, id_colonne),
+    CONSTRAINT fk_fd_facture FOREIGN KEY (id_facture) REFERENCES facture(id_facture) ON DELETE CASCADE,
+    CONSTRAINT fk_fd_item    FOREIGN KEY (id_item)    REFERENCES item(id_item)    ON DELETE CASCADE,
+    CONSTRAINT fk_fd_colonne FOREIGN KEY (id_colonne) REFERENCES colonne(id_colonne) ON DELETE CASCADE
+);
+
+-- ============================================================
+-- 7. Table audit_log (historique des modifications)
+-- ============================================================
+CREATE TABLE audit_log (
+    id_audit      NUMBER DEFAULT audit_seq.NEXTVAL PRIMARY KEY,
+    table_name    VARCHAR2(50),
+    action        VARCHAR2(10),
+    record_id     NUMBER,
+    old_value     CLOB,
+    new_value     CLOB,
+    modified_by   VARCHAR2(100),
+    modified_at   DATE DEFAULT SYSDATE
+);
+
+COMMIT;

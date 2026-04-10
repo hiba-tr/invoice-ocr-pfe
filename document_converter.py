@@ -29,7 +29,7 @@ from datamodel.document import (
     InputDocument,
     _DocumentConversionInput,
 )
-from datamodel.pipeline_options import PipelineOptions
+from datamodel.pipeline_options import PipelineOptions, PdfPipelineOptions, OcrAutoOptions
 from datamodel.settings import (
     DEFAULT_PAGE_RANGE,
     DocumentLimits,
@@ -62,7 +62,7 @@ class ImageFormatOption(FormatOption):
 
 class PdfFormatOption(FormatOption):
     pipeline_cls: Type = StandardPdfPipeline
-    backend: Type[AbstractDocumentBackend] = PyPdfiumDocumentBackend 
+    backend: Type[AbstractDocumentBackend] = PyPdfiumDocumentBackend
     backend_options: Optional[PdfBackendOptions] = None
 
 
@@ -101,16 +101,34 @@ class DocumentConverter:
             for format in self.allowed_formats
         }
 
-        #  SIMPLIFICATION : création unique des pipelines
+        # --- FORCER L'OCR POUR LES PDF ---
+        if InputFormat.PDF in self.format_to_options:
+            opt = self.format_to_options[InputFormat.PDF]
+            # Si les options du pipeline n'existent pas ou n'ont pas l'OCR activé, on les remplace
+            current_opts = opt.pipeline_options
+            if current_opts is None or not getattr(current_opts, 'do_ocr', False):
+                new_opts = PdfPipelineOptions()
+                new_opts.do_ocr = True
+                new_opts.ocr_options = OcrAutoOptions(force_full_page_ocr=True)
+                new_opts.do_table_structure = True
+                new_opts.table_structure_options.mode = "accurate"
+                # Conserver les autres attributs si des options existaient déjà
+                if current_opts:
+                    for k, v in current_opts.__dict__.items():
+                        if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+                            setattr(new_opts, k, v)
+                opt.pipeline_options = new_opts
+                _log.info("OCR forcé activé pour les PDF")
+        # -----------------------------
+
         self._pipelines: dict[InputFormat, BasePipeline] = {}
         for fmt, opt in self.format_to_options.items():
             if opt.pipeline_options is not None:
-                self._pipelines[fmt] = opt.pipeline_cls(   #le stocker pour réutilisation
-                    pipeline_options=opt.pipeline_options  
+                self._pipelines[fmt] = opt.pipeline_cls(
+                    pipeline_options=opt.pipeline_options
                 )
                 _log.info(f"Pipeline initialisé pour {fmt.value}")
 
-    #Sert juste à vérifier qu’un pipeline existe pour ce format.
     def initialize_pipeline(self, format: InputFormat):
         """Vérifie qu'un pipeline est disponible pour le format"""
         if format not in self._pipelines:
@@ -131,8 +149,7 @@ class DocumentConverter:
             max_file_size=max_file_size,
             page_range=page_range,
         )
-        #convert_all() retourne plusieurs résultats (un par fichier)
-        return next(all_res) #donne-moi le premier résultat de conversion
+        return next(all_res)
 
     def convert_all(
         self,
@@ -190,7 +207,6 @@ class DocumentConverter:
                 self._process_document, raises_on_error=raises_on_error
             )
 
-            #  CONVERSION PARALLÈLE CONSERVÉE
             if (
                 settings.perf.doc_batch_concurrency > 1
                 and settings.perf.doc_batch_size > 1
@@ -215,9 +231,7 @@ class DocumentConverter:
                     )
                     yield item
 
-    # SIMPLIFICATION : récupération directe du pipeline (pas de hash, pas de cache)
     def _get_pipeline(self, doc_format: InputFormat) -> Optional[BasePipeline]:
-        """Retourne le pipeline pour un format (simple et direct)"""
         return self._pipelines.get(doc_format)
 
     def _process_document(
@@ -241,7 +255,6 @@ class DocumentConverter:
                 conv_res = ConversionResult(
                     input=in_doc, status=ConversionStatus.SKIPPED, errors=[error_item]
                 )
-
         return conv_res
 
     def _execute_pipeline(
@@ -269,5 +282,4 @@ class DocumentConverter:
                     input=in_doc,
                     status=ConversionStatus.FAILURE,
                 )
-
         return conv_res

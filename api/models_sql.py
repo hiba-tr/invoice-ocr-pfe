@@ -11,6 +11,9 @@ class Facture(Base):
     date_facture = Column(DateTime)
     concession = Column(String(255))
     devise = Column(String(10), default="USD")
+    date_creation = Column(DateTime, default=datetime.utcnow)
+    client = Column(String(255), nullable=True)
+    objet = Column(String(500), nullable=True)
 
     fact_data = relationship("FactData", back_populates="facture", cascade="all, delete-orphan")
 
@@ -36,7 +39,7 @@ class FactData(Base):
     id_facture = Column(Integer, ForeignKey("facture.id_facture"), primary_key=True)
     id_item = Column(Integer, ForeignKey("item.id_item"), primary_key=True)
     id_colonne = Column(Integer, ForeignKey("colonne.id_colonne"), primary_key=True)
-    valeur = Column(Float, nullable=True)
+    valeur = Column(String, nullable=True)
     date_insertion = Column(DateTime, default=datetime.utcnow)
 
     facture = relationship("Facture", back_populates="fact_data")
@@ -52,9 +55,9 @@ class AuditLog(Base):
     __tablename__ = "audit_log"
     id_audit = Column(Integer, primary_key=True, autoincrement=True)
     table_name = Column(String(50), nullable=False)
-    action = Column(String(10), nullable=False)   # INSERT | UPDATE | DELETE
+    action = Column(String(10), nullable=False)
     record_id = Column(Integer)
     old_value = Column(Text, nullable=True)
-    new_value = Column(Text, nullable=True)        # nullable pour DELETE
+    new_value = Column(Text, nullable=True)
     modified_by = Column(String(100), default="system")
     modified_at = Column(DateTime, default=datetime.utcnow)

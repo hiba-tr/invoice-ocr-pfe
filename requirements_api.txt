@@ -1,11 +1,32 @@
+# ================================
+# API & serveur
+# ================================
 fastapi
 uvicorn
 sqlalchemy
 oracledb
 python-multipart
+requests
+
+# ================================
+# Traitement sémantique
+# ================================
 sentence-transformers
 faiss-cpu
+rapidfuzz                 # remplace fuzzywuzzy
+huggingface_hub
 numpy
+
+# ================================
+# Interface Streamlit
+# ================================
 streamlit
 pandas
 Pillow
+
+# ================================
+# Utilitaires
+# ================================
+python-dotenv
+pydantic
+pydantic-settings

@@ -1,67 +1,135 @@
 from typing import Dict, Any, List
 
-
-# Colonnes candidates pour le calcul du total (ordre de priorité)
-_TOTAL_COLUMN_PATTERNS = [
-    "current month expenditure 100%",
-    "current month",
-    "montant",
-    "total",
-    "amount",
-    "expenditure",
-]
-
-
-def _find_total_column(col_name: str) -> bool:
-    """Retourne True si ce nom de colonne ressemble à une colonne de montant total."""
-    col_lower = col_name.lower().strip()
-    return any(pattern in col_lower for pattern in _TOTAL_COLUMN_PATTERNS)
+def generate_resume_text(facture_data: Dict[str, Any]) -> str:
+    """
+    Génère un résumé en langage naturel à partir des données structurées.
+    """
+    numero = facture_data.get("id_facture")
+    fournisseur = facture_data.get("fournisseur") or facture_data.get("concession")
+    client = facture_data.get("client")
+    date_emission = facture_data.get("date_facture")
+    objet = facture_data.get("objet")
+    items = facture_data.get("items", [])
+    devise = facture_data.get("devise", "USD")
+    
+    # Calcul des montants (similaire à avant)
+    total_ht = 0.0
+    tva_montant = 0.0
+    for item in items:
+        for col, val in item.get("valeurs", {}).items():
+            if not isinstance(val, (int, float)):
+                continue
+            col_lower = col.lower()
+            if "ht" in col_lower or "h.t" in col_lower:
+                total_ht += val
+            elif "tva" in col_lower:
+                tva_montant += val
+            elif "ttc" in col_lower or "total" in col_lower:
+                total_ht += val
+            else:
+                total_ht += val
+    total_ttc = total_ht + tva_montant
+    
+    # Construction du texte
+    lines = []
+    
+    # 1. Informations générales
+    info_parts = []
+    if numero:
+        info_parts.append(f"Facture n°{numero}")
+    if fournisseur:
+        info_parts.append(f"émise par {fournisseur}")
+    if client:
+        info_parts.append(f"à destination de {client}")
+    if date_emission:
+        info_parts.append(f"en date du {date_emission}")
+    if info_parts:
+        lines.append(" ".join(info_parts) + ".")
+    
+    # 2. Objet
+    if objet:
+        lines.append(f"Objet : {objet}.")
+    
+    # 3. Détails des opérations
+    if items:
+        nb_articles = len(items)
+        # Catégories = descriptions uniques
+        categories = list({item.get("description", "") for item in items if item.get("description")})
+        categories_str = ", ".join(categories[:5])  # max 5
+        lines.append(f"Cette facture comporte {nb_articles} article(s) concernant : {categories_str}.")
+    
+    # 4. Montants
+    montant_parts = []
+    if total_ht > 0:
+        montant_parts.append(f"montant total HT de {total_ht:,.2f} {devise}")
+    if tva_montant > 0:
+        tva_taux = (tva_montant / total_ht * 100) if total_ht > 0 else 0
+        montant_parts.append(f"TVA de {tva_montant:,.2f} {devise} (taux {tva_taux:.1f}%)")
+    if total_ttc > 0:
+        montant_parts.append(f"soit un total TTC de {total_ttc:,.2f} {devise}")
+    if montant_parts:
+        lines.append("Montants : " + ", ".join(montant_parts) + ".")
+    
+    # 5. Conclusion synthétique
+    if items:
+        types_ops = list({item.get("description", "") for item in items if item.get("description")})
+        if types_ops:
+            first_type = types_ops[0]
+            lines.append(f"Cette facture regroupe principalement des opérations de type « {first_type} ».")
+    
+    return "\n".join(lines)
 
 
 def generate_resume(facture_data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    facture_data = {
-        "id_facture": int,
-        "nom_fichier": str,
-        "date_facture": str | None,
-        "concession": str | None,
-        "devise": str | None,
-        "items": [{"description": str, "valeurs": {col: float}}]
-    }
-
-    Retourne un dict compatible avec le schema ResumeOut.
+    Retourne un dictionnaire compatible avec ResumeOut, incluant le texte formaté.
     """
-    items: List[Dict] = facture_data.get("items", [])
-    total: float = 0.0
-    items_with_total: int = 0
+    items = facture_data.get("items", [])
+    devise = facture_data.get("devise", "USD")
+
+    total_ht = 0.0
+    tva_montant = 0.0
 
     for item in items:
         valeurs = item.get("valeurs", {})
-        # Chercher la colonne de montant par ordre de priorité
-        matched = False
         for col, val in valeurs.items():
-            if val is not None and _find_total_column(col):
-                total += float(val)
-                matched = True
-                break  # une seule colonne par item
-        if not matched and valeurs:
-            # Fallback : prendre la première valeur non-nulle disponible
-            first_val = next((v for v in valeurs.values() if v is not None), None)
-            if first_val is not None:
-                # Ne pas l'ajouter au total sauf si c'est le seul champ
-                pass
-        if valeurs:
-            items_with_total += 1
+            if not isinstance(val, (int, float)):
+                continue
+            col_lower = col.lower()
+            if "ht" in col_lower or "h.t" in col_lower:
+                total_ht += val
+            elif "tva" in col_lower:
+                tva_montant += val
+            elif "ttc" in col_lower or "total" in col_lower:
+                total_ht += val
+            else:
+                total_ht += val
+
+    total_ttc = total_ht + tva_montant
+    tva_taux = (tva_montant / total_ht * 100) if total_ht != 0 else 0.0
+
+    categories = list({item.get("description", "") for item in items if item.get("description")})
+    exemples = [item.get("description") for item in items[:3] if item.get("description")]
+
+    # Génération du texte formaté
+    resume_text = generate_resume_text(facture_data)
 
     return {
         "resume": {
-            "nom_fichier": facture_data.get("nom_fichier"),
             "numero": facture_data.get("id_facture"),
-            "date": facture_data.get("date_facture"),
-            "fournisseur": facture_data.get("concession"),
-            "devise": facture_data.get("devise", "USD"),
-            "total": round(total, 2),
-            "nb_items": len(items),
-            "modifications": [],  # historique à remplir via audit_log si besoin
+            "date_emission": facture_data.get("date_facture"),
+            "fournisseur": facture_data.get("fournisseur") or facture_data.get("concession", "Non spécifié"),
+            "client": facture_data.get("client", "Non spécifié"),
+            "objet": facture_data.get("objet", "Facture de prestations"),
+            "nb_articles": len(items),
+            "categories_principales": categories[:5],
+            "exemples_articles": exemples,
+            "total_ht": round(total_ht, 2),
+            "tva_taux": round(tva_taux, 2),
+            "tva_montant": round(tva_montant, 2),
+            "total_ttc": round(total_ttc, 2),
+            "devise": devise,
+            "date_insertion": facture_data.get("date_insertion"),
+            "resume_texte": resume_text   # Ajout du texte
         }
     }

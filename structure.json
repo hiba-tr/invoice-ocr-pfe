@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "company": null,
+    "concession": null,
+    "date": "18/05/2020",
+    "invoice_number": null,
+    "client": null,
+    "currency": "EUR",
+    "first_column_name": "Description"
+  },
+  "items": [
+    {
+      "description": "Devis n° D/016 - 18/05/2020",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "1",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "2",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "Devis n° D/017 - 18/05/2020",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "3",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "4",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "5",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "6",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    },
+    {
+      "description": "TOTAL:",
+      "valeurs": {
+        "AMOUNT": null
+      }
+    }
+  ]
+}

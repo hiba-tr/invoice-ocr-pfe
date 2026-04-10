@@ -1,0 +1,1294 @@
+{
+  "file": "C:\\doc_core\\facture1.png",
+  "format": "image",
+  "status": "success",
+  "metadata": {
+    "page_count": 1,
+    "document_hash": "67c26b2587617c62764d251664a3b5cd64d2c8f86773f42c50e6265a84a97fac"
+  },
+  "pages": [
+    {
+      "page_no": 1,
+      "size": {
+        "width": 773.0,
+        "height": 771.0
+      },
+      "headers": [],
+      "info_block": [],
+      "key_values": [
+        {
+          "type": "key_value_region",
+          "cells": [
+            {
+              "text": "Date de creation: 18/05/2020",
+              "from_ocr": true,
+              "confidence": 0.99794,
+              "bbox": {
+                "l": 587.1527099609375,
+                "t": 122.41178385416667,
+                "r": 754.29833984375,
+                "b": 134.07005818684897
+              }
+            },
+            {
+              "text": "Date limite de validite: 18/06/2020",
+              "from_ocr": true,
+              "confidence": 0.9734,
+              "bbox": {
+                "l": 559.4899088541666,
+                "t": 136.40170288085938,
+                "r": 753.9087727864584,
+                "b": 148.05997721354166
+              }
+            }
+          ]
+        },
+        {
+          "type": "key_value_region",
+          "cells": [
+            {
+              "text": "info@fideli.fr",
+              "from_ocr": true,
+              "confidence": 0.9664,
+              "bbox": {
+                "l": 28.442034403483074,
+                "t": 266.1970621744792,
+                "r": 104.02772013346355,
+                "b": 281.7414143880208
+              }
+            },
+            {
+              "text": "Telephone: +33.1.67.86.34.67",
+              "from_ocr": true,
+              "confidence": 0.99254,
+              "bbox": {
+                "l": 28.83165232340495,
+                "t": 282.90724690755206,
+                "r": 204.15926106770834,
+                "b": 298.06298828125
+              }
+            }
+          ]
+        },
+        {
+          "type": "key_value_region",
+          "cells": [
+            {
+              "text": "Total HT",
+              "from_ocr": true,
+              "confidence": 0.99926,
+              "bbox": {
+                "l": 591.0488688151041,
+                "t": 689.39208984375,
+                "r": 644.4263916015625,
+                "b": 704.9364420572916
+              }
+            },
+            {
+              "text": "812,00",
+              "from_ocr": true,
+              "confidence": 0.98994,
+              "bbox": {
+                "l": 712.9989420572916,
+                "t": 689.7806803385416,
+                "r": 754.68798828125,
+                "b": 704.5478515625
+              }
+            },
+            {
+              "text": "Montant TVA (20%)",
+              "from_ocr": true,
+              "confidence": 0.99969,
+              "bbox": {
+                "l": 526.7620849609375,
+                "t": 708.822509765625,
+                "r": 643.6471761067709,
+                "b": 723.2010904947916
+              }
+            },
+            {
+              "text": "122,40",
+              "from_ocr": true,
+              "confidence": 0.99684,
+              "bbox": {
+                "l": 713.7782389322916,
+                "t": 708.0453287760416,
+                "r": 754.68798828125,
+                "b": 722.8125
+              }
+            },
+            {
+              "text": "Montant TVA (10%)",
+              "from_ocr": true,
+              "confidence": 0.99587,
+              "bbox": {
+                "l": 525.9828694661459,
+                "t": 726.6985677083334,
+                "r": 643.2575276692709,
+                "b": 741.0770670572916
+              }
+            },
+            {
+              "text": "20,00",
+              "from_ocr": true,
+              "confidence": 0.99858,
+              "bbox": {
+                "l": 720.0120442708334,
+                "t": 726.3099772135416,
+                "r": 754.68798828125,
+                "b": 740.2998860677084
+              }
+            },
+            {
+              "text": "Total TTC",
+              "from_ocr": true,
+              "confidence": 0.99827,
+              "bbox": {
+                "l": 583.6461588541666,
+                "t": 744.1859537760416,
+                "r": 644.4263916015625,
+                "b": 758.564453125
+              }
+            },
+            {
+              "text": "954,40",
+              "from_ocr": true,
+              "confidence": 0.9978,
+              "bbox": {
+                "l": 712.609375,
+                "t": 743.79736328125,
+                "r": 754.68798828125,
+                "b": 758.953125
+              }
+            }
+          ]
+        }
+      ],
+      "text_cells": [
+        {
+          "text": "Payer en ligne >",
+          "label": "text"
+        },
+        {
+          "text": "FACTURE N°",
+          "label": "section_header"
+        },
+        {
+          "text": "F/05.2020/099",
+          "label": "section_header"
+        },
+        {
+          "text": "VENDEUR:",
+          "label": "section_header"
+        },
+        {
+          "text": "ACHETEUR:",
+          "label": "section_header"
+        },
+        {
+          "text": "FIDELI 32 Rue du Commerce 75018 Paris, France Numero TVA FR5213719114",
+          "label": "text"
+        },
+        {
+          "text": "M. & Mme Dupont 13 rue du Paradis",
+          "label": "text"
+        },
+        {
+          "text": "75014 Paris, France",
+          "label": "text"
+        },
+        {
+          "text": "Travaux Salle de bain et Toilettes",
+          "label": "section_header"
+        }
+      ],
+      "tables": [
+        {
+          "table_id": 1,
+          "num_rows": 10,
+          "num_cols": 8,
+          "cells": [
+            {
+              "row": 0,
+              "col": 6,
+              "text": "Montant TVA",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 598.0619710286459,
+                "t": 352.8568522135417,
+                "r": 649.101806640625,
+                "b": 383.945556640625
+              }
+            },
+            {
+              "row": 0,
+              "col": 0,
+              "text": ".N",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 24.545865376790363,
+                "t": 359.851806640625,
+                "r": 44.026713053385414,
+                "b": 376.1733805338542
+              }
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "text": "Designation",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 151.56098429361978,
+                "t": 361.0176188151042,
+                "r": 221.6920369466146,
+                "b": 376.5619710286458
+              }
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "text": "Qte",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 338.5771077473958,
+                "t": 360.6290283203125,
+                "r": 362.7333577473958,
+                "b": 375.7847493489583
+              }
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "text": "PU HT",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 395.8507893880208,
+                "t": 360.6290283203125,
+                "r": 437.539794921875,
+                "b": 375.3961588541667
+              }
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "text": "Total HT",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 470.6572672526042,
+                "t": 361.0176188151042,
+                "r": 521.3074544270834,
+                "b": 375.3961588541667
+              }
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "text": "TVA",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 545.0740966796875,
+                "t": 360.2403971354167,
+                "r": 573.51611328125,
+                "b": 375.7847493489583
+              }
+            },
+            {
+              "row": 0,
+              "col": 7,
+              "text": "Total TTC",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": true,
+              "row_header": false,
+              "bbox": {
+                "l": 679.8815511067709,
+                "t": 361.0176188151042,
+                "r": 737.9344889322916,
+                "b": 375.3961588541667
+              }
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "text": "Devis n° D/016 - 18/05/2020",
+              "row_span": 1,
+              "col_span": 8,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 312.4727783203125,
+                "t": 392.883544921875,
+                "r": 462.085693359375,
+                "b": 404.5418294270833
+              }
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "text": "1",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 24.15625,
+                "t": 416.2000732421875,
+                "r": 30.390121459960938,
+                "b": 425.915283203125
+              }
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "text": "Service 1 Description du Service 1",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 52.20866902669271,
+                "t": 414.2570393880208,
+                "r": 193.25,
+                "b": 444.9571533203125
+              }
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "text": "2 h",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 331.17437744140625,
+                "t": 413.4798177083333,
+                "r": 354.1617838541667,
+                "b": 428.6355794270833
+              }
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "text": "50,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 418.8382161458333,
+                "t": 413.4798177083333,
+                "r": 453.5141194661458,
+                "b": 428.6355794270833
+              }
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "text": "100,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 491.3069254557292,
+                "t": 413.0912272135417,
+                "r": 532.2167154947916,
+                "b": 428.2469482421875
+              }
+            },
+            {
+              "row": 2,
+              "col": 5,
+              "text": "10%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 552.8664143880209,
+                "t": 413.0912272135417,
+                "r": 581.6980794270834,
+                "b": 428.6355794270833
+              }
+            },
+            {
+              "row": 2,
+              "col": 6,
+              "text": "10,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 626.5040283203125,
+                "t": 413.4798177083333,
+                "r": 660.7903238932291,
+                "b": 429.024169921875
+              }
+            },
+            {
+              "row": 2,
+              "col": 7,
+              "text": "110,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 711.8301595052084,
+                "t": 413.4798177083333,
+                "r": 751.960693359375,
+                "b": 428.6355794270833
+              }
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "text": "2",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 22.59778086344401,
+                "t": 453.8951416015625,
+                "r": 31.948588053385418,
+                "b": 467.4964599609375
+              }
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "text": "Produit 1 Description du Produit 1",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 51.42943318684896,
+                "t": 453.5065511067708,
+                "r": 190.91229248046875,
+                "b": 485.7610677083333
+              }
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "text": "1.5 L",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 332.34324137369794,
+                "t": 453.5065511067708,
+                "r": 364.2918294270833,
+                "b": 468.6622721354167
+              }
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "text": "18,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 419.617431640625,
+                "t": 454.2837320963542,
+                "r": 453.5141194661458,
+                "b": 468.273681640625
+              }
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "text": "27,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 497.930419921875,
+                "t": 453.5065511067708,
+                "r": 532.9959716796875,
+                "b": 468.6622721354167
+              }
+            },
+            {
+              "row": 3,
+              "col": 5,
+              "text": "20%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 552.0871988932291,
+                "t": 453.8951416015625,
+                "r": 581.3084716796875,
+                "b": 468.273681640625
+              }
+            },
+            {
+              "row": 3,
+              "col": 6,
+              "text": "5,40",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 632.7378743489584,
+                "t": 453.5065511067708,
+                "r": 661.5695393880209,
+                "b": 469.4394938151042
+              }
+            },
+            {
+              "row": 3,
+              "col": 7,
+              "text": "32,40",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 717.2847493489584,
+                "t": 454.2837320963542,
+                "r": 751.960693359375,
+                "b": 468.273681640625
+              }
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "text": "Devis n° D/017 - 18/05/2020",
+              "row_span": 1,
+              "col_span": 8,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 312.8623860677083,
+                "t": 495.8649088541667,
+                "r": 462.085693359375,
+                "b": 507.5231526692708
+              }
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "text": "3",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 22.59778086344401,
+                "t": 517.2384033203125,
+                "r": 31.948588053385418,
+                "b": 530.8396809895834
+              }
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "text": "Service 1 Description du Service 1",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 52.20866902669271,
+                "t": 517.2384033203125,
+                "r": 193.25,
+                "b": 548.7156982421875
+              }
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "text": "2h",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 331.17437744140625,
+                "t": 516.8497721354166,
+                "r": 354.1617838541667,
+                "b": 531.6169026692709
+              }
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "text": "50,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 418.4485677083333,
+                "t": 516.0725504557291,
+                "r": 453.5141194661458,
+                "b": 532.0055338541666
+              }
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "text": "100,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 491.6965738932292,
+                "t": 516.8497721354166,
+                "r": 532.9959716796875,
+                "b": 531.6169026692709
+              }
+            },
+            {
+              "row": 5,
+              "col": 5,
+              "text": "10%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 553.2560221354166,
+                "t": 516.8497721354166,
+                "r": 581.3084716796875,
+                "b": 531.2283121744791
+              }
+            },
+            {
+              "row": 5,
+              "col": 6,
+              "text": "10,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 626.5040283203125,
+                "t": 516.8497721354166,
+                "r": 661.179931640625,
+                "b": 532.0055338541666
+              }
+            },
+            {
+              "row": 5,
+              "col": 7,
+              "text": "110,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 711.8301595052084,
+                "t": 516.0725504557291,
+                "r": 751.960693359375,
+                "b": 532.0055338541666
+              }
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "text": "4",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 22.987398783365887,
+                "t": 557.6536865234375,
+                "r": 32.33820597330729,
+                "b": 570.477783203125
+              }
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "text": "Produit 1 Description du Produit 1",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 51.42943318684896,
+                "t": 556.4878743489584,
+                "r": 191.30192057291666,
+                "b": 589.1310221354166
+              }
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "text": "1 pc",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 331.95361328125,
+                "t": 556.4878743489584,
+                "r": 360.3956705729167,
+                "b": 574.3638916015625
+              }
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "text": "300,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 411.8250732421875,
+                "t": 556.4878743489584,
+                "r": 453.5141194661458,
+                "b": 571.6436360677084
+              }
+            },
+            {
+              "row": 6,
+              "col": 4,
+              "text": "300,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 490.9173177083333,
+                "t": 556.4878743489584,
+                "r": 532.6063232421875,
+                "b": 571.6436360677084
+              }
+            },
+            {
+              "row": 6,
+              "col": 5,
+              "text": "20%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 551.6975504557291,
+                "t": 556.0992838541666,
+                "r": 581.6980794270834,
+                "b": 571.6436360677084
+              }
+            },
+            {
+              "row": 6,
+              "col": 6,
+              "text": "60,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 626.1144205729166,
+                "t": 556.4878743489584,
+                "r": 661.179931640625,
+                "b": 571.6436360677084
+              }
+            },
+            {
+              "row": 6,
+              "col": 7,
+              "text": "360,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 710.2716471354166,
+                "t": 556.4878743489584,
+                "r": 752.3502604166666,
+                "b": 571.6436360677084
+              }
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "text": "5",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 22.208165486653645,
+                "t": 596.1259765625,
+                "r": 32.727821350097656,
+                "b": 611.6703287760416
+              }
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "text": "Service 2",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 51.819051106770836,
+                "t": 596.9031982421875,
+                "r": 107.92388916015625,
+                "b": 611.28173828125
+              }
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "text": "1h",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 332.34324137369794,
+                "t": 596.9031982421875,
+                "r": 353.7721761067708,
+                "b": 611.6703287760416
+              }
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "text": "35,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 419.2278238932292,
+                "t": 597.2917887369791,
+                "r": 453.5141194661458,
+                "b": 611.28173828125
+              }
+            },
+            {
+              "row": 7,
+              "col": 4,
+              "text": "35,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 497.930419921875,
+                "t": 596.5146077473959,
+                "r": 532.9959716796875,
+                "b": 611.6703287760416
+              }
+            },
+            {
+              "row": 7,
+              "col": 5,
+              "text": "20%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 551.6975504557291,
+                "t": 596.9031982421875,
+                "r": 580.9188232421875,
+                "b": 611.28173828125
+              }
+            },
+            {
+              "row": 7,
+              "col": 6,
+              "text": "7,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 632.7378743489584,
+                "t": 596.1259765625,
+                "r": 661.5695393880209,
+                "b": 612.0589599609375
+              }
+            },
+            {
+              "row": 7,
+              "col": 7,
+              "text": "42,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 717.6743977864584,
+                "t": 597.2917887369791,
+                "r": 751.960693359375,
+                "b": 611.28173828125
+              }
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "text": "6",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 22.59778086344401,
+                "t": 624.1058349609375,
+                "r": 31.948588053385418,
+                "b": 637.3185221354166
+              }
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "text": "Produit 2",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 51.42943318684896,
+                "t": 624.1058349609375,
+                "r": 105.58619181315105,
+                "b": 638.4843343098959
+              }
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "text": "1 pc",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 332.34324137369794,
+                "t": 622.5513916015625,
+                "r": 360.0060221354167,
+                "b": 641.5932210286459
+              }
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "text": "250,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 411.8250732421875,
+                "t": 623.7172037760416,
+                "r": 453.5141194661458,
+                "b": 638.4843343098959
+              }
+            },
+            {
+              "row": 8,
+              "col": 4,
+              "text": "250,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 490.5277099609375,
+                "t": 623.7172037760416,
+                "r": 532.6063232421875,
+                "b": 638.4843343098959
+              }
+            },
+            {
+              "row": 8,
+              "col": 5,
+              "text": "20%",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 551.6975504557291,
+                "t": 622.9399820963541,
+                "r": 581.3084716796875,
+                "b": 638.8729654947916
+              }
+            },
+            {
+              "row": 8,
+              "col": 6,
+              "text": "50,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 626.1144205729166,
+                "t": 623.7172037760416,
+                "r": 661.179931640625,
+                "b": 638.8729654947916
+              }
+            },
+            {
+              "row": 8,
+              "col": 7,
+              "text": "300,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 710.2716471354166,
+                "t": 623.7172037760416,
+                "r": 752.3502604166666,
+                "b": 638.4843343098959
+              }
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "text": "TOTAL:",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 407.9289143880208,
+                "t": 652.4742838541666,
+                "r": 452.73486328125,
+                "b": 666.0755615234375
+              }
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "text": "812,00",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 490.9173177083333,
+                "t": 652.0856526692709,
+                "r": 533.3855794270834,
+                "b": 666.852783203125
+              }
+            },
+            {
+              "row": 9,
+              "col": 6,
+              "text": "142,40",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 619.4909261067709,
+                "t": 651.6970621744791,
+                "r": 661.179931640625,
+                "b": 666.4641927083334
+              }
+            },
+            {
+              "row": 9,
+              "col": 7,
+              "text": "954,40",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": false,
+              "bbox": {
+                "l": 709.882080078125,
+                "t": 651.6970621744791,
+                "r": 752.3502604166666,
+                "b": 666.4641927083334
+              }
+            }
+          ],
+          "matrix": [
+            [
+              ".N",
+              "Designation",
+              "Qte",
+              "PU HT",
+              "Total HT",
+              "TVA",
+              "Montant TVA",
+              "Total TTC"
+            ],
+            [
+              "Devis n° D/016 - 18/05/2020",
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "1",
+              "Service 1 Description du Service 1",
+              "2 h",
+              "50,00",
+              "100,00",
+              "10%",
+              "10,00",
+              "110,00"
+            ],
+            [
+              "2",
+              "Produit 1 Description du Produit 1",
+              "1.5 L",
+              "18,00",
+              "27,00",
+              "20%",
+              "5,40",
+              "32,40"
+            ],
+            [
+              "Devis n° D/017 - 18/05/2020",
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            [
+              "3",
+              "Service 1 Description du Service 1",
+              "2h",
+              "50,00",
+              "100,00",
+              "10%",
+              "10,00",
+              "110,00"
+            ],
+            [
+              "4",
+              "Produit 1 Description du Produit 1",
+              "1 pc",
+              "300,00",
+              "300,00",
+              "20%",
+              "60,00",
+              "360,00"
+            ],
+            [
+              "5",
+              "Service 2",
+              "1h",
+              "35,00",
+              "35,00",
+              "20%",
+              "7,00",
+              "42,00"
+            ],
+            [
+              "6",
+              "Produit 2",
+              "1 pc",
+              "250,00",
+              "250,00",
+              "20%",
+              "50,00",
+              "300,00"
+            ],
+            [
+              null,
+              null,
+              null,
+              "TOTAL:",
+              "812,00",
+              null,
+              "142,40",
+              "954,40"
+            ]
+          ]
+        }
+      ],
+      "raw_text": "[INFO] Date de creation: 18/05/2020\n[INFO] Date limite de validite: 18/06/2020\n[INFO] info@fideli.fr\n[INFO] Telephone: +33.1.67.86.34.67\n[INFO] Total HT\n[INFO] 812,00\n[INFO] Montant TVA (20%)\n[INFO] 122,40\n[INFO] Montant TVA (10%)\n[INFO] 20,00\n[INFO] Total TTC\n[INFO] 954,40\nMontant TVA\n.N\nDesignation\nQte\nPU HT\nTotal HT\nTVA\nTotal TTC\nDevis n° D/016 - 18/05/2020\n1\nService 1 Description du Service 1\n2 h\n50,00\n100,00\n10%\n10,00\n110,00\n2\nProduit 1 Description du Produit 1\n1.5 L\n18,00\n27,00\n20%\n5,40\n32,40\nDevis n° D/017 - 18/05/2020\n3\nService 1 Description du Service 1\n2h\n50,00\n100,00\n10%\n10,00\n110,00\n4\nProduit 1 Description du Produit 1\n1 pc\n300,00\n300,00\n20%\n60,00\n360,00\n5\nService 2\n1h\n35,00\n35,00\n20%\n7,00\n42,00\n6\nProduit 2\n1 pc\n250,00\n250,00\n20%\n50,00\n300,00\nTOTAL:\n812,00\n142,40\n954,40\nPayer en ligne >\nFACTURE N°\nF/05.2020/099\nVENDEUR:\nACHETEUR:\nFIDELI 32 Rue du Commerce 75018 Paris, France Numero TVA FR5213719114\nM. & Mme Dupont 13 rue du Paradis\n75014 Paris, France\nTravaux Salle de bain et Toilettes"
+    }
+  ],
+  "all_text": "--- Page 1 ---\n[INFO] Date de creation: 18/05/2020\n[INFO] Date limite de validite: 18/06/2020\n[INFO] info@fideli.fr\n[INFO] Telephone: +33.1.67.86.34.67\n[INFO] Total HT\n[INFO] 812,00\n[INFO] Montant TVA (20%)\n[INFO] 122,40\n[INFO] Montant TVA (10%)\n[INFO] 20,00\n[INFO] Total TTC\n[INFO] 954,40\nMontant TVA\n.N\nDesignation\nQte\nPU HT\nTotal HT\nTVA\nTotal TTC\nDevis n° D/016 - 18/05/2020\n1\nService 1 Description du Service 1\n2 h\n50,00\n100,00\n10%\n10,00\n110,00\n2\nProduit 1 Description du Produit 1\n1.5 L\n18,00\n27,00\n20%\n5,40\n32,40\nDevis n° D/017 - 18/05/2020\n3\nService 1 Description du Service 1\n2h\n50,00\n100,00\n10%\n10,00\n110,00\n4\nProduit 1 Description du Produit 1\n1 pc\n300,00\n300,00\n20%\n60,00\n360,00\n5\nService 2\n1h\n35,00\n35,00\n20%\n7,00\n42,00\n6\nProduit 2\n1 pc\n250,00\n250,00\n20%\n50,00\n300,00\nTOTAL:\n812,00\n142,40\n954,40\nPayer en ligne >\nFACTURE N°\nF/05.2020/099\nVENDEUR:\nACHETEUR:\nFIDELI 32 Rue du Commerce 75018 Paris, France Numero TVA FR5213719114\nM. & Mme Dupont 13 rue du Paradis\n75014 Paris, France\nTravaux Salle de bain et Toilettes",
+  "totals": {
+    "total_usd": "954,40",
+    "total_omv_share": null,
+    "total_etap_share": null
+  },
+  "timings": {
+    "page_parse": {
+      "times": [
+        0.0
+      ],
+      "count": 1
+    },
+    "ocr": {
+      "times": [
+        7.811999999918044
+      ],
+      "count": 1
+    },
+    "layout": {
+      "times": [
+        1.3280000002123415
+      ],
+      "count": 1
+    },
+    "table_structure": {
+      "times": [
+        5.17200000025332
+      ],
+      "count": 1
+    },
+    "page_assemble": {
+      "times": [
+        0.015999999828636646
+      ],
+      "count": 1
+    }
+  },
+  "invoice_info": {
+    "company": null,
+    "concession": null,
+    "document_type": null,
+    "month_ended": null,
+    "docusign_id": null
+  }
+}

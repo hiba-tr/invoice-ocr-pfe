@@ -65,3 +65,22 @@ tqdm>=4.65.0
 numpy>=1.24.0
 scipy>=1.10.0
 coloredlogs>=15.0.0
+
+# ========== AJOUTS POUR DOCLING & API ==========
+# API & serveur
+fastapi>=0.100.0
+uvicorn>=0.23.0
+sqlalchemy>=2.0.0
+oracledb>=2.0.0
+python-multipart>=0.0.6
+requests>=2.31.0
+
+# Traitement sémantique
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.4
+rapidfuzz>=3.0.0          # pour fuzzy matching (plus rapide que fuzzywuzzy)
+huggingface_hub>=0.20.0   # pour télécharger les modèles
+python-levenshtein>=0.20.0 # optionnel, accélère rapidfuzz
+
+# Interface Streamlit
+streamlit>=1.30.0

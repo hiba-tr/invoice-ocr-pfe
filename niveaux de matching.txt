@@ -1,0 +1,17 @@
+Niveau 1 – Correspondance exacte normalisée
+Les textes sont d'abord normalisés (minuscules, suppression de la ponctuation, réduction des espaces). Si deux descriptions sont identiques après cette normalisation, la correspondance est immédiate avec une confiance de 100 %.
+Exemple : "forage" correspond exactement à "forage".
+
+Niveau 2 – Correspondance exacte via synonymes (dictionnaire)
+Un dictionnaire de synonymes explicites permet d'associer des termes équivalents mais orthographiés différemment. La confiance attribuée est très élevée (95 %).
+Exemple : "drilling" est reconnu comme synonyme de "forage".
+
+Niveau 3 – Correspondance floue (fuzzy matching)
+Lorsqu'aucune correspondance exacte n'est trouvée, une mesure de similarité textuelle (token sort ratio) est calculée entre la nouvelle description et chaque item existant. On tolère les fautes de frappe, les abréviations, l'ordre des mots ou les petites variations orthographiques. La confiance est proportionnelle au score (entre 0 et 1).
+Exemple : "Overhaul Rotating Equipment" peut être rapproché de "Révision équipements rotatifs" même si les mots sont différents.
+
+Niveau 4 – Correspondance sémantique profonde (embeddings)
+Si les trois niveaux précédents échouent, on utilise un modèle de plongement lexical (Sentence Transformer) pour convertir chaque description en un vecteur numérique de 384 ou 768 dimensions. La similarité cosinus entre ces vecteurs capture le sens général, même en l'absence de mots communs. Un seuil (par exemple 0,65) détermine si la correspondance est retenue.
+Exemple : "travail" et "emploi" n'ont aucune lettre en commun mais leurs vecteurs sont proches (similarité > 0,70), ce qui permet de les associer.
+
+Ces quatre niveaux sont exécutés séquentiellement : on s'arrête dès qu'une correspondance dépasse le seuil requis, garantissant à la fois rapidité et robustesse.
