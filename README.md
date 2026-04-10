@@ -71,7 +71,9 @@ doccore/
 ├── streamlit_app.py            # Interface utilisateur (Streamlit)
 ├── postprocess.py              # Post-traitement des données extraites
 ├── main.py                     # Pipeline d’extraction OCR (Docling)
+├── document_converter.py       # Orchestre la conversion des documents (PDF/images) via le pipeline adapté.
 │
+├── commande.txt                # Commande pour lancer le projet
 ├── requirements.txt            # Dépendances du projet
 ├── requirements_api.txt        # Dépendances backend/API
 ├── table.txt                   # Script de création des tables Oracle
