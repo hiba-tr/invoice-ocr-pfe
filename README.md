@@ -96,9 +96,12 @@ cd invoice-ocr-pfe
 
 ### 3. Créer un environnement virtuel
 python -m venv venv
+
 Activer l’environnement
+
 Windows :
 venv\Scripts\activate
+
 Linux / Mac :
 source venv/bin/activate
 
