@@ -1,0 +1,108 @@
+<h2 class="fw-bold mb-4">
+  <i class="fas fa-pen-to-square me-2" style="color: var(--primary);"></i>Saisie manuelle d'une facture
+</h2>
+
+<!-- Étape 1 : Choix ou création de la concession -->
+<div class="card-custom mb-4">
+  <h5 class="mb-3"><i class="fas fa-building me-2"></i>Concession</h5>
+  <div class="row g-3 align-items-end">
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Sélectionner une concession</label>
+      <select id="manual-concession-select" class="form-select">
+        <option value="">-- Choisir --</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Ou créer une nouvelle</label>
+      <div class="input-group">
+        <input type="text" id="manual-new-concession" class="form-control" placeholder="Nom de la concession">
+        <button class="btn btn-outline-primary" id="manual-create-concession-btn" type="button">Créer</button>
+      </div>
+    </div>
+  </div>
+  <div id="manual-concession-feedback" class="mt-2"></div>
+</div>
+
+<!-- Étape 2 : Métadonnées de la facture (apparaît après les modales) -->
+<div class="card-custom mb-4" id="manual-meta-card" style="display: none;">
+  <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Métadonnées de la facture</h5>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Date facture</label>
+      <input type="date" class="form-control" id="manual-date">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Devise</label>
+      <input type="text" class="form-control" id="manual-devise" value="TND">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Numéro facture (optionnel)</label>
+      <input type="text" class="form-control" id="manual-numero">
+    </div>
+  </div>
+</div>
+
+<!-- Étape 3 : Tableau des articles (apparaît après les modales) -->
+<div class="card-custom" id="manual-table-card" style="display: none;">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Articles</h5>
+    <div>
+      <button class="btn btn-sm btn-outline-info me-2" id="manual-reload-items-btn"><i class="fas fa-list"></i> Items existants</button>
+      <button class="btn btn-sm btn-outline-success me-2" id="manual-add-row-btn"><i class="fas fa-plus-circle"></i> Ajouter une ligne</button>
+      <button class="btn btn-sm btn-outline-primary" id="manual-add-col-btn"><i class="fas fa-plus"></i> Colonne</button>
+    </div>
+  </div>
+  <div id="manual-items-table" style="min-height: 300px;"></div>
+  <div id="manual-total-footer" class="text-end fw-bold mt-3" style="display: none;">
+    Total général : <span id="manual-total-general">0.00</span> €
+  </div>
+</div>
+
+<!-- Étape 4 : Enregistrement -->
+<div class="mt-4 d-flex gap-3" id="manual-save-area" style="display: none;">
+  <button class="btn btn-primary px-5" id="manual-save-btn"><i class="fas fa-save me-2"></i>Enregistrer la facture</button>
+  <div class="form-check mt-2">
+    <input class="form-check-input" type="checkbox" id="manual-force-overwrite">
+    <label class="form-check-label">Écraser si existe</label>
+  </div>
+</div>
+
+<!-- Modal de sélection des items existants -->
+<div class="modal fade" id="manual-items-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sélectionner des items existants</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ces items sont déjà rattachés à cette concession. Cochez ceux que vous voulez ajouter à la facture.</p>
+        <div id="manual-items-list-container" style="max-height: 400px; overflow-y: auto;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="manual-confirm-items-btn">Ajouter la sélection</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de sélection des colonnes existantes -->
+<div class="modal fade" id="manual-columns-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choisir les colonnes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Sélectionnez les colonnes que vous souhaitez voir apparaître dans le tableau.</p>
+        <div id="manual-columns-list-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="manual-confirm-columns-btn">Valider les colonnes</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<h2 class="fw-bold mb-4"><i class="fas fa-chart-line me-2" style="color: var(--primary);"></i>Analyses comparatives</h2>
+
+<div class="card-custom">
+  <div class="row g-3 align-items-end mb-4">
+    <div class="col-md-5">
+      <label class="form-label fw-semibold">Concession</label>
+      <select id="analyse-concession" class="form-select"></select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Année</label>
+      <select id="analyse-annee" class="form-select"></select>
+    </div>
+    <div class="col-md-4">
+      <button id="lancer-analyse" class="btn btn-primary w-100">
+        <i class="fas fa-search me-2"></i>Afficher l'analyse
+      </button>
+    </div>
+  </div>
+  
+  <div id="analyse-resultats" style="display: none;">
+    <h5 class="mt-4 mb-3" id="analyse-titre"></h5>
+    
+    <div class="card-custom mb-4">
+      <h6 class="mb-3"><i class="fas fa-calendar-alt me-2"></i>Évolution des totaux mensuels</h6>
+      <canvas id="chart-mensuel" width="400" height="200"></canvas>
+    </div>
+    
+    <div class="card-custom">
+      <h6 class="mb-3"><i class="fas fa-boxes me-2"></i>Comparaison des prix par article</h6>
+      <div class="table-responsive">
+        <table class="table table-hover" id="table-articles">
+          <thead class="table-light">
+            <tr>
+              <th>Article</th>
+              <th>Occurrences</th>
+              <th>Prix moyen</th>
+              <th>Prix min</th>
+              <th>Prix max</th>
+              <th>Variation</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
