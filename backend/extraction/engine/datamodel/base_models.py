@@ -28,7 +28,7 @@ from pydantic import (
 )
 
 if TYPE_CHECKING:
-    from backend.pdf_backend import PdfPageBackend
+    from backend.extraction.engine.backend.pdf_backend import PdfPageBackend
 
 from backend.extraction.engine.backend.abstract_backend import AbstractDocumentBackend
 from backend.extraction.engine.datamodel.pipeline_options import PipelineOptions

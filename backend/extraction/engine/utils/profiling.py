@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, List
 import numpy as np
 from pydantic import BaseModel
 
-from datamodel.settings import settings
+from backend.extraction.engine.datamodel.settings import settings
 
 if TYPE_CHECKING:
-    from datamodel.document import ConversionResult
+    from backend.extraction.engine.datamodel.document import ConversionResult
 
 
 class ProfilingScope(str, Enum):

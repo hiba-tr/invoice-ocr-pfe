@@ -8,10 +8,10 @@ from docling_core.types.doc import BoundingBox, Size
 from docling_core.types.doc.page import SegmentedPdfPage, TextCell
 from PIL import Image
 
-from backend.abstract_backend import PaginatedDocumentBackend
-from datamodel.backend_options import PdfBackendOptions
-from datamodel.base_models import InputFormat
-from datamodel.document import InputDocument
+from backend.extraction.engine.backend.abstract_backend import PaginatedDocumentBackend
+from backend.extraction.engine.datamodel.backend_options import PdfBackendOptions
+from backend.extraction.engine.datamodel.base_models import InputFormat
+from backend.extraction.engine.datamodel.document import InputDocument
 
 
 class PdfPageBackend(ABC):

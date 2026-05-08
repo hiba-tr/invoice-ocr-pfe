@@ -6,8 +6,8 @@ from typing import Generic, Optional, Type, TypeVar
 from pluggy import PluginManager
 from pydantic import BaseModel
 
-from datamodel.pipeline_options import BaseOptions
-from models.base_model import BaseModelWithOptions
+from backend.extraction.engine.datamodel.pipeline_options import BaseOptions
+from backend.extraction.engine.models.base_model import BaseModelWithOptions
 
 A = TypeVar("A", bound=BaseModelWithOptions)
 
@@ -91,11 +91,11 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
         """Charge directement les moteurs locaux sans passer par les plugins"""
         if self.plugin_attr_name == "ocr_engines":
             try:
-                from models.stages.ocr.auto_ocr_model import OcrAutoModel
-                from models.stages.ocr.easyocr_model import EasyOcrModel
-                from models.stages.ocr.rapid_ocr_model import RapidOcrModel
-                from models.stages.ocr.tesseract_ocr_model import TesseractOcrModel
-                from models.stages.ocr.paddle_ocr_model import PaddleOcrModel
+                from backend.extraction.engine.models.stages.ocr.auto_ocr_model import OcrAutoModel
+                from backend.extraction.engine.models.stages.ocr.easyocr_model import EasyOcrModel
+                from backend.extraction.engine.models.stages.ocr.rapid_ocr_model import RapidOcrModel
+                from backend.extraction.engine.models.stages.ocr.tesseract_ocr_model import TesseractOcrModel
+                from backend.extraction.engine.models.stages.ocr.paddle_ocr_model import PaddleOcrModel
                 engines = [OcrAutoModel, EasyOcrModel, RapidOcrModel, TesseractOcrModel, PaddleOcrModel]
                 
                 for engine in engines:

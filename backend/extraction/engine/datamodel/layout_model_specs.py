@@ -5,7 +5,7 @@ from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field
 
-from datamodel.accelerator_options import AcceleratorDevice
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice
 
 _log = logging.getLogger(__name__)
 

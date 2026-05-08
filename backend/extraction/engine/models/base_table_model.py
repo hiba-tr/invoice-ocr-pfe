@@ -4,10 +4,10 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from typing import Type
 
-from datamodel.base_models import Page, TableStructurePrediction
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import BaseTableStructureOptions
-from models.base_model import BaseModelWithOptions, BasePageModel
+from backend.extraction.engine.datamodel.base_models import Page, TableStructurePrediction
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import BaseTableStructureOptions
+from backend.extraction.engine.models.base_model import BaseModelWithOptions, BasePageModel
 
 
 class BaseTableStructureModel(BasePageModel, BaseModelWithOptions, ABC):

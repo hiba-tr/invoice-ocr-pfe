@@ -5,15 +5,15 @@ from typing import TYPE_CHECKING, Union
 
 from docling_core.types.doc import DoclingDocument
 
-from datamodel.backend_options import (
+from backend.extraction.engine.datamodel.backend_options import (
     BackendOptions,
     BaseBackendOptions,
     DeclarativeBackendOptions,
 )
 
 if TYPE_CHECKING:
-    from datamodel.base_models import InputFormat
-    from datamodel.document import InputDocument
+    from backend.extraction.engine.datamodel.base_models import InputFormat
+    from backend.extraction.engine.datamodel.document import InputDocument
 
 
 class AbstractDocumentBackend(ABC):

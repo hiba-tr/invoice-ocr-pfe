@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import Protocol, Type
 
-from datamodel.base_models import Page
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import BaseOptions
+from backend.extraction.engine.datamodel.base_models import Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import BaseOptions
 
 
 class BaseModelWithOptions(Protocol):

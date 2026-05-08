@@ -8,11 +8,11 @@ import numpy as np
 from PIL import ImageDraw
 from pydantic import BaseModel
 
-from datamodel.base_models import Page
-from datamodel.document import ConversionResult
-from datamodel.settings import settings
-from models.base_model import BasePageModel
-from utils.profiling import TimeRecorder
+from backend.extraction.engine.datamodel.base_models import Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.settings import settings
+from backend.extraction.engine.models.base_model import BasePageModel
+from backend.extraction.engine.utils.profiling import TimeRecorder
 
 
 class PagePreprocessingOptions(BaseModel):

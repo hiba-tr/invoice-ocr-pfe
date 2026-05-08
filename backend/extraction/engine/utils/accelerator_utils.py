@@ -1,7 +1,7 @@
 import logging
 from typing import List, Optional
 
-from datamodel.accelerator_options import AcceleratorDevice
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice
 
 _log = logging.getLogger(__name__)
 

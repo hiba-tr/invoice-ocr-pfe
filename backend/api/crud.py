@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from backend.api import models_sql, schemas
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Optional
 from backend.semantic.semantic import normalize_text
 
 # ------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ def get_or_create_colonne(
 # ------------------------------------------------------------------------------
 # 4. CRÉATION D'UNE FACTURE (avec concession)
 # ------------------------------------------------------------------------------
-import uuid
+import uuid  # noqa: E402
 
 def create_facture(
     db: Session,

@@ -7,8 +7,8 @@ from docling_core.types.doc import DocItemLabel, Size
 from docling_core.types.doc.page import TextCell
 from rtree import index
 
-from datamodel.base_models import BoundingBox, Cluster, Page
-from datamodel.pipeline_options import (
+from backend.extraction.engine.datamodel.base_models import BoundingBox, Cluster, Page
+from backend.extraction.engine.datamodel.pipeline_options import (
     LayoutOptions,
 )
 

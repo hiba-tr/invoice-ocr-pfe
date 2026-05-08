@@ -4,10 +4,10 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from typing import Type
 
-from datamodel.base_models import LayoutPrediction, Page
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import BaseLayoutOptions
-from models.base_model import BaseModelWithOptions, BasePageModel
+from backend.extraction.engine.datamodel.base_models import LayoutPrediction, Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import BaseLayoutOptions
+from backend.extraction.engine.models.base_model import BaseModelWithOptions, BasePageModel
 
 
 class BaseLayoutModel(BasePageModel, BaseModelWithOptions, ABC):

@@ -26,27 +26,27 @@ from backend.extraction.engine.datamodel.base_models import (
     ErrorItem,
     Page,
 )
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import ThreadedPdfPipelineOptions
-from datamodel.settings import settings
-from models.factories import (
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import ThreadedPdfPipelineOptions
+from backend.extraction.engine.datamodel.settings import settings
+from backend.extraction.engine.models.factories import (
     get_layout_factory,
     get_ocr_factory,
     get_table_structure_factory,
 )
 
-from models.stages.page_assemble.page_assemble_model import (
+from backend.extraction.engine.models.stages.page_assemble.page_assemble_model import (
     PageAssembleModel,
     PageAssembleOptions,
 )
-from models.stages.page_preprocessing.page_preprocessing_model import (
+from backend.extraction.engine.models.stages.page_preprocessing.page_preprocessing_model import (
     PagePreprocessingModel,
     PagePreprocessingOptions,
 )
 
-from pipeline.base_pipeline import ConvertPipeline
-from utils.profiling import ProfilingScope, TimeRecorder
-from utils.utils import chunkify
+from backend.extraction.engine.pipeline.base_pipeline import ConvertPipeline
+from backend.extraction.engine.utils.profiling import ProfilingScope, TimeRecorder
+from backend.extraction.engine.utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 

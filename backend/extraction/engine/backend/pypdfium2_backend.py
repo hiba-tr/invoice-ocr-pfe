@@ -13,12 +13,12 @@ from pypdfium2 import PdfTextPage
 from pypdfium2._helpers.misc import PdfiumError
 from PIL import Image
 
-from backend.pdf_backend import PdfDocumentBackend, PdfPageBackend
-from datamodel.backend_options import PdfBackendOptions
-from utils.locks import pypdfium2_lock
+from backend.extraction.engine.backend.pdf_backend import PdfDocumentBackend, PdfPageBackend
+from backend.extraction.engine.datamodel.backend_options import PdfBackendOptions
+from backend.extraction.engine.utils.locks import pypdfium2_lock
 
 if TYPE_CHECKING:
-    from datamodel.document import InputDocument
+    from backend.extraction.engine.datamodel.document import InputDocument
 
 _log = logging.getLogger(__name__)
 

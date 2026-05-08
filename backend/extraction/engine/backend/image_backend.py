@@ -13,11 +13,11 @@ from docling_core.types.doc.page import (
 )
 from PIL import Image
 
-from backend.abstract_backend import AbstractDocumentBackend
-from backend.pdf_backend import PdfDocumentBackend, PdfPageBackend
-from datamodel.backend_options import PdfBackendOptions
-from datamodel.base_models import InputFormat, Size
-from datamodel.document import InputDocument
+from backend.extraction.engine.backend.abstract_backend import AbstractDocumentBackend
+from backend.extraction.engine.backend.pdf_backend import PdfDocumentBackend, PdfPageBackend
+from backend.extraction.engine.datamodel.backend_options import PdfBackendOptions
+from backend.extraction.engine.datamodel.base_models import InputFormat, Size
+from backend.extraction.engine.datamodel.document import InputDocument
 
 _log = logging.getLogger(__name__)
 

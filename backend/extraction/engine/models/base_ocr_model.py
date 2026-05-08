@@ -11,12 +11,12 @@ from docling_core.types.doc.page import TextCell
 from PIL import Image, ImageDraw
 from rtree import index
 
-from datamodel.accelerator_options import AcceleratorOptions
-from datamodel.base_models import Page
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import OcrOptions
-from datamodel.settings import settings
-from models.base_model import BaseModelWithOptions, BasePageModel
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorOptions
+from backend.extraction.engine.datamodel.base_models import Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import OcrOptions
+from backend.extraction.engine.datamodel.settings import settings
+from backend.extraction.engine.models.base_model import BaseModelWithOptions, BasePageModel
 
 _log = logging.getLogger(__name__)
 

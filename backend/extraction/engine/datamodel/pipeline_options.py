@@ -12,8 +12,8 @@ from pydantic import (
 )
 
 # Import the following for backwards compatibility
-from datamodel.accelerator_options import  AcceleratorOptions
-from datamodel.layout_model_specs import (
+from backend.extraction.engine.datamodel.accelerator_options import  AcceleratorOptions
+from backend.extraction.engine.datamodel.layout_model_specs import (
    
     DOCLING_LAYOUT_HERON,
  

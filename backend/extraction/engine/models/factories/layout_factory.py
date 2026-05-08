@@ -1,5 +1,5 @@
-from models.base_layout_model import BaseLayoutModel
-from models.factories.base_factory import BaseFactory
+from backend.extraction.engine.models.base_layout_model import BaseLayoutModel
+from backend.extraction.engine.models.factories.base_factory import BaseFactory
 
 
 class LayoutFactory(BaseFactory[BaseLayoutModel]):

@@ -9,18 +9,18 @@ import numpy as np
 from docling_core.types.doc import DocItemLabel
 from PIL import Image
 
-from datamodel.accelerator_options import AcceleratorOptions
-from datamodel.base_models import BoundingBox, Cluster, LayoutPrediction, Page
-from datamodel.document import ConversionResult
-from datamodel.layout_model_specs import DOCLING_LAYOUT_V2, LayoutModelConfig
-from datamodel.pipeline_options import LayoutOptions
-from datamodel.settings import settings
-from models.base_layout_model import BaseLayoutModel
-from models.utils.hf_model_download import download_hf_model
-from utils.accelerator_utils import decide_device
-from utils.layout_postprocessor import LayoutPostprocessor
-from utils.profiling import TimeRecorder
-from utils.visualization import draw_clusters
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorOptions
+from backend.extraction.engine.datamodel.base_models import BoundingBox, Cluster, LayoutPrediction, Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.layout_model_specs import DOCLING_LAYOUT_V2, LayoutModelConfig
+from backend.extraction.engine.datamodel.pipeline_options import LayoutOptions
+from backend.extraction.engine.datamodel.settings import settings
+from backend.extraction.engine.models.base_layout_model import BaseLayoutModel
+from backend.extraction.engine.models.utils.hf_model_download import download_hf_model
+from backend.extraction.engine.utils.accelerator_utils import decide_device
+from backend.extraction.engine.utils.layout_postprocessor import LayoutPostprocessor
+from backend.extraction.engine.utils.profiling import TimeRecorder
+from backend.extraction.engine.utils.visualization import draw_clusters
 
 _log = logging.getLogger(__name__)
 

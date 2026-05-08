@@ -5,7 +5,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from datamodel.base_models import (
+from backend.extraction.engine.datamodel.base_models import (
     AssembledUnit,
     ContainerElement,
     Page,
@@ -13,10 +13,10 @@ from datamodel.base_models import (
     Table,
     TextElement,
 )
-from datamodel.document import ConversionResult
-from models.base_model import BasePageModel
-from models.stages.layout.layout_model import LayoutModel
-from utils.profiling import TimeRecorder
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.models.base_model import BasePageModel
+from backend.extraction.engine.models.stages.layout.layout_model import LayoutModel
+from backend.extraction.engine.utils.profiling import TimeRecorder
 
 _log = logging.getLogger(__name__)
 

@@ -5,20 +5,20 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Optional, Type, List
 
-from datamodel.accelerator_options import AcceleratorOptions
-from datamodel.base_models import Page
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import (
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorOptions
+from backend.extraction.engine.datamodel.base_models import Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import (
     EasyOcrOptions,
     OcrAutoOptions,
     OcrOptions,
     RapidOcrOptions,
     TesseractCliOcrOptions,
 )
-from models.base_ocr_model import BaseOcrModel
-from models.stages.ocr.easyocr_model import EasyOcrModel
-from models.stages.ocr.rapid_ocr_model import RapidOcrModel
-from models.stages.ocr.tesseract_ocr_model import TesseractOcrModel
+from backend.extraction.engine.models.base_ocr_model import BaseOcrModel
+from backend.extraction.engine.models.stages.ocr.easyocr_model import EasyOcrModel
+from backend.extraction.engine.models.stages.ocr.rapid_ocr_model import RapidOcrModel
+from backend.extraction.engine.models.stages.ocr.tesseract_ocr_model import TesseractOcrModel
 
 _log = logging.getLogger(__name__)
 
@@ -55,8 +55,8 @@ class OcrAutoModel(BaseOcrModel):
 
             # ── PRIORITY 1: RapidOCR ────────────────────────────────────────
             try:
-                import onnxruntime  # noqa
-                from rapidocr import RapidOCR  # noqa
+                import onnxruntime 
+                from rapidocr import RapidOCR
                 engine = RapidOcrModel(
                     enabled=self.enabled,
                     artifacts_path=artifacts_path,
@@ -114,8 +114,8 @@ class OcrAutoModel(BaseOcrModel):
             # ── PRIORITY 4: PaddleOCR (If available) ───────────────────────
             try:
                 from paddleocr import PaddleOCR  # noqa
-                from models.stages.ocr.paddle_ocr_model import PaddleOcrModel
-                from datamodel.pipeline_options import PaddleOcrOptions
+                from backend.extraction.engine.models.stages.ocr.paddle_ocr_model import PaddleOcrModel
+                from backend.extraction.engine.datamodel.pipeline_options import PaddleOcrOptions
                 engine = PaddleOcrModel(
                     enabled=self.enabled,
                     artifacts_path=artifacts_path,

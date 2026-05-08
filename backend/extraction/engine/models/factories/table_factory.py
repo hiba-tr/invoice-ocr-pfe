@@ -1,5 +1,5 @@
-from models.base_table_model import BaseTableStructureModel
-from models.factories.base_factory import BaseFactory
+from backend.extraction.engine.models.base_table_model import BaseTableStructureModel
+from backend.extraction.engine.models.factories.base_factory import BaseFactory
 
 
 class TableStructureFactory(BaseFactory[BaseTableStructureModel]):

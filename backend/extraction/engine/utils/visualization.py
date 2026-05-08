@@ -2,7 +2,7 @@ from docling_core.types.doc import DocItemLabel
 from PIL import Image, ImageDraw, ImageFont
 from PIL.ImageFont import FreeTypeFont
 
-from datamodel.base_models import Cluster
+from backend.extraction.engine.datamodel.base_models import Cluster
 
 
 def draw_clusters(

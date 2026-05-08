@@ -8,14 +8,14 @@ import numpy as np
 from docling_core.types.doc import BoundingBox, CoordOrigin
 from docling_core.types.doc.page import BoundingRectangle, TextCell
 
-from datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
-from datamodel.base_models import Page
-from datamodel.document import ConversionResult
-from datamodel.pipeline_options import OcrOptions, PaddleOcrOptions
-from datamodel.settings import settings
-from models.base_ocr_model import BaseOcrModel
-from utils.accelerator_utils import decide_device
-from utils.profiling import TimeRecorder
+from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from backend.extraction.engine.datamodel.base_models import Page
+from backend.extraction.engine.datamodel.document import ConversionResult
+from backend.extraction.engine.datamodel.pipeline_options import OcrOptions, PaddleOcrOptions
+from backend.extraction.engine.datamodel.settings import settings
+from backend.extraction.engine.models.base_ocr_model import BaseOcrModel
+from backend.extraction.engine.utils.accelerator_utils import decide_device
+from backend.extraction.engine.utils.profiling import TimeRecorder
 
 _log = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ class PaddleOcrModel(BaseOcrModel):
             yield from page_batch
             return
 
-        from models.utils.image_preprocessor import ImagePreprocessor
+        from backend.extraction.engine.models.utils.image_preprocessor import ImagePreprocessor
         preprocessor = ImagePreprocessor()
 
         for page in page_batch:
