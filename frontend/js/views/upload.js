@@ -6,7 +6,6 @@ export function initUploadView() {
   const browseBtn = document.getElementById('browse-btn');
   const uploadArea = document.getElementById('upload-area');
   const extractBtn = document.getElementById('extract-btn');
-  const fileInfo = document.getElementById('selected-file-info');
 
   browseBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -18,103 +17,227 @@ export function initUploadView() {
       fileInput.click();
     }
   });
-  uploadArea?.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('border-primary'); });
-  uploadArea?.addEventListener('dragleave', () => uploadArea.classList.remove('border-primary'));
-  uploadArea?.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove('border-primary');
-    if (e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files[0]);
-  });
-  fileInput?.addEventListener('change', (e) => {
-    if (e.target.files.length) handleFileSelect(e.target.files[0]);
-  });
+  uploadArea?.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea?.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+ // Remplace les gestionnaires de drop et change par :
+uploadArea?.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  if (e.dataTransfer.files.length) {
+    Array.from(e.dataTransfer.files).forEach(f => handleFileSelect(f));
+  }
+});
+fileInput?.addEventListener('change', (e) => {
+  if (e.target.files.length) {
+    Array.from(e.target.files).forEach(f => handleFileSelect(f));
+  }
+});
 
-  function handleFileSelect(file) {
-    state.uploadedFile = file;
-    fileInfo.style.display = 'block';
-    fileInfo.innerHTML = `<i class="fas fa-file me-1"></i> ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
-    extractBtn.disabled = false;
+  // ---------- GESTION DE LA FILE D'ATTENTE ----------
+let selectedFiles = [];
+
+function updateFileQueue() {
+  const queueEl = document.getElementById('file-queue');
+  const queueList = document.getElementById('queue-list');
+  if (!queueEl || !queueList) return;
+  if (selectedFiles.length === 0) {
+    queueEl.style.display = 'none';
+    return;
+  }
+  queueEl.style.display = 'block';
+  queueList.innerHTML = selectedFiles
+    .map(
+      (f, i) => `
+      <div class="queue-item">
+        <i class="fas fa-file" style="color: var(--accent);"></i>
+        <span class="file-name">${f.name}</span>
+        <span style="font-size:12px; color: var(--text-muted);">${(f.size / 1024).toFixed(1)} KB</span>
+        <button class="btn btn-sm remove-file" data-index="${i}">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>`
+    )
+    .join('');
+  // Événements de suppression
+  queueList.querySelectorAll('.remove-file').forEach(btn =>
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(btn.dataset.index);
+      selectedFiles.splice(idx, 1);
+      updateFileQueue();
+      extractBtn.disabled = selectedFiles.length === 0;
+    })
+  );
+}
+
+function handleFileSelect(file) {
+  // Ajouter chaque nouveau fichier à la liste
+  selectedFiles.push(file);
+  updateFileQueue();
+  extractBtn.disabled = selectedFiles.length === 0;
+}
+extractBtn?.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+
+  // Afficher la barre de progression
+  if (progressContainer) {
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressText.textContent = '0%';
   }
 
-  extractBtn?.addEventListener('click', async () => {
-    if (!state.uploadedFile) return;
-    showSpinner();
-    try {
+  showSpinner();
+  try {
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+
+      // Mise à jour de la progression
+      const progress = Math.round(((i + 1) / selectedFiles.length) * 100);
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      if (progressText) progressText.textContent = `${progress}%`;
+
       const formData = new FormData();
-      formData.append('file', state.uploadedFile);
+      formData.append('file', file);
       const resp = await axios.post(API_BASE + '/upload', formData);
+      // Garde le dernier résultat pour l'affichage
       state.extractionResult = resp.data;
       state.suggestions = [];
       state.selectedInvoiceIndex = 0;
       state.editedTableData = [];
       state.tableInstance = null;
-      renderExtractionResults();
-      showToast('Extraction réussie', 'success');
-    } catch (err) {
-      showToast('Échec de l\'extraction', 'danger');
-    } finally {
-      hideSpinner();
     }
-  });
-}
+
+    // Enregistre le premier fichier pour l'affichage du nom
+    state.uploadedFile = selectedFiles[0];
+
+    // Affiche les résultats
+    renderExtractionResults();
+    showToast('Extraction réussie', 'success');
+
+    // Nettoie la file d'attente
+    selectedFiles = [];
+    updateFileQueue();
+    extractBtn.disabled = true;
+  } catch (err) {
+    showToast('Échec de l’extraction', 'danger');
+  } finally {
+    hideSpinner();
+    // Masque la progression après un court délai
+    if (progressContainer) {
+      setTimeout(() => { progressContainer.style.display = 'none'; }, 1000);
+    }
+  }
+});
 
 function renderExtractionResults() {
   const container = document.getElementById('extraction-results');
   container.style.display = 'block';
   const data = state.extractionResult;
-  let html = '';
-
   let invoices = data.invoices || (data.metadata ? [data] : []);
   if (invoices.length === 0) {
-    container.innerHTML = '<div class="alert alert-warning">Aucune facture détectée</div>';
+    container.innerHTML = `<div class="no-data"><div class="nd-icon">📭</div>Aucune facture détectée</div>`;
     return;
-  }
-
-  if (invoices.length > 1) {
-    html += `<div class="card-custom mb-3"><label class="fw-bold">Factures détectées :</label>`;
-    html += `<select id="invoice-selector" class="form-select">`;
-    invoices.forEach((inv, idx) => {
-      const meta = inv.metadata || {};
-      const name = meta.concession || meta.company || `Facture ${idx+1}`;
-      html += `<option value="${idx}" ${idx === state.selectedInvoiceIndex ? 'selected' : ''}>Facture ${idx+1} – ${name}</option>`;
-    });
-    html += `</select></div>`;
   }
 
   const currentInv = invoices[state.selectedInvoiceIndex];
   const metadata = currentInv.metadata || {};
   const items = currentInv.items || [];
+  const nbItems = items.length;
+  const totalAmount = items.reduce((sum, it) => {
+    const vals = Object.values(it.valeurs || {});
+    const numericVals = vals.map(v => {
+      const num = parseFloat(String(v).replace(',', '.').replace(/[^\d.-]/g, ''));
+      return isNaN(num) ? 0 : num;
+    });
+    return sum + numericVals.reduce((a, b) => a + b, 0);
+  }, 0).toFixed(2);
 
-  html += `<div class="card-custom"><h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Métadonnées</h5>`;
-  html += `<div class="row g-3">`;
-  html += `<div class="col-md-6"><label class="form-label">Concession</label><div id="concession-field"></div></div>`;
-  html += `<div class="col-md-6"><label class="form-label">Date facture</label><input type="date" class="form-control" id="meta-date" value="${metadata.date || ''}"></div>`;
-  html += `<div class="col-md-6"><label class="form-label">Client</label><input class="form-control" id="meta-client" value="${metadata.client || ''}"></div>`;
-  html += `<div class="col-md-6"><label class="form-label">Devise</label><input class="form-control" id="meta-currency" value="${metadata.currency || 'TND'}"></div>`;
-  html += `<div class="col-md-6"><label class="form-label">Fournisseur</label><input class="form-control" id="meta-company" value="${metadata.company || ''}"></div>`;
-  html += `<div class="col-md-6"><label class="form-label">Objet</label><input class="form-control" id="meta-objet" value=""></div>`;
-  html += `</div></div>`;
+  let html = '';
 
-  html += `<div class="card-custom"><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="mb-0">Articles extraits</h5>`;
-  html += `<div><button class="btn btn-sm btn-outline-primary me-2" id="add-column-btn"><i class="fas fa-plus"></i> Colonne</button>`;
-  // ✅ MODIFICATION : le bouton appelle désormais autoApplySuggestions
-  html += `<button class="btn btn-sm btn-outline-primary" id="suggest-btn"><i class="fas fa-lightbulb"></i> Vérifier correspondances</button></div></div>`;
-  html += `<div id="items-table" style="min-height: 300px;"></div></div>`;
+  // Header des résultats
+  html += `
+    <div class="an-header mb-3">
+      <div class="an-header-left">
+        <div class="an-eyebrow">Résultat</div>
+        <h2 class="an-title" style="font-size:22px;">Extraction <span>terminée</span></h2>
+      </div>
+      <div class="live-badge"><div class="live-dot"></div>OCR Validé</div>
+    </div>
+  `;
+
+  // KPI cards style Analyses
+   // KPI cards redimensionnées (3 colonnes)
+  html += `
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="kpi-card kpi-accent-cyan">
+          <div class="kpi-icon">📄</div>
+          <div class="kpi-label">Fichier traité</div>
+          <div class="kpi-value" style="font-size:18px;">${state.uploadedFile?.name || '—'}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="kpi-card kpi-accent-ok">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-label">Articles extraits</div>
+          <div class="kpi-value">${nbItems}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="kpi-card kpi-accent-blue">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Montant total estimé</div>
+          <div class="kpi-value kpi-cyan">${totalAmount} €</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Métadonnées
+    // Métadonnées (sans client, sans objet)
+  html += `
+    <div class="card-custom mb-4">
+      <h5 class="fw-bold mb-3" style="font-family:var(--font-display);"><i class="fas fa-info-circle me-2" style="color:var(--accent);"></i>Métadonnées</h5>
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label" style="font-family:var(--font-mono); font-size:10px; text-transform:uppercase;">Concession</label><div id="concession-field"></div></div>
+        <div class="col-md-6"><label class="form-label" style="font-family:var(--font-mono); font-size:10px; text-transform:uppercase;">Date facture</label><input type="date" class="an-input form-control" id="meta-date" value="${metadata.date || ''}"></div>
+        <div class="col-md-6"><label class="form-label" style="font-family:var(--font-mono); font-size:10px; text-transform:uppercase;">Devise</label><input class="an-input form-control" id="meta-currency" value="${metadata.currency || 'TND'}"></div>
+        <div class="col-md-6"><label class="form-label" style="font-family:var(--font-mono); font-size:10px; text-transform:uppercase;">Fournisseur</label><input class="an-input form-control" id="meta-company" value="${metadata.company || ''}"></div>
+      </div>
+    </div>
+  `;
+
+  // Table des articles
+  html += `
+    <div class="card-custom">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0" style="font-family:var(--font-display);">Articles extraits</h5>
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2" id="add-column-btn"><i class="fas fa-plus"></i> Colonne</button>
+          <button class="btn btn-sm btn-outline-primary" id="suggest-btn"><i class="fas fa-lightbulb"></i> Vérifier correspondances</button>
+        </div>
+      </div>
+      <div id="items-table" style="min-height:300px;"></div>
+    </div>
+  `;
   html += `<div id="suggestions-area" class="mt-3"></div>`;
-  html += `<div class="mt-4 d-flex gap-3"><button class="btn btn-primary px-5" id="save-btn"><i class="fas fa-save me-2"></i>Enregistrer</button>`;
-  html += `<div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="force-overwrite"><label class="form-check-label">Écraser si existe</label></div></div>`;
+  html += `
+    <div class="mt-4 d-flex gap-3">
+      <button id="save-btn" class="btn-analyse"><i class="fas fa-save me-2"></i>Enregistrer</button>
+      <div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="force-overwrite"><label class="form-check-label">Écraser si existe</label></div>
+    </div>
+  `;
 
   container.innerHTML = html;
 
+  // Initialisation des champs et de la table (inchangé)
   setTimeout(() => initConcessionField(metadata.concession), 10);
   initItemsTable(items, metadata.first_column_name || 'Description');
 
-  document.getElementById('invoice-selector')?.addEventListener('change', (e) => {
-    state.selectedInvoiceIndex = parseInt(e.target.value);
-    renderExtractionResults();
-  });
   document.getElementById('add-column-btn')?.addEventListener('click', addNewColumn);
-  // ✅ MODIFICATION : le bouton "Vérifier correspondances" déclenche l'auto-application
   document.getElementById('suggest-btn')?.addEventListener('click', autoApplySuggestions);
   document.getElementById('save-btn')?.addEventListener('click', saveFacture);
 }
@@ -388,10 +511,8 @@ function renderSuggestions() {
 
 async function saveFacture() {
   const date = document.getElementById('meta-date')?.value;
-  const client = document.getElementById('meta-client')?.value;
   const devise = document.getElementById('meta-currency')?.value || 'TND';
   const company = document.getElementById('meta-company')?.value;
-  const objet = document.getElementById('meta-objet')?.value;
   const force = document.getElementById('force-overwrite')?.checked || false;
 
   if (!state.currentConcessionId) { showToast('Concession non définie', 'danger'); return; }
@@ -425,4 +546,4 @@ async function saveFacture() {
     document.querySelector('#sidebar-nav [data-view="history"]').click();
   } catch (e) { showToast('Erreur lors de l\'enregistrement', 'danger'); }
   finally { hideSpinner(); }
-}
+}}

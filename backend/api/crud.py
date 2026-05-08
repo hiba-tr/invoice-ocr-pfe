@@ -228,3 +228,116 @@ def delete_valeur_ligne(
         db.commit()
         return True
     return False
+
+
+#ajouter pour dashboard
+# ---------- Items ----------
+def delete_items(db: Session, item_ids: List[int]) -> Tuple[int, List[int]]:
+    """
+    Supprime des items s'ils ne sont pas utilisés.
+    Retourne (nombre_supprimés, liste_des_ids_refusés_car_utilisés)
+    """
+    refused = []
+    deleted = 0
+    for iid in item_ids:
+        # Vérifier si l'item est référencé dans une ligne de facture
+        usage_count = db.query(models_sql.LigneFacture).filter(
+            models_sql.LigneFacture.id_item == iid
+        ).count()
+        if usage_count > 0:
+            refused.append(iid)
+            continue
+        item = db.query(models_sql.Item).get(iid)
+        if item:
+            db.delete(item)
+            deleted += 1
+    db.commit()
+    return deleted, refused
+
+# ---------- Colonnes ----------
+def delete_colonnes(db: Session, colonne_ids: List[int]) -> Tuple[int, List[int]]:
+    refused = []
+    deleted = 0
+    for cid in colonne_ids:
+        usage = db.query(models_sql.ValeurLigne).filter(
+            models_sql.ValeurLigne.id_colonne == cid
+        ).count()
+        if usage > 0:
+            refused.append(cid)
+            continue
+        col = db.query(models_sql.Colonne).get(cid)
+        if col:
+            db.delete(col)
+            deleted += 1
+    db.commit()
+    return deleted, refused
+
+# ---------- Factures ----------
+def delete_facture(db: Session, facture_id: int):
+    facture = db.query(models_sql.Facture).get(facture_id)
+    if facture:
+        # Supprimer d'abord les lignes et valeurs associées (cascade possible)
+        lignes = db.query(models_sql.LigneFacture).filter(
+            models_sql.LigneFacture.id_facture == facture_id
+        ).all()
+        for ligne in lignes:
+            db.query(models_sql.ValeurLigne).filter(
+                models_sql.ValeurLigne.id_ligne == ligne.id_ligne
+            ).delete()
+            db.delete(ligne)
+        db.delete(facture)
+        db.commit()
+        return True
+    return False
+
+
+def create_item_manuel(db: Session, libelle: str, id_concession: Optional[int] = None) -> models_sql.Item:
+    item = models_sql.Item(
+        id_concession=id_concession,
+        libelle_canonique=libelle,
+        libelle_recherche=normalize_text(libelle)
+    )
+    db.add(item)
+    db.commit()
+    db.refresh(item)
+    return item
+
+def create_colonne_manuel(db: Session, libelle: str, id_concession: Optional[int] = None) -> models_sql.Colonne:
+    colonne = models_sql.Colonne(
+        id_concession=id_concession,
+        libelle_canonique=libelle,
+        libelle_recherche=normalize_text(libelle)
+    )
+    db.add(colonne)
+    db.commit()
+    db.refresh(colonne)
+    return colonne
+
+def update_item(db: Session, item_id: int, new_libelle: str) -> Optional[models_sql.Item]:
+    item = db.query(models_sql.Item).get(item_id)
+    if item:
+        item.libelle_canonique = new_libelle
+        item.libelle_recherche = normalize_text(new_libelle)
+        db.commit()
+        db.refresh(item)
+    return item
+
+def update_colonne(db: Session, colonne_id: int, new_libelle: str) -> Optional[models_sql.Colonne]:
+    colonne = db.query(models_sql.Colonne).get(colonne_id)
+    if colonne:
+        colonne.libelle_canonique = new_libelle
+        colonne.libelle_recherche = normalize_text(new_libelle)
+        db.commit()
+        db.refresh(colonne)
+    return colonne
+
+def get_item_usage_count(db: Session, item_id: int) -> int:
+    return db.query(models_sql.LigneFacture).filter(
+        models_sql.LigneFacture.id_item == item_id
+    ).count()
+
+def get_colonne_usage_count(db: Session, colonne_id: int) -> int:
+    return db.query(models_sql.ValeurLigne).filter(
+        models_sql.ValeurLigne.id_colonne == colonne_id
+    ).count()
+

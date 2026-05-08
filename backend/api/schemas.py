@@ -37,8 +37,9 @@ class ItemCreate(ItemBase):
 
 class ItemOut(ItemBase):
     id_item: int
-    id_concession: int
+    id_concession: Optional[int] = None   # autorise les items sans concession
     date_creation: datetime
+    usage_count: int = 0                  # ajouté pour l'interface
 
     class Config:
         from_attributes = True
@@ -58,8 +59,9 @@ class ColonneCreate(ColonneBase):
 
 class ColonneOut(ColonneBase):
     id_colonne: int
-    id_concession: int
+    id_concession: Optional[int] = None   # autorise les colonnes sans concession
     date_creation: datetime
+    usage_count: int = 0                  # ajouté pour l'interface
 
     class Config:
         from_attributes = True
@@ -207,3 +209,26 @@ class ResumeDetail(BaseModel):
 
 class ResumeOut(BaseModel):
     resume: ResumeDetail
+
+
+
+    # ajouter pour daschboard
+
+    # ------------------------------------------------------------------------------
+# Schémas pour la gestion via l'interface Base de données
+# ------------------------------------------------------------------------------
+class ItemCreatePayload(BaseModel):
+    """Payload pour créer un item manuellement."""
+    libelle_canonique: str
+    id_concession: Optional[int] = None
+
+
+class ColonneCreatePayload(BaseModel):
+    """Payload pour créer une colonne manuellement."""
+    libelle_canonique: str
+    id_concession: Optional[int] = None
+
+
+class ConcessionCreatePayload(BaseModel):
+    """Payload pour créer une concession via JSON."""
+    nom: str

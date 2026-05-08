@@ -316,8 +316,14 @@ def get_all_items(
     id_concession: Optional[int] = Query(None, description="Filtrer par concession")
 ):
     if id_concession:
-        return db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
-    return crud.get_all_items(db)
+        items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
+    else:
+        items = crud.get_all_items(db)
+    for item in items:
+        item.usage_count = db.query(models_sql.LigneFacture).filter(
+            models_sql.LigneFacture.id_item == item.id_item
+        ).count()
+    return items
 
 
 @app.get("/colonnes", response_model=List[schemas.ColonneOut])
@@ -326,10 +332,24 @@ def get_all_colonnes(
     id_concession: Optional[int] = Query(None, description="Filtrer par concession")
 ):
     if id_concession:
-        return db.query(models_sql.Colonne).filter(models_sql.Colonne.id_concession == id_concession).all()
-    return crud.get_all_colonnes(db)
+        colonnes = db.query(models_sql.Colonne).filter(models_sql.Colonne.id_concession == id_concession).all()
+    else:
+        colonnes = crud.get_all_colonnes(db)
+    for colonne in colonnes:
+        colonne.usage_count = db.query(models_sql.ValeurLigne).filter(
+            models_sql.ValeurLigne.id_colonne == colonne.id_colonne
+        ).count()
+    return colonnes
 
+@app.post("/items", response_model=schemas.ItemOut)
+def api_create_item(payload: schemas.ItemCreatePayload, db: Session = Depends(get_db)):
+    item = crud.create_item_manuel(db, payload.libelle_canonique, payload.id_concession)
+    return item
 
+@app.post("/colonnes", response_model=schemas.ColonneOut)
+def api_create_colonne(payload: schemas.ColonneCreatePayload, db: Session = Depends(get_db)):
+    colonne = crud.create_colonne_manuel(db, payload.libelle_canonique, payload.id_concession)
+    return colonne
 # ------------------------------------------------------------------------------
 # 5. SUGGESTION SÉMANTIQUE (avec concession)
 # ------------------------------------------------------------------------------
@@ -356,13 +376,9 @@ def suggest_item(
 # 6. CONCESSIONS
 # ------------------------------------------------------------------------------
 @app.post("/concessions", response_model=schemas.ConcessionOut)
-def get_or_create_concession(
-    nom: str,
-    db: Session = Depends(get_db)
-):
-    """Recherche ou crée une concession à partir de son nom brut."""
-    concession = crud.get_or_create_concession(db, nom)
-    db.commit() 
+def create_concession(payload: schemas.ConcessionCreatePayload, db: Session = Depends(get_db)):
+    concession = crud.get_or_create_concession(db, payload.nom)
+    db.commit()
     return concession
 
 
@@ -438,18 +454,9 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
 
 
 @app.delete("/items")
-def delete_items(item_ids: List[int], db: Session = Depends(get_db)):
-    concession_ids = set()
-    for item_id in item_ids:
-        item = db.query(models_sql.Item).get(item_id)
-        if item:
-            concession_ids.add(item.id_concession)
-            db.delete(item)
-    db.commit()
-    for cid in concession_ids:
-        semantic.invalidate_cache(concession_id=cid)
-    return {"deleted": len(item_ids)}
-
+def api_delete_items(item_ids: List[int], db: Session = Depends(get_db)):
+    deleted, refused = crud.delete_items(db, item_ids)
+    return {"deleted": deleted, "refused": refused}
 
 # ------------------------------------------------------------------------------
 # 8. RÉSUMÉ (à adapter plus tard)
@@ -893,3 +900,4 @@ def export_analyse_excel(
 import os
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
 app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+
