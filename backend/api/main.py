@@ -42,6 +42,105 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
+import re
+
+# ──────────────────────────────────────────────────────────────
+# Coller cette fonction AU NIVEAU MODULE (avant les endpoints)
+# ──────────────────────────────────────────────────────────────
+
+def _parse_montant(val_brute: str) -> float | None:
+    """
+    Parse robuste d'une valeur monétaire brute extraite d'une facture.
+    Gère : '1 234,56 €', '1234.56', '1,234.56', '-200', '1.234,56', etc.
+    Retourne None si non parseable.
+    """
+    if not val_brute:
+        return None
+    s = str(val_brute).strip()
+
+    # Supprimer les symboles monétaires et espaces insécables
+    s = re.sub(r'[€$£\u00a0\u202f]', '', s).strip()
+
+    # Cas : valeur entre parenthèses → négatif (ex: accounting format)
+    negative = s.startswith('(') and s.endswith(')')
+    if negative:
+        s = s[1:-1]
+
+    # Détecter le format : séparateur décimal = virgule ou point
+    # Cas 1 : "1.234,56"  → milliers=point, décimal=virgule
+    # Cas 2 : "1,234.56"  → milliers=virgule, décimal=point
+    # Cas 3 : "1234,56"   → décimal=virgule (pas de séparateur milliers)
+    # Cas 4 : "1234.56"   → décimal=point
+    # Cas 5 : "1.234"     → milliers=point (entier), pas de décimale
+
+    if re.search(r'\.\d{3}[,]\d{2}$', s):
+        # 1.234,56 → 1234.56
+        s = s.replace('.', '').replace(',', '.')
+    elif re.search(r',\d{3}[.]\d{2}$', s):
+        # 1,234.56 → 1234.56
+        s = s.replace(',', '')
+    elif ',' in s and '.' not in s:
+        # 1234,56 → 1234.56
+        s = s.replace(',', '.')
+    elif '.' in s and ',' not in s:
+        # Peut être milliers (1.234) ou décimal (1.56)
+        parts = s.split('.')
+        if len(parts) == 2 and len(parts[1]) == 3:
+            # Probablement séparateur de milliers
+            s = s.replace('.', '')
+        # sinon on garde tel quel (décimal)
+    else:
+        # Enlever tous les séparateurs de milliers (espaces, apostrophes)
+        s = re.sub(r"[\s']", '', s)
+
+    try:
+        result = float(s)
+        return -result if negative else result
+    except ValueError:
+        return None
+
+
+def _is_montant_column(col_name: str) -> bool:
+    """
+    Détecte si un nom de colonne est susceptible de contenir un montant.
+    Priorité haute → faible.
+    """
+    col_lower = col_name.lower().strip()
+
+    HIGH_PRIORITY = [
+        'montant total', 'total ttc', 'total ht', 'total général',
+        'total facture', 'montant ttc', 'montant ht',
+    ]
+    MED_PRIORITY = [
+        'montant', 'total', 'amount', 'prix total', 'sous-total',
+    ]
+    LOW_PRIORITY = [
+        'prix', 'tarif', 'prix unitaire', 'pu', 'unit price',
+        'valeur', 'coût', 'cost',
+    ]
+    EXCLUDE = [
+        'qté', 'quantité', 'quantity', 'qty', 'réf', 'référence',
+        'ref', 'taux', 'tva', 'remise', 'discount', 'code',
+    ]
+
+    for ex in EXCLUDE:
+        if ex in col_lower:
+            return False
+
+    for h in HIGH_PRIORITY:
+        if h in col_lower:
+            return True
+    for m in MED_PRIORITY:
+        if m in col_lower:
+            return True
+    for l in LOW_PRIORITY:
+        if l in col_lower:
+            return True
+
+    return False
+
 # ------------------------------------------------------------------------------
 # 1. UPLOAD & EXTRACTION (inchangé pour le moment)
 # ------------------------------------------------------------------------------
@@ -402,7 +501,7 @@ def rebuild(db: Session = Depends(get_db)):
 
 #comprsion et analyse 
 
-
+"""
 # ------------------------------------------------------------------------------
 # 10. ANALYSES COMPARATIVES
 # ------------------------------------------------------------------------------
@@ -412,9 +511,7 @@ def get_comparaison_analyses(
     annee: int,
     db: Session = Depends(get_db)
 ):
-    """
-    Retourne les données agrégées pour les graphiques d'analyse d'une concession sur une année.
-    """
+
     from sqlalchemy import extract, func
     from datetime import datetime
 
@@ -502,7 +599,296 @@ def get_comparaison_analyses(
         "articles_comparaison": articles_comparaison,
         "nb_factures": len(factures)
     }
+"""
 
+# ------------------------------------------------------------------------------
+# 10. ANALYSES COMPARATIVES (version enrichie)
+# ------------------------------------------------------------------------------
+from datetime import date
+from typing import Optional, List
+from pydantic import BaseModel
+
+class AnalyseRequest(BaseModel):
+    id_concession: int
+    annee: Optional[int] = None
+    date_debut: Optional[date] = None
+    date_fin: Optional[date] = None
+    mois: Optional[int] = None          # 1-12, si fourni avec annee : filtre sur ce mois
+    trimestre: Optional[int] = None     # 1-4, si fourni avec annee : filtre sur ce trimestre
+
+@app.get("/analyses/comparaison")
+def get_comparaison_analyses(
+    id_concession: int,
+    annee: Optional[int] = None,
+    date_debut: Optional[date] = None,
+    date_fin: Optional[date] = None,
+    mois: Optional[int] = None,
+    trimestre: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Retourne une analyse enrichie pour une concession avec KPI, totaux mensuels,
+    comparaison N-1, anomalies, et répartition articles.
+    """
+    from sqlalchemy import extract, func
+    from datetime import timedelta
+
+    # Vérifier concession
+    concession = db.query(models_sql.Concession).get(id_concession)
+    if not concession:
+        raise HTTPException(status_code=404, detail="Concession non trouvée")
+
+    # Déterminer la plage de dates
+    if date_debut and date_fin:
+        plage_debut = date_debut
+        plage_fin = date_fin
+    elif annee and mois:
+        plage_debut = date(annee, mois, 1)
+        # dernier jour du mois
+        if mois == 12:
+            plage_fin = date(annee, 12, 31)
+        else:
+            plage_fin = date(annee, mois + 1, 1) - timedelta(days=1)
+    elif annee and trimestre:
+        trim_start_month = (trimestre - 1) * 3 + 1
+        plage_debut = date(annee, trim_start_month, 1)
+        trim_end_month = trim_start_month + 2
+        if trim_end_month == 12:
+            plage_fin = date(annee, 12, 31)
+        else:
+            plage_fin = date(annee, trim_end_month + 1, 1) - timedelta(days=1)
+    elif annee:
+        plage_debut = date(annee, 1, 1)
+        plage_fin = date(annee, 12, 31)
+    else:
+        raise HTTPException(status_code=400, detail="Veuillez spécifier une plage de dates (annee, date_debut/date_fin, mois, trimestre)")
+
+    # Récupérer les factures dans la plage
+    factures = db.query(models_sql.Facture).filter(
+        models_sql.Facture.id_concession == id_concession,
+        models_sql.Facture.date_facture >= plage_debut,
+        models_sql.Facture.date_facture <= plage_fin
+    ).all()
+
+    if not factures:
+        return {
+            "concession": concession.nom,
+            "plage": {"debut": str(plage_debut), "fin": str(plage_fin)},
+            "nb_factures": 0,
+            "kpi": None,
+            "totaux_mensuels": [],
+            "articles_comparaison": [],
+            "anomalies": ["Aucune facture trouvée sur cette période."],
+            "repartition_articles": [],
+            "comparaison_n1": None
+        }
+
+    # KPI
+    total_facture = sum(f.total_montant or 0 for f in factures)
+    nb_factures = len(factures)
+    panier_moyen = total_facture / nb_factures if nb_factures else 0.0
+
+    # Détails des lignes
+    details_items = []
+    for f in factures:
+        lignes_data = crud.get_fact_data_by_facture(db, f.id_facture)
+        for ligne_info in lignes_data:
+            item_name = ligne_info["item"]
+            valeurs = {v["colonne"]: v["valeur_brute"] for v in ligne_info["valeurs"]}
+
+            # Parsing robuste du montant
+            montant = None
+            # Tri des colonnes par priorité décroissante
+            cols_sorted = sorted(
+                valeurs.items(),
+                key=lambda x: (
+                    2 if any(h in x[0].lower() for h in ['total ttc','montant total','total ht']) else
+                    1 if _is_montant_column(x[0]) else
+                    0
+                ),
+                reverse=True
+            )
+            for col_name, val in cols_sorted:
+                if not _is_montant_column(col_name):
+                    continue
+                parsed = _parse_montant(val)
+                if parsed is not None and parsed > 0:
+                    montant = parsed
+                    break
+
+            details_items.append({
+                "facture_id": f.id_facture,
+                "date_facture": f.date_facture.isoformat() if f.date_facture else None,
+                "item": item_name,
+                "montant": montant,
+                "valeurs": valeurs
+            })
+
+    # Top article (par occurrences)
+    articles_count = {}
+    articles_total = {}
+    for d in details_items:
+        item = d["item"]
+        articles_count[item] = articles_count.get(item, 0) + 1
+        if d["montant"] is not None:
+            articles_total[item] = articles_total.get(item, 0) + d["montant"]
+    top_article = max(articles_count, key=articles_count.get) if articles_count else None
+
+    # KPI final
+    kpi = {
+        "total_facture": round(total_facture, 2),
+        "nb_factures": nb_factures,
+        "panier_moyen": round(panier_moyen, 2),
+        "top_article": top_article,
+        "top_article_occurrences": articles_count.get(top_article, 0) if top_article else 0
+    }
+
+    # Totaux mensuels
+    totaux_mensuels = [0.0] * 12
+    for f in factures:
+        if f.date_facture:
+            m = f.date_facture.month - 1
+            totaux_mensuels[m] += f.total_montant or 0
+
+    # Comparaison N-1 (même plage mais année précédente)
+    annee_prec_debut = date(plage_debut.year - 1, plage_debut.month, plage_debut.day)
+    annee_prec_fin = date(plage_fin.year - 1, plage_fin.month, plage_fin.day)
+    factures_n1 = db.query(models_sql.Facture).filter(
+        models_sql.Facture.id_concession == id_concession,
+        models_sql.Facture.date_facture >= annee_prec_debut,
+        models_sql.Facture.date_facture <= annee_prec_fin
+    ).all()
+    totaux_mensuels_n1 = [0.0] * 12
+    for f in factures_n1:
+        if f.date_facture:
+            m = f.date_facture.month - 1
+            totaux_mensuels_n1[m] += f.total_montant or 0
+    total_n1 = sum(f.total_montant or 0 for f in factures_n1)
+    evolution = ((total_facture - total_n1) / total_n1 * 100) if total_n1 else None
+    comparaison_n1 = {
+        "totaux_mensuels": totaux_mensuels_n1,
+        "total": round(total_n1, 2),
+        "evolution_pct": round(evolution, 2) if evolution is not None else None
+    }
+
+    # Articles comparaison (comme avant)
+    articles_stats = {}
+    for d in details_items:
+        item = d["item"]
+        if item not in articles_stats:
+            articles_stats[item] = {"occurrences": 0, "montants": []}
+        articles_stats[item]["occurrences"] += 1
+        if d["montant"] is not None:
+            articles_stats[item]["montants"].append(d["montant"])
+
+    articles_comparaison = []
+    for article, stats in articles_stats.items():
+        if stats["montants"]:
+            articles_comparaison.append({
+                "article": article,
+                "occurrences": stats["occurrences"],
+                "prix_moyen": round(sum(stats["montants"]) / len(stats["montants"]), 2),
+                "prix_min": min(stats["montants"]),
+                "prix_max": max(stats["montants"])
+            })
+        else:
+            articles_comparaison.append({
+                "article": article,
+                "occurrences": stats["occurrences"],
+                "prix_moyen": None,
+                "prix_min": None,
+                "prix_max": None
+            })
+
+    # Répartition des dépenses par article (top 5 + autres)
+    repartition = []
+    sorted_articles = sorted(articles_total.items(), key=lambda x: x[1], reverse=True)
+    top5 = sorted_articles[:5]
+    for art, montant in top5:
+        repartition.append({"article": art, "montant": round(montant, 2)})
+    autres = sum(m for _, m in sorted_articles[5:])
+    if autres > 0:
+        repartition.append({"article": "Autres", "montant": round(autres, 2)})
+
+    # Anomalies
+    anomalies = []
+    # Mois sans facture
+    for m in range(12):
+        if totaux_mensuels[m] == 0:
+            mois_nom = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][m]
+            anomalies.append(f"Aucune facture en {mois_nom} {plage_debut.year}")
+    # Articles avec variation de prix > 50%
+    for art in articles_comparaison:
+        if art["prix_moyen"] and art["prix_min"] and art["prix_max"]:
+            if art["prix_min"] > 0 and (art["prix_max"] - art["prix_min"]) / art["prix_min"] > 0.5:
+                anomalies.append(f"Variation de prix importante pour '{art['article']}' : min {art['prix_min']} €, max {art['prix_max']} €")
+    if not anomalies:
+        anomalies.append("Aucune anomalie détectée")
+
+    return {
+        "concession": concession.nom,
+        "plage": {"debut": str(plage_debut), "fin": str(plage_fin)},
+        "nb_factures": nb_factures,
+        "kpi": kpi,
+        "totaux_mensuels": totaux_mensuels,
+        "articles_comparaison": articles_comparaison,
+        "anomalies": anomalies,
+        "repartition_articles": repartition,
+        "comparaison_n1": comparaison_n1
+    }
+
+
+# --- Endpoint export Excel ---
+from fastapi.responses import StreamingResponse
+from io import BytesIO
+import openpyxl
+
+@app.get("/analyses/export-excel")
+def export_analyse_excel(
+    id_concession: int,
+    annee: Optional[int] = None,
+    date_debut: Optional[date] = None,
+    date_fin: Optional[date] = None,
+    mois: Optional[int] = None,
+    trimestre: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    data = get_comparaison_analyses(
+        id_concession=id_concession,
+        annee=annee,
+        date_debut=date_debut,
+        date_fin=date_fin,
+        mois=mois,
+        trimestre=trimestre,
+        db=db
+    )
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Analyse"
+    ws.append(["Analyse pour", data["concession"], f"{data['plage']['debut']} à {data['plage']['fin']}"])
+    ws.append([])
+    if data["kpi"]:
+        ws.append(["KPI", ""])
+        ws.append(["Total facturé", data["kpi"]["total_facture"]])
+        ws.append(["Nombre factures", data["kpi"]["nb_factures"]])
+        ws.append(["Panier moyen", data["kpi"]["panier_moyen"]])
+    ws.append([])
+    ws.append(["Mois", "Total", "Total N-1"])
+    for mois_idx in range(12):
+        ws.append([mois_idx+1, data["totaux_mensuels"][mois_idx], data.get("comparaison_n1", {}).get("totaux_mensuels", [0]*12)[mois_idx]])
+    ws.append([])
+    ws.append(["Article", "Occurrences", "Prix moyen", "Prix min", "Prix max"])
+    for art in data["articles_comparaison"]:
+        ws.append([art["article"], art["occurrences"], art["prix_moyen"], art["prix_min"], art["prix_max"]])
+    
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=analyse_doccore.xlsx"}
+    )
 # ------ Servir le frontend (statique) ------
 import os
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "..", "frontend")

@@ -1,16 +1,17 @@
-<h2 class="fw-bold mb-4">
-  <i class="fas fa-pen-to-square me-2" style="color: var(--primary);"></i>Saisie manuelle d'une facture
-</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="page-title"><i class="fas fa-pen-to-square me-2" style="color: var(--primary);"></i>Saisie manuelle d'une facture</h1>
+    <p class="page-subtitle">Créez une facture de toutes pièces en quelques clics</p>
+  </div>
+</div>
 
-<!-- Étape 1 : Choix ou création de la concession -->
-<div class="card-custom mb-4">
+<!-- Étape 1 : Concession -->
+<div class="card-custom animate-fadeInUp">
   <h5 class="mb-3"><i class="fas fa-building me-2"></i>Concession</h5>
   <div class="row g-3 align-items-end">
     <div class="col-md-6">
       <label class="form-label fw-semibold">Sélectionner une concession</label>
-      <select id="manual-concession-select" class="form-select">
-        <option value="">-- Choisir --</option>
-      </select>
+      <select id="manual-concession-select" class="form-select"></select>
     </div>
     <div class="col-md-4">
       <label class="form-label fw-semibold">Ou créer une nouvelle</label>
@@ -23,26 +24,17 @@
   <div id="manual-concession-feedback" class="mt-2"></div>
 </div>
 
-<!-- Étape 2 : Métadonnées de la facture (apparaît après les modales) -->
+<!-- Étape 2 : Métadonnées -->
 <div class="card-custom mb-4" id="manual-meta-card" style="display: none;">
   <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Métadonnées de la facture</h5>
   <div class="row g-3">
-    <div class="col-md-4">
-      <label class="form-label">Date facture</label>
-      <input type="date" class="form-control" id="manual-date">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Devise</label>
-      <input type="text" class="form-control" id="manual-devise" value="TND">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Numéro facture (optionnel)</label>
-      <input type="text" class="form-control" id="manual-numero">
-    </div>
+    <div class="col-md-4"><label class="form-label">Date facture</label><input type="date" class="form-control" id="manual-date"></div>
+    <div class="col-md-4"><label class="form-label">Devise</label><input type="text" class="form-control" id="manual-devise" value="TND"></div>
+    <div class="col-md-4"><label class="form-label">Numéro facture</label><input type="text" class="form-control" id="manual-numero"></div>
   </div>
 </div>
 
-<!-- Étape 3 : Tableau des articles (apparaît après les modales) -->
+<!-- Étape 3 : Articles -->
 <div class="card-custom" id="manual-table-card" style="display: none;">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">Articles</h5>
@@ -53,10 +45,19 @@
     </div>
   </div>
   <div id="manual-items-table" style="min-height: 300px;"></div>
-  <div id="manual-total-footer" class="text-end fw-bold mt-3" style="display: none;">
-    Total général : <span id="manual-total-general">0.00</span> €
+</div>
+
+<!-- Étape 4 : Enregistrement -->
+<div class="mt-4 d-flex gap-3" id="manual-save-area" style="display: none;">
+  <button class="btn btn-primary px-5" id="manual-save-btn"><i class="fas fa-save me-2"></i>Enregistrer la facture</button>
+  <div class="form-check mt-2">
+    <input class="form-check-input" type="checkbox" id="manual-force-overwrite">
+    <label class="form-check-label">Écraser si existe</label>
   </div>
 </div>
+
+<!-- Modales (inchangées) -->
+...
 
 <!-- Étape 4 : Enregistrement -->
 <div class="mt-4 d-flex gap-3" id="manual-save-area" style="display: none;">
