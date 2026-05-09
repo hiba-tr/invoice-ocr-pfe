@@ -261,10 +261,9 @@ def create_facture(
     )
 
     # Invalider le cache sémantique
-    semantic.invalidate_cache(concession_id=concession_id)
+    semantic.invalidate_cache()
 
     return db_facture
-
 
 # ------------------------------------------------------------------------------
 # 3. LECTURE DES FACTURES
@@ -896,7 +895,3 @@ def export_analyse_excel(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": "attachment; filename=analyse_doccore.xlsx"}
     )
-# ------ Servir le frontend (statique) ------
-import os
-frontend_path = os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
-app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")

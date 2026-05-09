@@ -1,0 +1,256 @@
+{
+  "file": "test\\12.png",
+  "format": "image",
+  "status": "success",
+  "metadata": {
+    "page_count": 1,
+    "document_hash": "b7f28673cdac85c642611cf1e13683679486409def3298edcb25b6140f641c2a"
+  },
+  "pages": [
+    {
+      "page_no": 1,
+      "size": {
+        "width": 1476.0,
+        "height": 469.0
+      },
+      "headers": [],
+      "info_block": [],
+      "key_values": [],
+      "text_cells": [
+        {
+          "text": "(148.271.43)",
+          "label": "text"
+        },
+        {
+          "text": "(148,271.43)",
+          "label": "text"
+        },
+        {
+          "text": "(74,135.72)",
+          "label": "text"
+        },
+        {
+          "text": "(31.149.52)",
+          "label": "text"
+        },
+        {
+          "text": "(15.574.76)",
+          "label": "text"
+        },
+        {
+          "text": "Salt water well disposal FCLT",
+          "label": "text"
+        },
+        {
+          "text": "Hook up CQ Dev W 13 FARAII2",
+          "label": "text"
+        },
+        {
+          "text": "Hook up CQ Dev W 13 EL BADR6",
+          "label": "text"
+        },
+        {
+          "text": "ClIEROUQ Gas Valorisation ( FGR",
+          "label": "text"
+        },
+        {
+          "text": "WAZE Execute Plhase",
+          "label": "text"
+        },
+        {
+          "text": "CHIEROUQ Upgrade",
+          "label": "text"
+        },
+        {
+          "text": "South Tunisia Oil Development",
+          "label": "text"
+        },
+        {
+          "text": "CHIEROUQ Temporary Facilities",
+          "label": "text"
+        },
+        {
+          "text": "Repair Fire Fighting System (Safety)",
+          "label": "text"
+        },
+        {
+          "text": "Inegrate Telemetry in PI",
+          "label": "text"
+        },
+        {
+          "text": "Process Safety",
+          "label": "text"
+        },
+        {
+          "text": "Waha CPF LP&1IP Flare Tips Replacement",
+          "label": "text"
+        },
+        {
+          "text": "Renew DCS System",
+          "label": "text"
+        },
+        {
+          "text": "WAllA corroded pipes replacement",
+          "label": "text"
+        },
+        {
+          "text": "Waha CPF TA",
+          "label": "text"
+        },
+        {
+          "text": "20.132.69",
+          "label": "text"
+        },
+        {
+          "text": "10.066.35",
+          "label": "text"
+        },
+        {
+          "text": "Overhaul Rotating Equipment",
+          "label": "text"
+        },
+        {
+          "text": "(137.254.60)",
+          "label": "text"
+        },
+        {
+          "text": "(68.627.30)",
+          "label": "text"
+        },
+        {
+          "text": "Lightning Protection System for WAllA & AGP Fields",
+          "label": "text"
+        }
+      ],
+      "tables": [
+        {
+          "table_id": 0,
+          "num_rows": 4,
+          "num_cols": 1,
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "text": "Facilities",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 15.498992919921875,
+                "t": 82.4343770345052,
+                "r": 266.5826822916667,
+                "b": 152.65625
+              }
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "text": "C1IEROUQ Concession-WAHA PROD F",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 21.698590596516926,
+                "t": 174.02813720703125,
+                "r": 1026.0332845052083,
+                "b": 235.09063720703125
+              }
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "text": "ESDV Valves location as per firefighting rating (IGRR)",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 15.498992919921875,
+                "t": 253.40938313802084,
+                "r": 1363.911376953125,
+                "b": 329.7375081380208
+              }
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "text": "Camp upgrade 23",
+              "row_span": 1,
+              "col_span": 1,
+              "column_header": false,
+              "row_header": true,
+              "bbox": {
+                "l": 12.39919408162435,
+                "t": 348.0562744140625,
+                "r": 458.7701822916667,
+                "b": 412.171875
+              }
+            }
+          ],
+          "matrix": [
+            [
+              "Facilities"
+            ],
+            [
+              "C1IEROUQ Concession-WAHA PROD F"
+            ],
+            [
+              "ESDV Valves location as per firefighting rating (IGRR)"
+            ],
+            [
+              "Camp upgrade 23"
+            ]
+          ]
+        }
+      ],
+      "raw_text": "Facilities\nC1IEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\nCamp upgrade 23\n(148.271.43)\n(148,271.43)\n(74,135.72)\n(31.149.52)\n(15.574.76)\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAII2\nHook up CQ Dev W 13 EL BADR6\nClIEROUQ Gas Valorisation ( FGR\nWAZE Execute Plhase\nCHIEROUQ Upgrade\nSouth Tunisia Oil Development\nCHIEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&1IP Flare Tips Replacement\nRenew DCS System\nWAllA corroded pipes replacement\nWaha CPF TA\n20.132.69\n10.066.35\nOverhaul Rotating Equipment\n(137.254.60)\n(68.627.30)\nLightning Protection System for WAllA & AGP Fields"
+    }
+  ],
+  "all_text": "--- Page 1 ---\nFacilities\nC1IEROUQ Concession-WAHA PROD F\nESDV Valves location as per firefighting rating (IGRR)\nCamp upgrade 23\n(148.271.43)\n(148,271.43)\n(74,135.72)\n(31.149.52)\n(15.574.76)\nSalt water well disposal FCLT\nHook up CQ Dev W 13 FARAII2\nHook up CQ Dev W 13 EL BADR6\nClIEROUQ Gas Valorisation ( FGR\nWAZE Execute Plhase\nCHIEROUQ Upgrade\nSouth Tunisia Oil Development\nCHIEROUQ Temporary Facilities\nRepair Fire Fighting System (Safety)\nInegrate Telemetry in PI\nProcess Safety\nWaha CPF LP&1IP Flare Tips Replacement\nRenew DCS System\nWAllA corroded pipes replacement\nWaha CPF TA\n20.132.69\n10.066.35\nOverhaul Rotating Equipment\n(137.254.60)\n(68.627.30)\nLightning Protection System for WAllA & AGP Fields",
+  "totals": {
+    "total_usd": null,
+    "total_omv_share": null,
+    "total_etap_share": null
+  },
+  "timings": {
+    "page_parse": {
+      "times": [
+        0.0
+      ],
+      "count": 1
+    },
+    "ocr": {
+      "times": [
+        180.4220000000205
+      ],
+      "count": 1
+    },
+    "layout": {
+      "times": [
+        1.25
+      ],
+      "count": 1
+    },
+    "table_structure": {
+      "times": [
+        7.48399999999674
+      ],
+      "count": 1
+    },
+    "page_assemble": {
+      "times": [
+        0.0
+      ],
+      "count": 1
+    }
+  },
+  "invoice_info": {
+    "company": null,
+    "concession": null,
+    "document_type": null,
+    "month_ended": null,
+    "docusign_id": null
+  }
+}

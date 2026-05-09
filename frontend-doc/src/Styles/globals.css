@@ -1,0 +1,559 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: rgb(226, 232, 240);
+  }
+
+  .dark * {
+    border-color: rgb(30, 41, 59);
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Glassmorphism cards */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+  }
+
+  .dark .glass {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(51, 65, 85, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card {
+    @apply glass p-6 transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 150, 199, 0.3);
+  }
+
+  .dark .glass-card:hover {
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.4);
+    border-color: rgba(61, 232, 244, 0.15);
+  }
+
+  /* Sidebar links */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200;
+    color: #64748b;
+  }
+
+  .sidebar-link:hover {
+    background: rgba(241, 245, 249, 0.8);
+    color: #0f172a;
+  }
+
+  .dark .sidebar-link {
+    color: #94a3b8;
+  }
+
+  .dark .sidebar-link:hover {
+    background: rgba(30, 41, 59, 0.5);
+    color: #e2e8f0;
+  }
+
+  .sidebar-link.active {
+    background: linear-gradient(135deg, #0096c7, #4361ee);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 150, 199, 0.3);
+  }
+
+  .dark .sidebar-link.active {
+    background: linear-gradient(135deg, #3de8f4, #4361ee);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 font-display font-bold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg;
+    background: linear-gradient(135deg, #0096c7, #4361ee);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-primary:active {
+    transform: scale(1);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .dark .btn-primary {
+    background: linear-gradient(135deg, #3de8f4, #4361ee);
+  }
+
+  .btn-glass {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    color: #475569;
+  }
+
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .dark .btn-glass {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(51, 65, 85, 0.5);
+    color: #cbd5e1;
+  }
+
+  .dark .btn-glass:hover {
+    background: rgba(30, 41, 59, 0.7);
+  }
+
+  /* Inputs */
+  .input-glass {
+    @apply w-full px-4 py-2.5 rounded-xl text-sm transition-all duration-200 outline-none;
+    background: rgb(241, 245, 249);
+    border: 1px solid rgb(226, 232, 240);
+    color: #0f172a;
+  }
+
+  .input-glass:focus {
+    border-color: #0096c7;
+    box-shadow: 0 0 0 3px rgba(0, 150, 199, 0.1);
+  }
+
+  .dark .input-glass {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgb(51, 65, 85);
+    color: #e2e8f0;
+  }
+
+  .dark .input-glass:focus {
+    border-color: #3de8f4;
+    box-shadow: 0 0 0 3px rgba(61, 232, 244, 0.1);
+  }
+
+  .select-glass {
+    @apply input-glass cursor-pointer appearance-none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    @apply rounded-2xl p-12 text-center cursor-pointer transition-all duration-200;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px dashed rgb(203, 213, 225);
+  }
+
+  .upload-zone:hover {
+    border-color: #0096c7;
+    background: rgba(0, 150, 199, 0.05);
+  }
+
+  .dark .upload-zone {
+    background: rgba(15, 23, 42, 0.3);
+    border-color: rgb(71, 85, 105);
+  }
+
+  .dark .upload-zone:hover {
+    border-color: #3de8f4;
+    background: rgba(61, 232, 244, 0.05);
+  }
+
+  /* KPI Cards */
+  .kpi-card {
+    @apply p-6 rounded-2xl flex flex-col gap-2 relative overflow-hidden;
+  }
+
+  .kpi-card::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl;
+  }
+
+  .kpi-card.accent-cyan::after { background: #0096c7; }
+  .kpi-card.accent-blue::after { background: #4361ee; }
+  .kpi-card.accent-pink::after { background: #d0006e; }
+  .kpi-card.accent-green::after { background: #2d6a4f; }
+  .kpi-card.accent-amber::after { background: #e85d04; }
+
+  .dark .kpi-card.accent-cyan::after { background: #3de8f4; }
+
+  .kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748b;
+  }
+
+  .dark .kpi-label {
+    color: #94a3b8;
+  }
+
+  /* Tabs */
+  .tab-btn {
+    @apply px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+  }
+
+  .tab-btn:hover {
+    color: #475569;
+  }
+
+  .dark .tab-btn {
+    color: #64748b;
+  }
+
+  .dark .tab-btn:hover {
+    color: #cbd5e1;
+  }
+
+  .tab-btn.active {
+    color: #0096c7;
+    border-bottom-color: #0096c7;
+  }
+
+  .dark .tab-btn.active {
+    color: #3de8f4;
+    border-bottom-color: #3de8f4;
+  }
+
+  /* Badges */
+  .badge-status {
+    @apply font-mono text-xs px-3 py-1 rounded-full;
+  }
+
+  .badge-success {
+    background: rgba(45, 106, 79, 0.1);
+    color: #2d6a4f;
+  }
+
+  .dark .badge-success {
+    background: rgba(52, 211, 153, 0.1);
+    color: #34d399;
+  }
+
+  /* Tabulator overrides */
+  .tabulator {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .tabulator .tabulator-header {
+    background: rgb(241, 245, 249) !important;
+    border-bottom: 1px solid rgb(226, 232, 240) !important;
+  }
+
+  .dark .tabulator .tabulator-header {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-bottom: 1px solid rgb(51, 65, 85) !important;
+  }
+
+  .tabulator .tabulator-header .tabulator-col {
+    background: transparent !important;
+    border-right: none !important;
+    color: #64748b !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.625rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .tabulator .tabulator-row {
+    background: transparent !important;
+    border-bottom: 1px solid rgb(241, 245, 249) !important;
+    color: #475569;
+    transition: background 0.15s;
+  }
+
+  .dark .tabulator .tabulator-row {
+    border-bottom: 1px solid rgb(30, 41, 59) !important;
+    color: #cbd5e1;
+  }
+
+  .tabulator .tabulator-row:hover {
+    background: rgb(241, 245, 249) !important;
+    color: #0f172a !important;
+  }
+
+  .dark .tabulator .tabulator-row:hover {
+    background: rgba(30, 41, 59, 0.3) !important;
+    color: #f1f5f9 !important;
+  }
+
+  .tabulator .tabulator-row .tabulator-cell {
+    border-right: none !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgb(203, 213, 225);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(148, 163, 184);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgb(51, 65, 85);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgb(71, 85, 105);
+  }
+}
+
+/* ============================================
+   TABULATOR - Thème bleu/cyan glassmorphism
+   ============================================ */
+
+.tabulator {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.875rem !important;
+}
+
+/* Header - dégradé bleu/cyan */
+.tabulator .tabulator-header {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(236, 254, 255, 0.95)) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .tabulator .tabulator-header {
+  background: linear-gradient(135deg, rgba(23, 37, 84, 0.7), rgba(21, 94, 117, 0.5)) !important;
+  border-bottom: 2px solid rgba(6, 182, 212, 0.25) !important;
+}
+
+/* Colonnes du header - même style que l'historique */
+.tabulator .tabulator-header .tabulator-col {
+  background: transparent !important;
+  border-right: 1px solid rgba(59, 130, 246, 0.1) !important;
+  color: #1e40af !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.6875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-weight: 600 !important;
+  padding: 0.875rem 1rem !important;
+}
+
+.dark .tabulator .tabulator-header .tabulator-col {
+  color: #67e8f9 !important;
+  border-right-color: rgba(6, 182, 212, 0.1) !important;
+}
+
+/* Tri */
+.tabulator .tabulator-col.tabulator-sortable:hover {
+  background: rgba(59, 130, 246, 0.08) !important;
+}
+
+.tabulator .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter-asc,
+.tabulator .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter-desc {
+  color: #3b82f6 !important;
+}
+
+/* Lignes */
+.tabulator .tabulator-row {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(219, 234, 254, 0.5) !important;
+  color: #334155 !important;
+  transition: background 0.15s ease !important;
+}
+
+.dark .tabulator .tabulator-row {
+  border-bottom: 1px solid rgba(30, 58, 138, 0.2) !important;
+  color: #cbd5e1 !important;
+}
+
+.tabulator .tabulator-row:hover {
+  background: rgba(219, 234, 254, 0.4) !important;
+  color: #0f172a !important;
+}
+
+.dark .tabulator .tabulator-row:hover {
+  background: rgba(30, 58, 138, 0.2) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Lignes paires */
+.tabulator .tabulator-row.tabulator-row-even {
+  background: rgba(239, 246, 255, 0.3) !important;
+}
+
+.dark .tabulator .tabulator-row.tabulator-row-even {
+  background: rgba(15, 23, 42, 0.2) !important;
+}
+
+/* Cellules */
+.tabulator .tabulator-row .tabulator-cell {
+  border-right: 1px solid rgba(219, 234, 254, 0.3) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.dark .tabulator .tabulator-row .tabulator-cell {
+  border-right: 1px solid rgba(51, 65, 85, 0.2) !important;
+}
+
+/* Cellule en édition */
+.tabulator .tabulator-cell.tabulator-editing {
+  background: rgba(239, 246, 255, 0.95) !important;
+  border: 2px solid #3b82f6 !important;
+  border-radius: 0.375rem !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  color: #0f172a !important;
+}
+
+.dark .tabulator .tabulator-cell.tabulator-editing {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Footer / Pagination */
+.tabulator .tabulator-footer {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.9), rgba(236, 254, 255, 0.9)) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(59, 130, 246, 0.2) !important;
+  color: #64748b !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  padding: 0.5rem 1rem !important;
+}
+
+.dark .tabulator .tabulator-footer {
+  background: linear-gradient(135deg, rgba(23, 37, 84, 0.5), rgba(21, 94, 117, 0.3)) !important;
+  border-top: 1px solid rgba(6, 182, 212, 0.2) !important;
+  color: #94a3b8 !important;
+}
+
+/* Boutons de pagination */
+.tabulator .tabulator-page {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  color: #3b82f6 !important;
+  border-radius: 0.375rem !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.625rem !important;
+}
+
+.dark .tabulator .tabulator-page {
+  background: rgba(30, 41, 59, 0.5) !important;
+  border-color: rgba(6, 182, 212, 0.25) !important;
+  color: #67e8f9 !important;
+}
+
+.tabulator .tabulator-page.active {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.dark .tabulator .tabulator-page.active {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3) !important;
+}
+
+.tabulator .tabulator-page:disabled {
+  opacity: 0.4 !important;
+}
+
+/* Placeholder */
+.tabulator .tabulator-placeholder {
+  color: #94a3b8 !important;
+  font-style: italic !important;
+  padding: 2rem !important;
+}
+
+/* Sélection de ligne */
+.tabulator .tabulator-row.tabulator-selected {
+  background: rgba(219, 234, 254, 0.7) !important;
+  border-bottom-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.dark .tabulator .tabulator-row.tabulator-selected {
+  background: rgba(30, 58, 138, 0.4) !important;
+  border-bottom-color: rgba(6, 182, 212, 0.3) !important;
+}
+
+/* Row number */
+.tabulator .tabulator-row .tabulator-cell.tabulator-row-handle {
+  background: transparent !important;
+  color: #3b82f6 !important;
+}
+
+.dark .tabulator .tabulator-row .tabulator-cell.tabulator-row-handle {
+  color: #67e8f9 !important;
+}
+
+/* Resize handle */
+.tabulator .tabulator-col .tabulator-col-resize-handle {
+  background: rgba(59, 130, 246, 0.3) !important;
+}
+
+.tabulator .tabulator-col .tabulator-col-resize-handle:hover {
+  background: rgba(59, 130, 246, 0.6) !important;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}

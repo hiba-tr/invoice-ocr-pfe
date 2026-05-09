@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import logging
+import threading  
 from dataclasses import dataclass
 from typing import Optional
 
@@ -62,7 +63,28 @@ class PreprocessConfig:
     # Set sr_dnn_model_path=None to always use the pure-OpenCV fallback.
     sr_dnn_model: Optional[str] = "fsrcnn"
     sr_dnn_model_path: Optional[str] = None  # e.g. "models/fsrcnn_x3.pb"
-
+    
+    @classmethod
+    def from_options(cls, options) -> "PreprocessConfig":
+        """Crée une PreprocessConfig depuis des PreprocessOptions."""
+        if options is None:
+            return cls()
+        return cls(
+            target_dpi=options.target_dpi,
+            assumed_source_dpi=options.assumed_source_dpi,
+            denoise_strength=options.denoise_strength,
+            denoise_template_window=options.denoise_template_window,
+            denoise_search_window=options.denoise_search_window,
+            sharpen_amount=options.sharpen_amount,
+            sharpen_radius=options.sharpen_radius,
+            clahe_clip_limit=options.clahe_clip_limit,
+            clahe_tile_size=options.clahe_tile_size,
+            sr_scale_factor=options.sr_scale_factor,
+            sr_unsharp_amount=options.sr_unsharp_amount,
+            sr_unsharp_radius=options.sr_unsharp_radius,
+            sr_denoise_before=options.sr_denoise_before,
+            sr_denoise_after=options.sr_denoise_after,
+        )
 
 # ---------------------------------------------------------------------------
 # Super-resolution helpers
@@ -147,18 +169,23 @@ def _super_resolve(gray: np.ndarray, cfg: PreprocessConfig) -> np.ndarray:
 
 class ImagePreprocessor:
     """
-    Adaptive preprocessing pipeline — 4 quality tiers:
-
-    Tier 1  blur > 300    passthrough       (clean image, OCR handles it natively)
-    Tier 2  80 < blur ≤ 300  light enhance  (denoise + mild sharpen)
-    Tier 3  50 < blur ≤ 80   full enhance   (CLAHE + denoise + sharpen)
-    Tier 4  blur ≤ 50     super-resolution  (pre-denoise → CLAHE → SR → post-sharpen)
-
-    Binarisation is OFF by default — it degrades clean scans.
+    Adaptive preprocessing pipeline — 4 quality tiers.
+    Pattern Singleton pour éviter les recréations.
     """
 
+    _instance = None
+
+    def __new__(cls, config: Optional[PreprocessConfig] = None):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
     def __init__(self, config: Optional[PreprocessConfig] = None):
+        if self._initialized and config is None:
+            return
         self.cfg = config or PreprocessConfig()
+        self._initialized = True
 
     # ── Public API ───────────────────────────────────────────────────────────
 
@@ -168,22 +195,18 @@ class ImagePreprocessor:
         
         _log.debug("Quality: blur=%.1f", blur)
         try:
-        # Netteté parfaite (score > 1000) → pas de traitement
             if blur > 1000:
+                _log.debug("Tier 1: Image parfaite → passthrough")
                 return image
-            
-            # Qualité moyenne (200-1000) → traitement léger
             elif blur > 200:
+                _log.debug("Tier 2: Qualité moyenne → light enhance")
                 return self._light_enhance(image)
-            
-            # Flou (50-200) → traitement complet
             elif blur > 50:
+                _log.debug("Tier 3: Floue → full enhance")
                 return self._full_enhance(image)
-            
-            # Très flou (< 50) → super-résolution
             else:
+                _log.debug("Tier 4: Très floue → super-resolution")
                 return self._super_resolution_enhance(image)
-
         except Exception as e:
             _log.warning("ImagePreprocessor error (%s) → original returned", e)
             return image

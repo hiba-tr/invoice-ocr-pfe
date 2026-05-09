@@ -532,6 +532,88 @@ class PaginatedPipelineOptions(ConvertPipelineOptions):
     # Extraction d'images incorporées : inutile pour facture textuelle
     generate_picture_images: bool = False
     generate_table_images: bool = False
+    
+class PreprocessOptions(BaseModel):
+    """Configuration du preprocessing d'image avant OCR.
+    
+    Contrôle les paramètres de débruitage, netteté, contraste et super-résolution
+    appliqués aux images avant de les passer au moteur OCR.
+    """
+
+    # ── Résolution cible ────────────────────────────────────────────────────
+    target_dpi: Annotated[
+        int,
+        Field(description="DPI cible pour le preprocessing. L'image sera redimensionnée si nécessaire.")
+    ] = 300
+
+    assumed_source_dpi: Annotated[
+        int,
+        Field(description="DPI supposé de l'image source (72 pour écran, 150-300 pour scan).")
+    ] = 72
+
+    # ── Débruitage ──────────────────────────────────────────────────────────
+    denoise_strength: Annotated[
+        float,
+        Field(description="Force du débruitage (0-30). Plus haut = plus de lissage.")
+    ] = 10.0
+
+    denoise_template_window: Annotated[
+        int,
+        Field(description="Taille de la fenêtre template pour le débruitage (doit être impair).")
+    ] = 7
+
+    denoise_search_window: Annotated[
+        int,
+        Field(description="Taille de la fenêtre de recherche pour le débruitage (doit être impair).")
+    ] = 21
+
+    # ── Netteté ─────────────────────────────────────────────────────────────
+    sharpen_amount: Annotated[
+        float,
+        Field(description="Intensité du sharpening (0.5-3.0). Plus haut = plus net.")
+    ] = 1.5
+
+    sharpen_radius: Annotated[
+        int,
+        Field(description="Rayon du noyau de flou gaussien pour l'unsharp mask (en px).")
+    ] = 1
+
+    # ── Contraste local (CLAHE) ─────────────────────────────────────────────
+    clahe_clip_limit: Annotated[
+        float,
+        Field(description="Limite de clipping pour CLAHE (1-4). Plus haut = plus de contraste.")
+    ] = 2.0
+
+    clahe_tile_size: Annotated[
+        int,
+        Field(description="Taille des tuiles pour CLAHE (4-16). Plus petit = contraste plus local.")
+    ] = 8
+
+    # ── Super-résolution (images très floues) ───────────────────────────────
+    sr_scale_factor: Annotated[
+        int,
+        Field(description="Facteur d'upscale pour la super-résolution (2 ou 3).")
+    ] = 3
+
+    sr_unsharp_amount: Annotated[
+        float,
+        Field(description="Intensité de l'unsharp mask après SR.")
+    ] = 2.0
+
+    sr_unsharp_radius: Annotated[
+        int,
+        Field(description="Rayon du noyau pour l'unsharp mask après SR.")
+    ] = 2
+
+    sr_denoise_before: Annotated[
+        float,
+        Field(description="Force du débruitage AVANT super-résolution.")
+    ] = 8.0
+
+    sr_denoise_after: Annotated[
+        float,
+        Field(description="Force du débruitage APRÈS super-résolution.")
+    ] = 5.0
 class PdfPipelineOptions(PaginatedPipelineOptions):
     do_table_structure: Annotated[
         bool,
@@ -664,7 +746,11 @@ class PdfPipelineOptions(PaginatedPipelineOptions):
             )
         ),
     ] = 100
-
+    preprocess_options: Annotated[
+        PreprocessOptions,
+        Field(description="Configuration du preprocessing d'image avant OCR")
+    ] = PreprocessOptions()
 
 class ThreadedPdfPipelineOptions(PdfPipelineOptions):
     """Pipeline options for the threaded PDF pipeline with batching and backpressure control"""
+    

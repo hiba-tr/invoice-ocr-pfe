@@ -10,8 +10,7 @@ from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple, cast
-from models.utils.image_preprocessor import ImagePreprocessor
-
+  
 from docling_core.types.doc import (
     Size,
     PageItem,
@@ -394,7 +393,6 @@ class StandardPdfPipeline(ConvertPipeline):
         self.pipeline_options: ThreadedPdfPipelineOptions = pipeline_options
         self.artifacts_path = None
         self._run_seq = itertools.count(1)  # deterministic, monotonic run ids
-        self.image_preprocessor = ImagePreprocessor()
         # initialise heavy models once
         self._init_models()
 
@@ -482,10 +480,6 @@ class StandardPdfPipeline(ConvertPipeline):
             queue_max_size=opts.queue_max_size,
             timed_out_run_ids=timed_out_run_ids,
         )
-        # === PASSAGE DES ATTRIBUTS NÉCESSAIRES ===
-        ocr.image_preprocessor = self.image_preprocessor
-        ocr.pipeline_options = self.pipeline_options
-        # =========================================
 
         layout = ThreadedPipelineStage(
             name="layout",
