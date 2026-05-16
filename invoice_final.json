@@ -1,0 +1,529 @@
+{
+  "identity": {
+    "company": null,
+    "concession": null,
+    "document_type": null,
+    "period": "",
+    "period_normalized": null,
+    "docusign_id": null,
+    "total_pages": null,
+    "pages_processed": 1,
+    "source_file": "facture_google1.png",
+    "document_hash": "49a4c4a2ad588393ca45cb427bd4365266b627c40dbc0d9a2212dad89c2b795d",
+    "extraction_status": "success"
+  },
+  "columns": {
+    "columns": [
+      {
+        "index": 0,
+        "header_raw": "N°",
+        "semantic": "n°",
+        "is_numeric": true,
+        "currency": "USD"
+      },
+      {
+        "index": 1,
+        "header_raw": "DESIGNATION",
+        "semantic": "designation",
+        "is_numeric": true,
+        "currency": "USD"
+      },
+      {
+        "index": 2,
+        "header_raw": "QTE",
+        "semantic": "qte",
+        "is_numeric": true,
+        "currency": "USD"
+      },
+      {
+        "index": 3,
+        "header_raw": "PRIX U.",
+        "semantic": "prix_u.",
+        "is_numeric": true,
+        "currency": "USD"
+      },
+      {
+        "index": 4,
+        "header_raw": "TOTALHT",
+        "semantic": "total",
+        "is_numeric": true,
+        "currency": "USD"
+      }
+    ],
+    "headers": [
+      "N°",
+      "DESIGNATION",
+      "QTE",
+      "PRIX U.",
+      "TOTALHT"
+    ],
+    "semantics": [
+      "n°",
+      "designation",
+      "qte",
+      "prix_u.",
+      "total"
+    ]
+  },
+  "sections": [
+    {
+      "name": "Items",
+      "row_index": 0,
+      "item_count": 9,
+      "active_item_count": 8,
+      "items": [
+        {
+          "description": "Salle du restaurant",
+          "row_index": 1,
+          "row_type": "data",
+          "amounts": {
+            "designation": {
+              "raw": "Salledurestaurant",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "3451,63",
+              "value": 3451.63,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.1",
+          "row_index": 2,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.1",
+              "value": 1.1,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Coinbar",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "501,73",
+              "value": 501.73,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.1.1",
+          "row_index": 3,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.1.1",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "DeposedeI'anciennemoquette",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "qte": {
+              "raw": "30,00m²",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "10,75C",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "322,50",
+              "value": 322.5,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.1.2",
+          "row_index": 4,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.1.2",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "-",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": true
+            },
+            "qte": {
+              "raw": "8,75u",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "11,34",
+              "value": 11.34,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "99,23",
+              "value": 99.23,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": [
+            "merged_artifact:designation"
+          ]
+        },
+        {
+          "description": "1.1.3",
+          "row_index": 5,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.1.3",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Enlevementdesdechets",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "qte": {
+              "raw": "1,00u",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "80,00",
+              "value": 80.0,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "80,00",
+              "value": 80.0,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.2",
+          "row_index": 6,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.2",
+              "value": 1.2,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Preparation,protection,installationechafaudage,deposedespanneauxacoustiques,poncage,reposedespanneauxacoustiques.",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "qte": {
+              "raw": "20,00m²",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "36,00C",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "720,00C",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.3",
+          "row_index": 7,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.3",
+              "value": 1.3,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Sallealetage",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "2229,90",
+              "value": 2229.9,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.3.1",
+          "row_index": 8,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.3.1",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Posed'unnouveaurevetementdesolspecialrestaurant",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "qte": {
+              "raw": "30,00m²",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "62,00",
+              "value": 62.0,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "1860,00",
+              "value": 1860.0,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": true,
+          "quality_flags": []
+        },
+        {
+          "description": "1.3.2",
+          "row_index": 9,
+          "row_type": "data",
+          "amounts": {
+            "n°": {
+              "raw": "1.3.2",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "designation": {
+              "raw": "Applicationd'unragreage",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "qte": {
+              "raw": "30,00m²",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "prix_u.": {
+              "raw": "12,33C",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            },
+            "total": {
+              "raw": "369,90C",
+              "value": null,
+              "currency": "USD",
+              "is_negative": false,
+              "is_empty": false
+            }
+          },
+          "is_active": false,
+          "quality_flags": []
+        }
+      ],
+      "subtotal_calculated": {
+        "n°": {
+          "raw": "3.60",
+          "value": 3.5999999999999996,
+          "currency": "USD",
+          "is_negative": false,
+          "is_empty": false
+        },
+        "prix_u.": {
+          "raw": "153.34",
+          "value": 153.34,
+          "currency": "USD",
+          "is_negative": false,
+          "is_empty": false
+        },
+        "total": {
+          "raw": "8,544.99",
+          "value": 8544.99,
+          "currency": "USD",
+          "is_negative": false,
+          "is_empty": false
+        }
+      },
+      "subtotal_declared": null
+    },
+    {
+      "name": "Items",
+      "row_index": 0,
+      "item_count": 2,
+      "active_item_count": 0,
+      "items": [
+        {
+          "description": "Total net HT",
+          "row_index": 0,
+          "row_type": "subtotal",
+          "amounts": {},
+          "is_active": false,
+          "quality_flags": []
+        },
+        {
+          "description": "NETA PAYER",
+          "row_index": 1,
+          "row_type": "section_header",
+          "amounts": {},
+          "is_active": false,
+          "quality_flags": []
+        }
+      ],
+      "subtotal_calculated": null,
+      "subtotal_declared": null
+    }
+  ],
+  "financial_summary": {
+    "totals_by_column": {
+      "n°": {
+        "raw": "3.60",
+        "value": 3.5999999999999996,
+        "currency": "USD",
+        "is_negative": false,
+        "is_empty": false
+      },
+      "prix_u.": {
+        "raw": "153.34",
+        "value": 153.34,
+        "currency": "USD",
+        "is_negative": false,
+        "is_empty": false
+      },
+      "total": {
+        "raw": "8,544.99",
+        "value": 8544.99,
+        "currency": "USD",
+        "is_negative": false,
+        "is_empty": false
+      }
+    },
+    "sharing": {},
+    "sharing_balanced": null,
+    "budget_consumed_pct": null,
+    "ytd_vs_budget_variance": null,
+    "total_rows": [],
+    "anomalies": [
+      "1 cellule(s) avec artefacts de fusion (corrigées)"
+    ]
+  },
+  "quality": {
+    "overall_score": 0.6375,
+    "identity_complete": false,
+    "tables_found": 2,
+    "total_rows": 11,
+    "active_rows": 8,
+    "issues": [
+      "Champ manquant : company",
+      "Champ manquant : document_type",
+      "Champ manquant : period",
+      "Champ manquant : docusign_id"
+    ],
+    "warnings": [
+      "Champ optionnel absent : concession",
+      "Champ optionnel absent : period_normalized",
+      "Colonnes de partage non détectées (facultatif)",
+      "1 cellule(s) avec artefacts de fusion (corrigées)"
+    ]
+  }
+}

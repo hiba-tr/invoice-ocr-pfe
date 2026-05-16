@@ -1,0 +1,1378 @@
+{
+  "metadata": {
+    "file": "C:\\Factures\\facture_google1.png",
+    "format": "image",
+    "status": "success",
+    "page_count": 1,
+    "document_hash": "49a4c4a2ad588393ca45cb427bd4365266b627c40dbc0d9a2212dad89c2b795d",
+    "timings": {
+      "page_parse": {
+        "total_sec": 0.0,
+        "count": 1,
+        "avg_sec": 0.0
+      },
+      "ocr": {
+        "total_sec": 6.843,
+        "count": 1,
+        "avg_sec": 6.843
+      },
+      "layout": {
+        "total_sec": 1.266,
+        "count": 1,
+        "avg_sec": 1.266
+      },
+      "table_structure": {
+        "total_sec": 4.438,
+        "count": 1,
+        "avg_sec": 4.438
+      },
+      "page_assemble": {
+        "total_sec": 0.0,
+        "count": 1,
+        "avg_sec": 0.0
+      }
+    }
+  },
+  "document_info": {},
+  "pages": [
+    {
+      "page_no": 1,
+      "size": {
+        "width": 737.0,
+        "height": 1024.0
+      },
+      "page_number_in_doc": null,
+      "total_pages_in_doc": null,
+      "docusign_id": null,
+      "headers": [
+        {
+          "text": "FAC-DEMO-2023-002",
+          "label": "page_footer",
+          "bbox": {
+            "l": 616.7257080078125,
+            "t": 979.6128743489584,
+            "r": 715.5042317708334,
+            "b": 993.0322265625
+          }
+        },
+        {
+          "text": "Page 1 sur 1",
+          "label": "page_footer",
+          "bbox": {
+            "l": 657.1583658854166,
+            "t": 994.064453125,
+            "r": 717.0396321614584,
+            "b": 1008.0
+          }
+        }
+      ],
+      "kv_regions": [
+        {
+          "type": "key_value_region",
+          "bbox": {
+            "l": 538.4194742838541,
+            "t": 153.80644734700522,
+            "r": 717.5514322916666,
+            "b": 200.258056640625
+          },
+          "cells": [
+            {
+              "text": "N°FAC-DEMO-2023-002",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.99618,
+              "bbox": {
+                "l": 590.11181640625,
+                "t": 153.80644734700522,
+                "r": 717.5514322916666,
+                "b": 167.22579956054688
+              }
+            },
+            {
+              "text": "Sur devisN°DEV-DEMO-2022-001",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.97186,
+              "bbox": {
+                "l": 538.4194742838541,
+                "t": 169.80644734700522,
+                "r": 716.52783203125,
+                "b": 183.2258097330729
+              }
+            },
+            {
+              "text": "En date du:18/04/2023",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.96597,
+              "bbox": {
+                "l": 591.6472574869791,
+                "t": 186.83870442708334,
+                "r": 717.5514322916666,
+                "b": 200.258056640625
+              }
+            }
+          ],
+          "extracted_fields": {}
+        },
+        {
+          "type": "key_value_region",
+          "bbox": {
+            "l": 23.03125,
+            "t": 202.83870442708334,
+            "r": 162.24237060546875,
+            "b": 233.80643717447916
+          },
+          "cells": [
+            {
+              "text": "Tel:06123456 65",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.95248,
+              "bbox": {
+                "l": 23.03125,
+                "t": 202.83870442708334,
+                "r": 125.39236450195312,
+                "b": 216.258056640625
+              }
+            },
+            {
+              "text": "Email : michel@peinture.fr",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.97985,
+              "bbox": {
+                "l": 23.543055216471355,
+                "t": 218.83870442708334,
+                "r": 162.24237060546875,
+                "b": 233.80643717447916
+              }
+            }
+          ],
+          "extracted_fields": {}
+        },
+        {
+          "type": "key_value_region",
+          "bbox": {
+            "l": 23.543055216471355,
+            "t": 685.9354654947916,
+            "r": 299.91807047526044,
+            "b": 700.9032389322916
+          },
+          "cells": [
+            {
+              "text": "Methodes de paiement acceptees : Cheque, Especes.",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.9593,
+              "bbox": {
+                "l": 23.543055216471355,
+                "t": 685.9354654947916,
+                "r": 299.91807047526044,
+                "b": 700.9032389322916
+              }
+            }
+          ],
+          "extracted_fields": {}
+        },
+        {
+          "type": "key_value_region",
+          "bbox": {
+            "l": 185.27362060546875,
+            "t": 980.1289876302084,
+            "r": 539.4430745442709,
+            "b": 993.54833984375
+          },
+          "cells": [
+            {
+              "text": "Dupont Peinture EI- 23 Rue Basfrol, 75011Paris, France - SIRET: 123456789",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.94248,
+              "bbox": {
+                "l": 185.27362060546875,
+                "t": 980.1289876302084,
+                "r": 539.4430745442709,
+                "b": 993.54833984375
+              }
+            }
+          ],
+          "extracted_fields": {}
+        },
+        {
+          "type": "key_value_region",
+          "bbox": {
+            "l": 117.20348103841145,
+            "t": 994.064453125,
+            "r": 607.5132242838541,
+            "b": 1019.8709309895834
+          },
+          "cells": [
+            {
+              "text": "Tel : 06 12 34 56 65 - Emall : michel@peinture.fr",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.94505,
+              "bbox": {
+                "l": 250.2729288736979,
+                "t": 994.064453125,
+                "r": 473.9319661458333,
+                "b": 1006.9676920572916
+              }
+            },
+            {
+              "text": "Garantie decennale -MAAF-12 Rue de Richelieu, 75001 Paris, France -Couverture: France metropolitaine",
+              "semantic_class": "unknown",
+              "from_ocr": true,
+              "confidence": 0.96618,
+              "bbox": {
+                "l": 117.20348103841145,
+                "t": 1006.9676920572916,
+                "r": 607.5132242838541,
+                "b": 1019.8709309895834
+              }
+            }
+          ],
+          "extracted_fields": {}
+        }
+      ],
+      "tables": [
+        {
+          "table_id": "0",
+          "page_no": 1,
+          "num_rows": 10,
+          "num_cols": 5,
+          "data_start_row": 1,
+          "column_headers_raw": [
+            "N°",
+            "DESIGNATION",
+            "QTE",
+            "PRIX U.",
+            "TOTALHT"
+          ],
+          "column_semantics": [
+            "n°",
+            "designation",
+            "qte",
+            "prix_u.",
+            "total"
+          ],
+          "matrix": [
+            [
+              "N°",
+              "DESIGNATION",
+              "QTE",
+              "PRIX U.",
+              "TOTALHT"
+            ],
+            [
+              null,
+              "Salle du restaurant",
+              null,
+              null,
+              "3 451,63"
+            ],
+            [
+              "1.1",
+              "Coin bar",
+              null,
+              null,
+              "501,73"
+            ],
+            [
+              "1.1.1",
+              "DeposedeI'anciennemoquette",
+              "30,00 m²",
+              "10,75 C",
+              "322,50"
+            ],
+            [
+              "1.1.2",
+              "Cloisons de separation - BA13 standard sur ossature metallique (1 m) - Rail R90 et double montant M88 (1 m*) - Isolation GR80 (1 m)",
+              "8,75 u",
+              "11,34",
+              "99,23"
+            ],
+            [
+              "1.1.3",
+              "Enlevement des dechets",
+              "1,00 u",
+              "80,00",
+              "80,00"
+            ],
+            [
+              "1.2",
+              "Preparation, protection, installation echafaudage, depose des panneaux acoustiques, poncage, repose des panneaux acoustiques.",
+              "20,00 m²",
+              "36,00 C",
+              "720,00 C"
+            ],
+            [
+              "1.3",
+              "Salle a letage",
+              null,
+              null,
+              "2 229,90"
+            ],
+            [
+              "1.3.1",
+              "Posed'unnouveaurevetementdesolspecial restaurant",
+              "30,00 m²",
+              "62,00",
+              "1860,00"
+            ],
+            [
+              "1.3.2",
+              "Application d'un ragreage",
+              "30,00 m²",
+              "12,33 C",
+              "369,90 C"
+            ]
+          ],
+          "total_rows": [],
+          "bbox": {
+            "l": 21.551185607910156,
+            "t": 289.7886657714844,
+            "r": 716.9304809570312,
+            "b": 628.77734375
+          }
+        },
+        {
+          "table_id": "14",
+          "page_no": 1,
+          "num_rows": 2,
+          "num_cols": 2,
+          "data_start_row": 0,
+          "column_headers_raw": [
+            "",
+            ""
+          ],
+          "column_semantics": [
+            "unknown",
+            "unknown"
+          ],
+          "matrix": [
+            [
+              "Total net HT",
+              "3 451,63"
+            ],
+            [
+              "NETA PAYER",
+              "3451,63"
+            ]
+          ],
+          "total_rows": [
+            {
+              "row_index": 0,
+              "row_type": "total",
+              "description": "Total net HT",
+              "values": {
+                "unknown": {
+                  "text": "3 451,63",
+                  "amount": 3451.63
+                }
+              },
+              "raw_cells": [
+                {
+                  "col": 0,
+                  "col_name": "unknown",
+                  "text": "Total net HT",
+                  "amount": null,
+                  "bbox": {
+                    "l": 381.295166015625,
+                    "t": 675.6128743489584,
+                    "r": 451.92431640625,
+                    "b": 689.54833984375
+                  }
+                },
+                {
+                  "col": 1,
+                  "col_name": "unknown",
+                  "text": "3 451,63",
+                  "amount": 3451.63,
+                  "bbox": {
+                    "l": 648.4576822916666,
+                    "t": 675.0967610677084,
+                    "r": 706.803466796875,
+                    "b": 690.5806477864584
+                  }
+                }
+              ]
+            }
+          ],
+          "bbox": {
+            "l": 369.7146301269531,
+            "t": 666.7996215820312,
+            "r": 716.4356079101562,
+            "b": 727.3034057617188
+          }
+        }
+      ],
+      "table_count": 2,
+      "raw_text": ""
+    }
+  ],
+  "tables": [
+    {
+      "table_id": "0",
+      "page_no": 1,
+      "num_rows": 10,
+      "num_cols": 5,
+      "data_start_row": 1,
+      "column_headers_raw": [
+        "N°",
+        "DESIGNATION",
+        "QTE",
+        "PRIX U.",
+        "TOTALHT"
+      ],
+      "column_semantics": [
+        "n°",
+        "designation",
+        "qte",
+        "prix_u.",
+        "total"
+      ],
+      "matrix": [
+        [
+          "N°",
+          "DESIGNATION",
+          "QTE",
+          "PRIX U.",
+          "TOTALHT"
+        ],
+        [
+          null,
+          "Salle du restaurant",
+          null,
+          null,
+          "3 451,63"
+        ],
+        [
+          "1.1",
+          "Coin bar",
+          null,
+          null,
+          "501,73"
+        ],
+        [
+          "1.1.1",
+          "DeposedeI'anciennemoquette",
+          "30,00 m²",
+          "10,75 C",
+          "322,50"
+        ],
+        [
+          "1.1.2",
+          "Cloisons de separation - BA13 standard sur ossature metallique (1 m) - Rail R90 et double montant M88 (1 m*) - Isolation GR80 (1 m)",
+          "8,75 u",
+          "11,34",
+          "99,23"
+        ],
+        [
+          "1.1.3",
+          "Enlevement des dechets",
+          "1,00 u",
+          "80,00",
+          "80,00"
+        ],
+        [
+          "1.2",
+          "Preparation, protection, installation echafaudage, depose des panneaux acoustiques, poncage, repose des panneaux acoustiques.",
+          "20,00 m²",
+          "36,00 C",
+          "720,00 C"
+        ],
+        [
+          "1.3",
+          "Salle a letage",
+          null,
+          null,
+          "2 229,90"
+        ],
+        [
+          "1.3.1",
+          "Posed'unnouveaurevetementdesolspecial restaurant",
+          "30,00 m²",
+          "62,00",
+          "1860,00"
+        ],
+        [
+          "1.3.2",
+          "Application d'un ragreage",
+          "30,00 m²",
+          "12,33 C",
+          "369,90 C"
+        ]
+      ],
+      "rows": [
+        {
+          "row_index": 1,
+          "row_type": "data",
+          "description": "Salle du restaurant",
+          "values": {
+            "designation": {
+              "text": "Salle du restaurant",
+              "amount": null
+            },
+            "total": {
+              "text": "3 451,63",
+              "amount": 3451.63
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Salle du restaurant",
+              "amount": null,
+              "bbox": {
+                "l": 69.60556030273438,
+                "t": 326.19354248046875,
+                "r": 191.92708333333334,
+                "b": 341.6774088541667
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "3 451,63",
+              "amount": 3451.63,
+              "bbox": {
+                "l": 645.3868408203125,
+                "t": 326.7096761067708,
+                "r": 713.4569498697916,
+                "b": 342.1935221354167
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 2,
+          "row_type": "data",
+          "description": "1.1",
+          "values": {
+            "n°": {
+              "text": "1.1",
+              "amount": 1.1
+            },
+            "designation": {
+              "text": "Coin bar",
+              "amount": null
+            },
+            "total": {
+              "text": "501,73",
+              "amount": 501.73
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.1",
+              "amount": 1.1,
+              "bbox": {
+                "l": 28.149307250976562,
+                "t": 356.1290283203125,
+                "r": 48.10972595214844,
+                "b": 370.5806477864583
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Coin bar",
+              "amount": null,
+              "bbox": {
+                "l": 69.60556030273438,
+                "t": 356.1290283203125,
+                "r": 121.80972290039062,
+                "b": 370.5806477864583
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "501,73",
+              "amount": 501.73,
+              "bbox": {
+                "l": 660.7410074869791,
+                "t": 356.1290283203125,
+                "r": 713.96875,
+                "b": 370.5806477864583
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 3,
+          "row_type": "data",
+          "description": "1.1.1",
+          "values": {
+            "n°": {
+              "text": "1.1.1",
+              "amount": null
+            },
+            "designation": {
+              "text": "DeposedeI'anciennemoquette",
+              "amount": null
+            },
+            "qte": {
+              "text": "30,00 m²",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "10,75 C",
+              "amount": 10.75
+            },
+            "total": {
+              "text": "322,50",
+              "amount": 322.5
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.1.1",
+              "amount": null,
+              "bbox": {
+                "l": 28.149307250976562,
+                "t": 384.51611328125,
+                "r": 54.76319885253906,
+                "b": 397.9354654947917
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "DeposedeI'anciennemoquette",
+              "amount": null,
+              "bbox": {
+                "l": 70.11736551920573,
+                "t": 384.51611328125,
+                "r": 236.96598307291666,
+                "b": 398.4516194661458
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "30,00 m²",
+              "amount": null,
+              "bbox": {
+                "l": 505.6638997395833,
+                "t": 383.4838460286458,
+                "r": 555.8208414713541,
+                "b": 397.9354654947917
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "10,75 C",
+              "amount": 10.75,
+              "bbox": {
+                "l": 593.6944580078125,
+                "t": 384.0,
+                "r": 635.1507161458334,
+                "b": 398.4516194661458
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "322,50",
+              "amount": 322.5,
+              "bbox": {
+                "l": 665.8590494791666,
+                "t": 384.0,
+                "r": 713.96875,
+                "b": 398.4516194661458
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 4,
+          "row_type": "data",
+          "description": "1.1.2",
+          "values": {
+            "n°": {
+              "text": "1.1.2",
+              "amount": null
+            },
+            "designation": {
+              "text": "Cloisons de separation - BA13 standard sur ossature metallique (1 m) - Rail R90 et double montant M88 (1 m*) - Isolation GR80 (1 m)",
+              "amount": null
+            },
+            "qte": {
+              "text": "8,75 u",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "11,34",
+              "amount": 11.34
+            },
+            "total": {
+              "text": "99,23",
+              "amount": 99.23
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.1.2",
+              "amount": null,
+              "bbox": {
+                "l": 28.149307250976562,
+                "t": 410.8387044270833,
+                "r": 56.298614501953125,
+                "b": 424.258056640625
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Cloisons de separation - BA13 standard sur ossature metallique (1 m) - Rail R90 et double montant M88 (1 m*) - Isolation GR80 (1 m)",
+              "amount": null,
+              "bbox": {
+                "l": 68.58194478352864,
+                "t": 411.3548177083333,
+                "r": 307.59515380859375,
+                "b": 475.3548177083333
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "8,75 u",
+              "amount": null,
+              "bbox": {
+                "l": 519.482666015625,
+                "t": 410.8387044270833,
+                "r": 556.3326416015625,
+                "b": 424.774169921875
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "11,34",
+              "amount": 11.34,
+              "bbox": {
+                "l": 593.6944580078125,
+                "t": 410.8387044270833,
+                "r": 635.1507161458334,
+                "b": 424.774169921875
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "99,23",
+              "amount": 99.23,
+              "bbox": {
+                "l": 672.000732421875,
+                "t": 410.8387044270833,
+                "r": 713.4569498697916,
+                "b": 424.774169921875
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 5,
+          "row_type": "data",
+          "description": "1.1.3",
+          "values": {
+            "n°": {
+              "text": "1.1.3",
+              "amount": null
+            },
+            "designation": {
+              "text": "Enlevement des dechets",
+              "amount": null
+            },
+            "qte": {
+              "text": "1,00 u",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "80,00",
+              "amount": 80.0
+            },
+            "total": {
+              "text": "80,00",
+              "amount": 80.0
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.1.3",
+              "amount": null,
+              "bbox": {
+                "l": 27.125694274902344,
+                "t": 488.774169921875,
+                "r": 56.81041971842448,
+                "b": 503.7419026692708
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Enlevement des dechets",
+              "amount": null,
+              "bbox": {
+                "l": 69.60556030273438,
+                "t": 489.8064371744792,
+                "r": 198.58056640625,
+                "b": 503.2257893880208
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "1,00 u",
+              "amount": null,
+              "bbox": {
+                "l": 519.9944661458334,
+                "t": 489.2903238932292,
+                "r": 556.844482421875,
+                "b": 504.258056640625
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "80,00",
+              "amount": 80.0,
+              "bbox": {
+                "l": 593.1826578776041,
+                "t": 489.2903238932292,
+                "r": 635.1507161458334,
+                "b": 503.7419026692708
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "80,00",
+              "amount": 80.0,
+              "bbox": {
+                "l": 672.000732421875,
+                "t": 489.2903238932292,
+                "r": 713.96875,
+                "b": 503.7419026692708
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 6,
+          "row_type": "data",
+          "description": "1.2",
+          "values": {
+            "n°": {
+              "text": "1.2",
+              "amount": 1.2
+            },
+            "designation": {
+              "text": "Preparation, protection, installation echafaudage, depose des panneaux acoustiques, poncage, repose des panneaux acoustiques.",
+              "amount": null
+            },
+            "qte": {
+              "text": "20,00 m²",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "36,00 C",
+              "amount": 36.0
+            },
+            "total": {
+              "text": "720,00 C",
+              "amount": 720.0
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.2",
+              "amount": 1.2,
+              "bbox": {
+                "l": 27.637502034505207,
+                "t": 515.0967610677084,
+                "r": 47.597920735677086,
+                "b": 529.0322265625
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Preparation, protection, installation echafaudage, depose des panneaux acoustiques, poncage, repose des panneaux acoustiques.",
+              "amount": null,
+              "bbox": {
+                "l": 68.58194478352864,
+                "t": 515.0967610677084,
+                "r": 448.3416748046875,
+                "b": 547.6128743489584
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "20,00 m²",
+              "amount": null,
+              "bbox": {
+                "l": 506.1756998697917,
+                "t": 513.5483805338541,
+                "r": 555.8208414713541,
+                "b": 529.5483805338541
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "36,00 C",
+              "amount": 36.0,
+              "bbox": {
+                "l": 593.1826578776041,
+                "t": 515.0967610677084,
+                "r": 635.6625162760416,
+                "b": 529.5483805338541
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "720,00 C",
+              "amount": 720.0,
+              "bbox": {
+                "l": 664.83544921875,
+                "t": 513.5483805338541,
+                "r": 714.4805501302084,
+                "b": 530.5806477864584
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 7,
+          "row_type": "data",
+          "description": "1.3",
+          "values": {
+            "n°": {
+              "text": "1.3",
+              "amount": 1.3
+            },
+            "designation": {
+              "text": "Salle a letage",
+              "amount": null
+            },
+            "total": {
+              "text": "2 229,90",
+              "amount": 2229.9
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.3",
+              "amount": 1.3,
+              "bbox": {
+                "l": 28.149307250976562,
+                "t": 560.0,
+                "r": 49.13333638509115,
+                "b": 574.4515787760416
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Salle a letage",
+              "amount": null,
+              "bbox": {
+                "l": 69.60556030273438,
+                "t": 558.9677327473959,
+                "r": 151.49444580078125,
+                "b": 576.51611328125
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "2 229,90",
+              "amount": 2229.9,
+              "bbox": {
+                "l": 648.969482421875,
+                "t": 560.0,
+                "r": 713.96875,
+                "b": 575.4838460286459
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 8,
+          "row_type": "data",
+          "description": "1.3.1",
+          "values": {
+            "n°": {
+              "text": "1.3.1",
+              "amount": null
+            },
+            "designation": {
+              "text": "Posed'unnouveaurevetementdesolspecial restaurant",
+              "amount": null
+            },
+            "qte": {
+              "text": "30,00 m²",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "62,00",
+              "amount": 62.0
+            },
+            "total": {
+              "text": "1860,00",
+              "amount": 1860.0
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.3.1",
+              "amount": null,
+              "bbox": {
+                "l": 27.125694274902344,
+                "t": 587.8709309895834,
+                "r": 55.78680928548177,
+                "b": 602.8387044270834
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Posed'unnouveaurevetementdesolspecial restaurant",
+              "amount": null,
+              "bbox": {
+                "l": 69.09375,
+                "t": 588.3870849609375,
+                "r": 365.42919921875,
+                "b": 602.8387044270834
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "30,00 m²",
+              "amount": null,
+              "bbox": {
+                "l": 505.6638997395833,
+                "t": 587.8709309895834,
+                "r": 555.8208414713541,
+                "b": 602.3225504557291
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "62,00",
+              "amount": 62.0,
+              "bbox": {
+                "l": 593.1826578776041,
+                "t": 588.3870849609375,
+                "r": 635.1507161458334,
+                "b": 602.8387044270834
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "1860,00",
+              "amount": 1860.0,
+              "bbox": {
+                "l": 656.134765625,
+                "t": 588.3870849609375,
+                "r": 713.96875,
+                "b": 602.3225504557291
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 9,
+          "row_type": "data",
+          "description": "1.3.2",
+          "values": {
+            "n°": {
+              "text": "1.3.2",
+              "amount": null
+            },
+            "designation": {
+              "text": "Application d'un ragreage",
+              "amount": null
+            },
+            "qte": {
+              "text": "30,00 m²",
+              "amount": null
+            },
+            "prix_u.": {
+              "text": "12,33 C",
+              "amount": 12.33
+            },
+            "total": {
+              "text": "369,90 C",
+              "amount": 369.9
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "n°",
+              "text": "1.3.2",
+              "amount": null,
+              "bbox": {
+                "l": 27.637502034505207,
+                "t": 614.7096761067709,
+                "r": 56.298614501953125,
+                "b": 628.1290283203125
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "designation",
+              "text": "Application d'un ragreage",
+              "amount": null,
+              "bbox": {
+                "l": 70.11736551920573,
+                "t": 615.2257893880209,
+                "r": 205.745849609375,
+                "b": 629.1612548828125
+              }
+            },
+            {
+              "col": 2,
+              "col_name": "qte",
+              "text": "30,00 m²",
+              "amount": null,
+              "bbox": {
+                "l": 506.1756998697917,
+                "t": 612.6451416015625,
+                "r": 555.8208414713541,
+                "b": 628.6451416015625
+              }
+            },
+            {
+              "col": 3,
+              "col_name": "prix_u.",
+              "text": "12,33 C",
+              "amount": 12.33,
+              "bbox": {
+                "l": 593.6944580078125,
+                "t": 614.1935221354166,
+                "r": 635.6625162760416,
+                "b": 628.6451416015625
+              }
+            },
+            {
+              "col": 4,
+              "col_name": "total",
+              "text": "369,90 C",
+              "amount": 369.9,
+              "bbox": {
+                "l": 665.8590494791666,
+                "t": 614.1935221354166,
+                "r": 713.96875,
+                "b": 628.1290283203125
+              }
+            }
+          ]
+        }
+      ],
+      "total_rows": [],
+      "bbox": {
+        "l": 21.551185607910156,
+        "t": 289.7886657714844,
+        "r": 716.9304809570312,
+        "b": 628.77734375
+      },
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "table_id": "14",
+      "page_no": 1,
+      "num_rows": 2,
+      "num_cols": 2,
+      "data_start_row": 0,
+      "column_headers_raw": [
+        "",
+        ""
+      ],
+      "column_semantics": [
+        "unknown",
+        "unknown"
+      ],
+      "matrix": [
+        [
+          "Total net HT",
+          "3 451,63"
+        ],
+        [
+          "NETA PAYER",
+          "3451,63"
+        ]
+      ],
+      "rows": [
+        {
+          "row_index": 0,
+          "row_type": "total",
+          "description": "Total net HT",
+          "values": {
+            "unknown": {
+              "text": "3 451,63",
+              "amount": 3451.63
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "unknown",
+              "text": "Total net HT",
+              "amount": null,
+              "bbox": {
+                "l": 381.295166015625,
+                "t": 675.6128743489584,
+                "r": 451.92431640625,
+                "b": 689.54833984375
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "unknown",
+              "text": "3 451,63",
+              "amount": 3451.63,
+              "bbox": {
+                "l": 648.4576822916666,
+                "t": 675.0967610677084,
+                "r": 706.803466796875,
+                "b": 690.5806477864584
+              }
+            }
+          ]
+        },
+        {
+          "row_index": 1,
+          "row_type": "section_header",
+          "description": "NETA PAYER",
+          "values": {
+            "unknown": {
+              "text": "3451,63",
+              "amount": 3451.63
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "unknown",
+              "text": "NETA PAYER",
+              "amount": null,
+              "bbox": {
+                "l": 381.8069661458333,
+                "t": 704.0,
+                "r": 469.3257242838542,
+                "b": 719.48388671875
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "unknown",
+              "text": "3451,63",
+              "amount": 3451.63,
+              "bbox": {
+                "l": 637.7097574869791,
+                "t": 704.0,
+                "r": 706.803466796875,
+                "b": 720.51611328125
+              }
+            }
+          ]
+        }
+      ],
+      "total_rows": [
+        {
+          "row_index": 0,
+          "row_type": "total",
+          "description": "Total net HT",
+          "values": {
+            "unknown": {
+              "text": "3 451,63",
+              "amount": 3451.63
+            }
+          },
+          "raw_cells": [
+            {
+              "col": 0,
+              "col_name": "unknown",
+              "text": "Total net HT",
+              "amount": null,
+              "bbox": {
+                "l": 381.295166015625,
+                "t": 675.6128743489584,
+                "r": 451.92431640625,
+                "b": 689.54833984375
+              }
+            },
+            {
+              "col": 1,
+              "col_name": "unknown",
+              "text": "3 451,63",
+              "amount": 3451.63,
+              "bbox": {
+                "l": 648.4576822916666,
+                "t": 675.0967610677084,
+                "r": 706.803466796875,
+                "b": 690.5806477864584
+              }
+            }
+          ]
+        }
+      ],
+      "bbox": {
+        "l": 369.7146301269531,
+        "t": 666.7996215820312,
+        "r": 716.4356079101562,
+        "b": 727.3034057617188
+      },
+      "source_pages": [
+        1
+      ]
+    }
+  ],
+  "totals": {
+    "total_usd": null,
+    "omv_share": null,
+    "etap_share": null,
+    "ytd_current": null,
+    "ytd_previous": null,
+    "budget": null,
+    "currency": "USD",
+    "source_rows": [
+      {
+        "description": "Total net HT",
+        "amounts": {
+          "unknown": 3451.63
+        }
+      }
+    ]
+  },
+  "raw_text": "=== Page 1 ===\n"
+}

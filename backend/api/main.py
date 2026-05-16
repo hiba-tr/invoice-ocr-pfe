@@ -7,11 +7,12 @@ import time
 import gc
 from datetime import datetime
 from typing import List, Optional
-
+from fastapi.responses import JSONResponse
 from backend.api.database import get_db, engine, Base
 from backend.api import models_sql, schemas, crud, resume
-from backend.extraction.main import extract_invoice_complete
-from backend.extraction.postprocess import postprocess_invoice   # déjà bon dans votre code
+from backend.extraction.invoice_extraction_bridge import extract_invoice
+
+from backend.postprocess.pipeline import process_from_dict  
 from backend.semantic import semantic                            # déjà bon
 from backend.semantic.semantic import normalize_text
 from fastapi.staticfiles import StaticFiles
@@ -144,18 +145,51 @@ def _is_montant_column(col_name: str) -> bool:
 # ------------------------------------------------------------------------------
 # 1. UPLOAD & EXTRACTION (inchangé pour le moment)
 # ------------------------------------------------------------------------------
-@app.post("/upload", response_model=schemas.ExtractionResponse)
+@app.post("/upload", response_model=None)
 async def upload_facture(file: UploadFile = File(...)):
     content = await file.read()
     suffix = Path(file.filename).suffix
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
     tmp_path = tmp.name
+
     try:
         tmp.write(content)
+        tmp.flush() 
         tmp.close()
-        raw_result = extract_invoice_complete(tmp_path, max_pages=50)
-        structured = postprocess_invoice(raw_result)
+                # ========== DIAGNOSTIC ÉTAPE 1 ==========
+        print("=" * 60)
+        print("DIAGNOSTIC FICHIER TEMPORAIRE")
+        print(f"  Nom original : {file.filename}")
+        print(f"  Taille reçue  : {len(content)} octets")
+        print(f"  Chemin temp   : {tmp_path}")
+        print(f"  Taille disque : {os.path.getsize(tmp_path)} octets")
+        print(f"  Fichier existe : {os.path.exists(tmp_path)}")
+        print(f"  Extension     : {suffix}")
+        print("=" * 60)
+        # =========================================
+        raw_result = extract_invoice(tmp_path, max_pages=50)
+                # ========== DIAGNOSTIC ÉTAPE 2 ==========
+        print("=" * 60)
+        print("DIAGNOSTIC EXTRACTION BRUTE (avant postprocess)")
+        tables = raw_result.get("tables", [])
+        if tables:
+            t0 = tables[0]
+            print(f"  Nombre de tableaux : {len(tables)}")
+            print(f"  Lignes dans la matrice : {len(t0.get('matrix', []))}")
+            print(f"  Colonnes dans la matrice : {t0.get('num_cols')}")
+            print(f"  Headers bruts : {t0.get('column_headers_raw', [])}")
+            print(f"  Nombre de rows extraites : {len(t0.get('rows', []))}")
+        else:
+            print("  AUCUN TABLEAU TROUVÉ !")
+        print("=" * 60)
+        # =========================================
+        invoice = process_from_dict(raw_result)
+        structured = invoice.to_dict()
+        import json
+        print("=== STRUCTURED FROM POSTPROCESS ===")
+        print(json.dumps(structured, indent=2, default=str, ensure_ascii=False))
     finally:
+        # Nettoyage du fichier temporaire
         try:
             os.unlink(tmp_path)
         except PermissionError:
@@ -166,19 +200,83 @@ async def upload_facture(file: UploadFile = File(...)):
             except PermissionError:
                 pass
 
-    # Si le postprocess retourne une liste -> plusieurs factures
-    if isinstance(structured, list):
-        return {"invoices": structured}
-    else:
-        # Une seule facture : on retourne les champs directement (compatibilité)
-        return {
-            "metadata": structured.get("metadata"),
-            "columns": structured.get("columns"),
-            "items": structured.get("items"),
-            "invoices": None
-        }
+    # --- Construction de la réponse à partir de structured ---
+        # --- Construction robuste de la réponse ---
+        # ── Construction de la réponse ──────────────────────────────────────
+    # ── Construction de la réponse ──────────────────────────────────────
+    identity = structured.get("identity", {}) or {}
+    fs = structured.get("financial_summary", {}) or {}
 
+    currency = identity.get("currency") or "USD"
 
+    metadata = {
+        "company": identity.get("company"),
+        "concession": identity.get("concession"),
+        "date": identity.get("period"),
+        "currency": currency,
+        "document_type": identity.get("document_type"),
+        "first_column_name": (
+            structured["columns"]["headers"][0]
+            if structured.get("columns", {}).get("headers")
+            else "Description"
+        ),
+    }
+
+    # ── Colonnes : TOUTES (sauf vides) ────────────────────────────────
+    all_cols = structured.get("columns", {}).get("columns", [])
+    columns = [c["header_raw"] for c in all_cols if c.get("header_raw", "").strip()]
+
+    # ── Sémantiques numériques (pour filtrer les valeurs) ─────────────
+    numeric_semantics = {
+        c["semantic"]
+        for c in all_cols
+        if c.get("is_numeric", True) and c.get("header_raw", "").strip()
+    }
+
+    # ── Mapping sémantique → header ────────────────────────────────────
+    col_headers = structured.get("columns", {}).get("headers", [])
+    col_semantics_list = structured.get("columns", {}).get("semantics", [])
+    sem_to_header = {s: h for s, h in zip(col_semantics_list, col_headers) if s and h}
+
+    # ── Items ──────────────────────────────────────────────────────────
+# ── Items ──────────────────────────────────────────────────────────
+# Remplacer depuis "# ── Items ────────────────────" jusqu'à la fin de la boucle
+    items = []
+    for section in structured.get("sections", []):
+        for item in section.get("items", []):
+            valeurs = {}
+            for col_name, montant in item.get("amounts", {}).items():
+                display_name = sem_to_header.get(col_name, col_name)
+                col_info = next((c for c in all_cols if c.get("semantic") == col_name), None)
+                is_num = col_info.get("is_numeric", False) if col_info else False
+                if montant.get("is_empty"):
+                    valeurs[display_name] = None
+                else:
+                    if is_num and montant.get("value") is not None:
+                        val = montant["value"]
+                        if val == int(val):
+                            valeurs[display_name] = f"{int(val):,}".replace(",", " ")
+                        else:
+                            valeurs[display_name] = f"{val:,.2f}".replace(",", " ").replace(".", ",")
+                    else:
+                        valeurs[display_name] = montant.get("raw")
+            items.append({
+                "description": item.get("description"),
+                "valeurs": valeurs,
+            })
+
+    # ── Totaux ─────────────────────────────────────────────────────────
+    totals_by_col = fs.get("totals_by_column", {}) or {}
+    totals = {}
+    for sem, amt in totals_by_col.items():
+        if amt.get("value") is not None:
+            val = amt["value"]
+            if val == int(val):
+                totals[sem] = f"{int(val):,}".replace(",", " ")
+            else:
+                totals[sem] = f"{val:,.2f}".replace(",", " ").replace(".", ",")
+
+    return JSONResponse(content=structured)
 # ------------------------------------------------------------------------------
 # 2. CRÉATION D'UNE FACTURE (avec hash de contenu)
 # ------------------------------------------------------------------------------

@@ -136,22 +136,26 @@ function renderExtractionResults() {
   const container = document.getElementById('extraction-results');
   container.style.display = 'block';
   const data = state.extractionResult;
-  let invoices = data.invoices || (data.metadata ? [data] : []);
-  if (invoices.length === 0) {
-    container.innerHTML = `<div class="no-data"><div class="nd-icon">📭</div>Aucune facture détectée</div>`;
-    return;
-  }
 
-  const currentInv = invoices[state.selectedInvoiceIndex];
-  const metadata = currentInv.metadata || {};
-  const items = currentInv.items || [];
+  // ✅ Lire les items depuis les sections
+  const sections = data.sections || [];
+  const allItems = sections.flatMap(s => s.items || []);
+  const identity = data.identity || {};
+
+  const metadata = {
+    company: identity.company,
+    date: identity.period,
+    currency: identity.currency,
+    concession: identity.concession,
+    first_column_name: data.columns?.headers?.[0] || 'Description'
+  };
+
+  const items = allItems;
   const nbItems = items.length;
+
   const totalAmount = items.reduce((sum, it) => {
-    const vals = Object.values(it.valeurs || {});
-    const numericVals = vals.map(v => {
-      const num = parseFloat(String(v).replace(',', '.').replace(/[^\d.-]/g, ''));
-      return isNaN(num) ? 0 : num;
-    });
+    const vals = Object.values(it.amounts || {});
+    const numericVals = vals.map(v => (v && v.value) || 0);
     return sum + numericVals.reduce((a, b) => a + b, 0);
   }, 0).toFixed(2);
 
@@ -235,8 +239,7 @@ function renderExtractionResults() {
 
   // Initialisation des champs et de la table (inchangé)
   setTimeout(() => initConcessionField(metadata.concession), 10);
-  initItemsTable(items, metadata.first_column_name || 'Description');
-
+  initItemsTable(items, data.columns?.headers?.[0] || 'Description');
   document.getElementById('add-column-btn')?.addEventListener('click', addNewColumn);
   document.getElementById('suggest-btn')?.addEventListener('click', autoApplySuggestions);
   document.getElementById('save-btn')?.addEventListener('click', saveFacture);
@@ -334,42 +337,100 @@ async function autoApplySuggestions() {
 // ---- Le reste des fonctions (table, calculs, colonnes, etc.) reste inchangé ----
 let isCalculating = false;
 let tableInstance = null;
-
 function initItemsTable(items, firstColName) {
-  state.firstColumnName = firstColName;
-  const valueCols = new Set();
-  items.forEach(it => Object.keys(it.valeurs || {}).forEach(k => valueCols.add(k)));
+  const schema = state.extractionResult.columns;
+  if (!schema || !schema.headers) {
+    console.warn('Schéma de colonnes introuvable');
+    return;
+  }
 
-  const colDefs = [
-    { title: firstColName, field: 'description', editor: 'input', width: 250, frozen: true }
-  ];
-  [...valueCols].forEach(col => {
-    colDefs.push({
-      title: col, field: col, editor: 'input',
+  const headers = schema.headers;
+  const semantics = schema.semantics;
+
+  // 1. Construire des champs UNIQUES (même sémantiques)
+  const fieldCount = {};
+  const uniqueFields = semantics.map((sem, i) => {
+    let field = sem || `col_${i}`;
+    if (fieldCount[field] !== undefined) {
+      fieldCount[field]++;
+      field = `${field}_${fieldCount[field]}`;
+    } else {
+      fieldCount[field] = 1;
+    }
+    return field;
+  });
+
+  // 2. Définitions des colonnes Tabulator
+  const colDefs = headers.map((header, index) => {
+    const field = uniqueFields[index];
+    const isDescription = field === 'description' || field === 'designation' || field === 'libelle' || field === 'article' || field === 'item';
+    return {
+      title: header,
+      field: field,
+      editor: 'input',
+      width: isDescription ? 250 : undefined,
+      frozen: isDescription,
       formatter: function(cell) {
         const val = cell.getValue();
+        if (val && typeof val === 'object' && val.raw !== undefined) {
+          return val.raw;
+        }
         return val !== undefined && val !== null ? val : '';
       }
-    });
+    };
   });
+
+  // 3. Colonne Total
   colDefs.push({
-    title: 'Total', field: '__total_ligne',
+    title: 'Total',
+    field: '__total_ligne',
     formatter: function(cell) {
       const val = cell.getValue();
       return val !== undefined ? val.toFixed(2) + ' €' : '';
     },
-    editor: false, hozAlign: 'right', width: 120
+    hozAlign: 'right',
+    width: 120,
+    editor: false
   });
 
+  // 4. Transformer les items en données Tabulator
   const tableData = items.map(it => {
-    const row = { description: it.description, __total_ligne: 0 };
-    Object.entries(it.valeurs || {}).forEach(([k,v]) => row[k] = v);
+    const row = { __total_ligne: 0 };
+
+    // Trouver le champ de description (le premier champ qui correspond à une sémantique de description)
+    const descField = uniqueFields.find((f, i) =>
+      semantics[i] === 'description' || semantics[i] === 'designation' || semantics[i] === 'libelle' || semantics[i] === 'article' || semantics[i] === 'item'
+    );
+    if (descField) {
+      row[descField] = it.description;
+    }
+
+    // Placer les autres colonnes depuis it.amounts
+    if (it.amounts) {
+      Object.entries(it.amounts).forEach(([sem, val]) => {
+        // Retrouver l'index de la sémantique dans le tableau d'origine
+        const idx = semantics.indexOf(sem);
+        if (idx !== -1) {
+          const field = uniqueFields[idx];
+          if (field !== descField) {
+            row[field] = val;
+          }
+        } else {
+          // fallback (ne devrait pas arriver)
+          if (sem !== descField) {
+            row[sem] = val;
+          }
+        }
+      });
+    }
+
     return row;
   });
 
   state.editedTableData = tableData;
   state.tableColumns = colDefs;
 
+  // 5. Créer la table Tabulator
   const tableEl = document.getElementById('items-table');
   if (tableInstance) tableInstance.destroy();
   tableInstance = new Tabulator(tableEl, {
@@ -391,7 +452,6 @@ function initItemsTable(items, firstColName) {
   tableInstance.on('cellEdited', () => { if (!isCalculating) { isCalculating = true; recalculerTotaux(); isCalculating = false; } mettreAJourFooter(); state.editedTableData = tableInstance.getData(); });
   setTimeout(() => { if (!isCalculating) { isCalculating = true; recalculerTotaux(); isCalculating = false; } mettreAJourFooter(); }, 50);
 }
-
 function recalculerTotaux() {
   if (!state.tableInstance) return;
   const data = state.tableInstance.getData();

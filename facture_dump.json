@@ -1,0 +1,1807 @@
+{
+  "status": "success",
+  "input": {
+    "file": "C:\\Factures\\facture_google1.png",
+    "document_hash": "49a4c4a2ad588393ca45cb427bd4365266b627c40dbc0d9a2212dad89c2b795d",
+    "format": "image"
+  },
+  "errors": [],
+  "timings": {
+    "page_parse": {
+      "scope": "page",
+      "count": 1,
+      "times": [
+        0.0
+      ],
+      "start_timestamps": [
+        "2026-05-11 15:04:11.172919+00:00"
+      ]
+    },
+    "ocr": {
+      "scope": "page",
+      "count": 1,
+      "times": [
+        5.906999999991967
+      ],
+      "start_timestamps": [
+        "2026-05-11 15:04:11.175068+00:00"
+      ]
+    },
+    "layout": {
+      "scope": "page",
+      "count": 1,
+      "times": [
+        1.264999999999418
+      ],
+      "start_timestamps": [
+        "2026-05-11 15:04:17.078954+00:00"
+      ]
+    },
+    "table_structure": {
+      "scope": "page",
+      "count": 1,
+      "times": [
+        3.812999999994645
+      ],
+      "start_timestamps": [
+        "2026-05-11 15:04:18.384666+00:00"
+      ]
+    },
+    "page_assemble": {
+      "scope": "page",
+      "count": 1,
+      "times": [
+        0.0
+      ],
+      "start_timestamps": [
+        "2026-05-11 15:04:22.215257+00:00"
+      ]
+    }
+  },
+  "num_pages": 1,
+  "pages": [
+    {
+      "page_no": 1,
+      "page_keys": [
+        "page_no",
+        "size",
+        "predictions",
+        "assembled",
+        "parsed_page"
+      ],
+      "size": {
+        "width": 737.0,
+        "height": 1024.0
+      },
+      "assembled": {
+        "__keys__": [
+          "elements",
+          "body",
+          "headers"
+        ],
+        "headers": [
+          {
+            "label": "page_footer",
+            "id": 18,
+            "page_no": 1,
+            "cluster": {
+              "id": 18,
+              "label": "page_footer",
+              "bbox": {
+                "l": 616.7257080078125,
+                "t": 979.6128743489584,
+                "r": 715.5042317708334,
+                "b": 993.0322265625,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.702315628528595,
+              "cells": [
+                {
+                  "index": 74,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 616.7257080078125,
+                    "r_y0": 993.0322265625,
+                    "r_x1": 715.5042317708334,
+                    "r_y1": 993.0322265625,
+                    "r_x2": 715.5042317708334,
+                    "r_y2": 979.6128743489584,
+                    "r_x3": 616.7257080078125,
+                    "r_y3": 979.6128743489584,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "FAC-DEMO-2023-002",
+                  "orig": "FAC-DEMO-2023-002",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99147,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "FAC-DEMO-2023-002"
+          },
+          {
+            "label": "page_footer",
+            "id": 15,
+            "page_no": 1,
+            "cluster": {
+              "id": 15,
+              "label": "page_footer",
+              "bbox": {
+                "l": 657.1583658854166,
+                "t": 994.064453125,
+                "r": 717.0396321614584,
+                "b": 1008.0,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.8158829808235168,
+              "cells": [
+                {
+                  "index": 76,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 657.1583658854166,
+                    "r_y0": 1008.0,
+                    "r_x1": 717.0396321614584,
+                    "r_y1": 1008.0,
+                    "r_x2": 717.0396321614584,
+                    "r_y2": 994.064453125,
+                    "r_x3": 657.1583658854166,
+                    "r_y3": 994.064453125,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Page 1 sur 1",
+                  "orig": "Page 1 sur 1",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99402,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "Page 1 sur 1"
+          }
+        ],
+        "body_count": 16,
+        "body_sample": [
+          {
+            "label": "text",
+            "id": 37,
+            "page_no": 1,
+            "cluster": {
+              "id": 37,
+              "label": "text",
+              "bbox": {
+                "l": 383.3423665364583,
+                "t": 20.129032135009766,
+                "r": 512.8291829427084,
+                "b": 84.64515686035156,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.5625203847885132,
+              "cells": [
+                {
+                  "index": 0,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 384.365966796875,
+                    "r_y0": 33.54838562011719,
+                    "r_x1": 495.4278157552083,
+                    "r_y1": 33.54838562011719,
+                    "r_x2": 495.4278157552083,
+                    "r_y2": 20.129032135009766,
+                    "r_x3": 384.365966796875,
+                    "r_y3": 20.129032135009766,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "M.DemoJean-Marc",
+                  "orig": "M.DemoJean-Marc",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99356,
+                  "from_ocr": true
+                },
+                {
+                  "index": 1,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.8541666666667,
+                    "r_y0": 50.58064270019531,
+                    "r_x1": 512.8291829427084,
+                    "r_y1": 50.58064270019531,
+                    "r_x2": 512.8291829427084,
+                    "r_y2": 35.612902323404946,
+                    "r_x3": 383.8541666666667,
+                    "r_y3": 35.612902323404946,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "236 av. de la Republique",
+                  "orig": "236 av. de la Republique",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.97284,
+                  "from_ocr": true
+                },
+                {
+                  "index": 3,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.8541666666667,
+                    "r_y0": 66.58064270019531,
+                    "r_x1": 466.2548828125,
+                    "r_y1": 66.58064270019531,
+                    "r_x2": 466.2548828125,
+                    "r_y2": 52.645161946614586,
+                    "r_x3": 383.8541666666667,
+                    "r_y3": 52.645161946614586,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "49800 TRELAZE",
+                  "orig": "49800 TRELAZE",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.98107,
+                  "from_ocr": true
+                },
+                {
+                  "index": 5,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.3423665364583,
+                    "r_y0": 84.64515686035156,
+                    "r_x1": 421.2159830729167,
+                    "r_y1": 84.64515686035156,
+                    "r_x2": 421.2159830729167,
+                    "r_y2": 68.64515686035156,
+                    "r_x3": 383.3423665364583,
+                    "r_y3": 68.64515686035156,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "France",
+                  "orig": "France",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99778,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "M.DemoJean-Marc 236 av. de la Republique 49800 TRELAZE France"
+          },
+          {
+            "label": "section_header",
+            "id": 17,
+            "page_no": 1,
+            "cluster": {
+              "id": 17,
+              "label": "section_header",
+              "bbox": {
+                "l": 24.566668192545574,
+                "t": 120.77419026692708,
+                "r": 132.55764770507812,
+                "b": 134.70967610677084,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.793552815914154,
+              "cells": [
+                {
+                  "index": 6,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 24.566668192545574,
+                    "r_y0": 134.70967610677084,
+                    "r_x1": 132.55764770507812,
+                    "r_y1": 134.70967610677084,
+                    "r_x2": 132.55764770507812,
+                    "r_y2": 120.77419026692708,
+                    "r_x3": 24.566668192545574,
+                    "r_y3": 120.77419026692708,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "DupontPeintureEI",
+                  "orig": "DupontPeintureEI",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99709,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "DupontPeintureEI"
+          },
+          {
+            "label": "section_header",
+            "id": 16,
+            "page_no": 1,
+            "cluster": {
+              "id": 16,
+              "label": "section_header",
+              "bbox": {
+                "l": 617.2375081380209,
+                "t": 119.74193318684895,
+                "r": 717.0396321614584,
+                "b": 149.16128540039062,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.813870906829834,
+              "cells": [
+                {
+                  "index": 7,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 617.2375081380209,
+                    "r_y0": 149.16128540039062,
+                    "r_x1": 717.0396321614584,
+                    "r_y1": 149.16128540039062,
+                    "r_x2": 717.0396321614584,
+                    "r_y2": 119.74193318684895,
+                    "r_x3": 617.2375081380209,
+                    "r_y3": 119.74193318684895,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Facture",
+                  "orig": "Facture",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99991,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "Facture"
+          },
+          {
+            "label": "text",
+            "id": 30,
+            "page_no": 1,
+            "cluster": {
+              "id": 30,
+              "label": "text",
+              "bbox": {
+                "l": 22.519444783528645,
+                "t": 136.7741902669271,
+                "r": 101.33750406901042,
+                "b": 183.2258097330729,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.5949001312255859,
+              "cells": [
+                {
+                  "index": 8,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 23.03125,
+                    "r_y0": 150.70967610677084,
+                    "r_x1": 101.33750406901042,
+                    "r_y1": 150.70967610677084,
+                    "r_x2": 101.33750406901042,
+                    "r_y2": 136.7741902669271,
+                    "r_x3": 23.03125,
+                    "r_y3": 136.7741902669271,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "23 Rue Basfroi",
+                  "orig": "23 Rue Basfroi",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99531,
+                  "from_ocr": true
+                },
+                {
+                  "index": 9,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 22.519444783528645,
+                    "r_y0": 167.22579956054688,
+                    "r_x1": 56.81041971842448,
+                    "r_y1": 167.22579956054688,
+                    "r_x2": 56.81041971842448,
+                    "r_y2": 152.7741902669271,
+                    "r_x3": 22.519444783528645,
+                    "r_y3": 152.7741902669271,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "75011",
+                  "orig": "75011",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99989,
+                  "from_ocr": true
+                },
+                {
+                  "index": 11,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 23.03125,
+                    "r_y0": 183.2258097330729,
+                    "r_x1": 51.692362467447914,
+                    "r_y1": 183.2258097330729,
+                    "r_x2": 51.692362467447914,
+                    "r_y2": 169.80644734700522,
+                    "r_x3": 23.03125,
+                    "r_y3": 169.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Paris",
+                  "orig": "Paris",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99831,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "23 Rue Basfroi 75011 Paris"
+          },
+          {
+            "label": "key_value_region",
+            "id": 27,
+            "page_no": 1,
+            "cluster": {
+              "id": 27,
+              "label": "key_value_region",
+              "bbox": {
+                "l": 538.4194742838541,
+                "t": 153.80644734700522,
+                "r": 717.5514322916666,
+                "b": 200.258056640625,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.6032305359840393,
+              "cells": [
+                {
+                  "index": 10,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 590.11181640625,
+                    "r_y0": 167.22579956054688,
+                    "r_x1": 717.5514322916666,
+                    "r_y1": 167.22579956054688,
+                    "r_x2": 717.5514322916666,
+                    "r_y2": 153.80644734700522,
+                    "r_x3": 590.11181640625,
+                    "r_y3": 153.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "N°FAC-DEMO-2023-002",
+                  "orig": "N°FAC-DEMO-2023-002",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99618,
+                  "from_ocr": true
+                },
+                {
+                  "index": 12,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 538.4194742838541,
+                    "r_y0": 183.2258097330729,
+                    "r_x1": 716.52783203125,
+                    "r_y1": 183.2258097330729,
+                    "r_x2": 716.52783203125,
+                    "r_y2": 169.80644734700522,
+                    "r_x3": 538.4194742838541,
+                    "r_y3": 169.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Sur devisN°DEV-DEMO-2022-001",
+                  "orig": "Sur devisN°DEV-DEMO-2022-001",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.97186,
+                  "from_ocr": true
+                },
+                {
+                  "index": 14,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 591.6472574869791,
+                    "r_y0": 200.258056640625,
+                    "r_x1": 717.5514322916666,
+                    "r_y1": 200.258056640625,
+                    "r_x2": 717.5514322916666,
+                    "r_y2": 186.83870442708334,
+                    "r_x3": 591.6472574869791,
+                    "r_y3": 186.83870442708334,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "En date du:18/04/2023",
+                  "orig": "En date du:18/04/2023",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.96597,
+                  "from_ocr": true
+                }
+              ],
+              "children": [
+                {
+                  "id": 35,
+                  "label": "text",
+                  "bbox": {
+                    "l": 590.11181640625,
+                    "t": 153.80644734700522,
+                    "r": 717.5514322916666,
+                    "b": 167.22579956054688,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.5653442740440369,
+                  "cells": [
+                    {
+                      "index": 10,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 590.11181640625,
+                        "r_y0": 167.22579956054688,
+                        "r_x1": 717.5514322916666,
+                        "r_y1": 167.22579956054688,
+                        "r_x2": 717.5514322916666,
+                        "r_y2": 153.80644734700522,
+                        "r_x3": 590.11181640625,
+                        "r_y3": 153.80644734700522,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "N°FAC-DEMO-2023-002",
+                      "orig": "N°FAC-DEMO-2023-002",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.99618,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": 25,
+                  "label": "text",
+                  "bbox": {
+                    "l": 538.4194742838541,
+                    "t": 169.80644734700522,
+                    "r": 716.52783203125,
+                    "b": 183.2258097330729,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.6276670694351196,
+                  "cells": [
+                    {
+                      "index": 12,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 538.4194742838541,
+                        "r_y0": 183.2258097330729,
+                        "r_x1": 716.52783203125,
+                        "r_y1": 183.2258097330729,
+                        "r_x2": 716.52783203125,
+                        "r_y2": 169.80644734700522,
+                        "r_x3": 538.4194742838541,
+                        "r_y3": 169.80644734700522,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "Sur devisN°DEV-DEMO-2022-001",
+                      "orig": "Sur devisN°DEV-DEMO-2022-001",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.97186,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": 4,
+                  "label": "text",
+                  "bbox": {
+                    "l": 591.6472574869791,
+                    "t": 186.83870442708334,
+                    "r": 717.5514322916666,
+                    "b": 200.258056640625,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.9049760103225708,
+                  "cells": [
+                    {
+                      "index": 14,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 591.6472574869791,
+                        "r_y0": 200.258056640625,
+                        "r_x1": 717.5514322916666,
+                        "r_y1": 200.258056640625,
+                        "r_x2": 717.5514322916666,
+                        "r_y2": 186.83870442708334,
+                        "r_x3": 591.6472574869791,
+                        "r_y3": 186.83870442708334,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "En date du:18/04/2023",
+                      "orig": "En date du:18/04/2023",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.96597,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            "text": null
+          }
+        ],
+        "elements_count": 18,
+        "elements_sample": [
+          {
+            "label": "text",
+            "id": 37,
+            "page_no": 1,
+            "cluster": {
+              "id": 37,
+              "label": "text",
+              "bbox": {
+                "l": 383.3423665364583,
+                "t": 20.129032135009766,
+                "r": 512.8291829427084,
+                "b": 84.64515686035156,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.5625203847885132,
+              "cells": [
+                {
+                  "index": 0,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 384.365966796875,
+                    "r_y0": 33.54838562011719,
+                    "r_x1": 495.4278157552083,
+                    "r_y1": 33.54838562011719,
+                    "r_x2": 495.4278157552083,
+                    "r_y2": 20.129032135009766,
+                    "r_x3": 384.365966796875,
+                    "r_y3": 20.129032135009766,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "M.DemoJean-Marc",
+                  "orig": "M.DemoJean-Marc",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99356,
+                  "from_ocr": true
+                },
+                {
+                  "index": 1,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.8541666666667,
+                    "r_y0": 50.58064270019531,
+                    "r_x1": 512.8291829427084,
+                    "r_y1": 50.58064270019531,
+                    "r_x2": 512.8291829427084,
+                    "r_y2": 35.612902323404946,
+                    "r_x3": 383.8541666666667,
+                    "r_y3": 35.612902323404946,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "236 av. de la Republique",
+                  "orig": "236 av. de la Republique",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.97284,
+                  "from_ocr": true
+                },
+                {
+                  "index": 3,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.8541666666667,
+                    "r_y0": 66.58064270019531,
+                    "r_x1": 466.2548828125,
+                    "r_y1": 66.58064270019531,
+                    "r_x2": 466.2548828125,
+                    "r_y2": 52.645161946614586,
+                    "r_x3": 383.8541666666667,
+                    "r_y3": 52.645161946614586,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "49800 TRELAZE",
+                  "orig": "49800 TRELAZE",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.98107,
+                  "from_ocr": true
+                },
+                {
+                  "index": 5,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 383.3423665364583,
+                    "r_y0": 84.64515686035156,
+                    "r_x1": 421.2159830729167,
+                    "r_y1": 84.64515686035156,
+                    "r_x2": 421.2159830729167,
+                    "r_y2": 68.64515686035156,
+                    "r_x3": 383.3423665364583,
+                    "r_y3": 68.64515686035156,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "France",
+                  "orig": "France",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99778,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "M.DemoJean-Marc 236 av. de la Republique 49800 TRELAZE France"
+          },
+          {
+            "label": "section_header",
+            "id": 17,
+            "page_no": 1,
+            "cluster": {
+              "id": 17,
+              "label": "section_header",
+              "bbox": {
+                "l": 24.566668192545574,
+                "t": 120.77419026692708,
+                "r": 132.55764770507812,
+                "b": 134.70967610677084,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.793552815914154,
+              "cells": [
+                {
+                  "index": 6,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 24.566668192545574,
+                    "r_y0": 134.70967610677084,
+                    "r_x1": 132.55764770507812,
+                    "r_y1": 134.70967610677084,
+                    "r_x2": 132.55764770507812,
+                    "r_y2": 120.77419026692708,
+                    "r_x3": 24.566668192545574,
+                    "r_y3": 120.77419026692708,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "DupontPeintureEI",
+                  "orig": "DupontPeintureEI",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99709,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "DupontPeintureEI"
+          },
+          {
+            "label": "section_header",
+            "id": 16,
+            "page_no": 1,
+            "cluster": {
+              "id": 16,
+              "label": "section_header",
+              "bbox": {
+                "l": 617.2375081380209,
+                "t": 119.74193318684895,
+                "r": 717.0396321614584,
+                "b": 149.16128540039062,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.813870906829834,
+              "cells": [
+                {
+                  "index": 7,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 617.2375081380209,
+                    "r_y0": 149.16128540039062,
+                    "r_x1": 717.0396321614584,
+                    "r_y1": 149.16128540039062,
+                    "r_x2": 717.0396321614584,
+                    "r_y2": 119.74193318684895,
+                    "r_x3": 617.2375081380209,
+                    "r_y3": 119.74193318684895,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Facture",
+                  "orig": "Facture",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99991,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "Facture"
+          },
+          {
+            "label": "text",
+            "id": 30,
+            "page_no": 1,
+            "cluster": {
+              "id": 30,
+              "label": "text",
+              "bbox": {
+                "l": 22.519444783528645,
+                "t": 136.7741902669271,
+                "r": 101.33750406901042,
+                "b": 183.2258097330729,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.5949001312255859,
+              "cells": [
+                {
+                  "index": 8,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 23.03125,
+                    "r_y0": 150.70967610677084,
+                    "r_x1": 101.33750406901042,
+                    "r_y1": 150.70967610677084,
+                    "r_x2": 101.33750406901042,
+                    "r_y2": 136.7741902669271,
+                    "r_x3": 23.03125,
+                    "r_y3": 136.7741902669271,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "23 Rue Basfroi",
+                  "orig": "23 Rue Basfroi",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99531,
+                  "from_ocr": true
+                },
+                {
+                  "index": 9,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 22.519444783528645,
+                    "r_y0": 167.22579956054688,
+                    "r_x1": 56.81041971842448,
+                    "r_y1": 167.22579956054688,
+                    "r_x2": 56.81041971842448,
+                    "r_y2": 152.7741902669271,
+                    "r_x3": 22.519444783528645,
+                    "r_y3": 152.7741902669271,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "75011",
+                  "orig": "75011",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99989,
+                  "from_ocr": true
+                },
+                {
+                  "index": 11,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 23.03125,
+                    "r_y0": 183.2258097330729,
+                    "r_x1": 51.692362467447914,
+                    "r_y1": 183.2258097330729,
+                    "r_x2": 51.692362467447914,
+                    "r_y2": 169.80644734700522,
+                    "r_x3": 23.03125,
+                    "r_y3": 169.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Paris",
+                  "orig": "Paris",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99831,
+                  "from_ocr": true
+                }
+              ],
+              "children": []
+            },
+            "text": "23 Rue Basfroi 75011 Paris"
+          },
+          {
+            "label": "key_value_region",
+            "id": 27,
+            "page_no": 1,
+            "cluster": {
+              "id": 27,
+              "label": "key_value_region",
+              "bbox": {
+                "l": 538.4194742838541,
+                "t": 153.80644734700522,
+                "r": 717.5514322916666,
+                "b": 200.258056640625,
+                "coord_origin": "TOPLEFT"
+              },
+              "confidence": 0.6032305359840393,
+              "cells": [
+                {
+                  "index": 10,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 590.11181640625,
+                    "r_y0": 167.22579956054688,
+                    "r_x1": 717.5514322916666,
+                    "r_y1": 167.22579956054688,
+                    "r_x2": 717.5514322916666,
+                    "r_y2": 153.80644734700522,
+                    "r_x3": 590.11181640625,
+                    "r_y3": 153.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "N°FAC-DEMO-2023-002",
+                  "orig": "N°FAC-DEMO-2023-002",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.99618,
+                  "from_ocr": true
+                },
+                {
+                  "index": 12,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 538.4194742838541,
+                    "r_y0": 183.2258097330729,
+                    "r_x1": 716.52783203125,
+                    "r_y1": 183.2258097330729,
+                    "r_x2": 716.52783203125,
+                    "r_y2": 169.80644734700522,
+                    "r_x3": 538.4194742838541,
+                    "r_y3": 169.80644734700522,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "Sur devisN°DEV-DEMO-2022-001",
+                  "orig": "Sur devisN°DEV-DEMO-2022-001",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.97186,
+                  "from_ocr": true
+                },
+                {
+                  "index": 14,
+                  "rgba": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 255
+                  },
+                  "rect": {
+                    "r_x0": 591.6472574869791,
+                    "r_y0": 200.258056640625,
+                    "r_x1": 717.5514322916666,
+                    "r_y1": 200.258056640625,
+                    "r_x2": 717.5514322916666,
+                    "r_y2": 186.83870442708334,
+                    "r_x3": 591.6472574869791,
+                    "r_y3": 186.83870442708334,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "text": "En date du:18/04/2023",
+                  "orig": "En date du:18/04/2023",
+                  "text_direction": "left_to_right",
+                  "confidence": 0.96597,
+                  "from_ocr": true
+                }
+              ],
+              "children": [
+                {
+                  "id": 35,
+                  "label": "text",
+                  "bbox": {
+                    "l": 590.11181640625,
+                    "t": 153.80644734700522,
+                    "r": 717.5514322916666,
+                    "b": 167.22579956054688,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.5653442740440369,
+                  "cells": [
+                    {
+                      "index": 10,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 590.11181640625,
+                        "r_y0": 167.22579956054688,
+                        "r_x1": 717.5514322916666,
+                        "r_y1": 167.22579956054688,
+                        "r_x2": 717.5514322916666,
+                        "r_y2": 153.80644734700522,
+                        "r_x3": 590.11181640625,
+                        "r_y3": 153.80644734700522,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "N°FAC-DEMO-2023-002",
+                      "orig": "N°FAC-DEMO-2023-002",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.99618,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": 25,
+                  "label": "text",
+                  "bbox": {
+                    "l": 538.4194742838541,
+                    "t": 169.80644734700522,
+                    "r": 716.52783203125,
+                    "b": 183.2258097330729,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.6276670694351196,
+                  "cells": [
+                    {
+                      "index": 12,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 538.4194742838541,
+                        "r_y0": 183.2258097330729,
+                        "r_x1": 716.52783203125,
+                        "r_y1": 183.2258097330729,
+                        "r_x2": 716.52783203125,
+                        "r_y2": 169.80644734700522,
+                        "r_x3": 538.4194742838541,
+                        "r_y3": 169.80644734700522,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "Sur devisN°DEV-DEMO-2022-001",
+                      "orig": "Sur devisN°DEV-DEMO-2022-001",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.97186,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": 4,
+                  "label": "text",
+                  "bbox": {
+                    "l": 591.6472574869791,
+                    "t": 186.83870442708334,
+                    "r": 717.5514322916666,
+                    "b": 200.258056640625,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "confidence": 0.9049760103225708,
+                  "cells": [
+                    {
+                      "index": 14,
+                      "rgba": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                      },
+                      "rect": {
+                        "r_x0": 591.6472574869791,
+                        "r_y0": 200.258056640625,
+                        "r_x1": 717.5514322916666,
+                        "r_y1": 200.258056640625,
+                        "r_x2": 717.5514322916666,
+                        "r_y2": 186.83870442708334,
+                        "r_x3": 591.6472574869791,
+                        "r_y3": 186.83870442708334,
+                        "coord_origin": "TOPLEFT"
+                      },
+                      "text": "En date du:18/04/2023",
+                      "orig": "En date du:18/04/2023",
+                      "text_direction": "left_to_right",
+                      "confidence": 0.96597,
+                      "from_ocr": true
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            "text": null
+          }
+        ]
+      },
+      "predictions": {
+        "__keys__": [
+          "layout",
+          "tablestructure"
+        ],
+        "tablestructure": {
+          "table_count": 2,
+          "tables": {
+            "0": {
+              "num_rows": 10,
+              "num_cols": 5,
+              "cell_count": 43,
+              "cells_sample": [
+                {
+                  "bbox": {
+                    "l": 27.125694274902344,
+                    "t": 296.77419026692706,
+                    "r": 45.55069478352865,
+                    "b": 311.2257893880208,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "N°",
+                  "column_header": true,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 70.11736551920573,
+                    "t": 295.74192301432294,
+                    "r": 150.9826456705729,
+                    "b": 310.7096761067708,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "DESIGNATION",
+                  "column_header": true,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 529.2069498697916,
+                    "t": 296.258056640625,
+                    "r": 558.3798828125,
+                    "b": 311.2257893880208,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 2,
+                  "end_col_offset_idx": 3,
+                  "text": "QTE",
+                  "column_header": true,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 589.6000162760416,
+                    "t": 296.77419026692706,
+                    "r": 634.1271158854166,
+                    "b": 311.2257893880208,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 3,
+                  "end_col_offset_idx": 4,
+                  "text": "PRIX U.",
+                  "column_header": true,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 656.134765625,
+                    "t": 297.8064371744792,
+                    "r": 712.9451497395834,
+                    "b": 311.74192301432294,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 4,
+                  "end_col_offset_idx": 5,
+                  "text": "TOTALHT",
+                  "column_header": true,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 69.60556030273438,
+                    "t": 326.19354248046875,
+                    "r": 191.92708333333334,
+                    "b": 341.6774088541667,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 1,
+                  "end_row_offset_idx": 2,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "Salle du restaurant",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 645.3868408203125,
+                    "t": 326.7096761067708,
+                    "r": 713.4569498697916,
+                    "b": 342.1935221354167,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 1,
+                  "end_row_offset_idx": 2,
+                  "start_col_offset_idx": 4,
+                  "end_col_offset_idx": 5,
+                  "text": "3 451,63",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 28.149307250976562,
+                    "t": 356.1290283203125,
+                    "r": 48.10972595214844,
+                    "b": 370.5806477864583,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 2,
+                  "end_row_offset_idx": 3,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "1.1",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 69.60556030273438,
+                    "t": 356.1290283203125,
+                    "r": 121.80972290039062,
+                    "b": 370.5806477864583,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 2,
+                  "end_row_offset_idx": 3,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "Coin bar",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 660.7410074869791,
+                    "t": 356.1290283203125,
+                    "r": 713.96875,
+                    "b": 370.5806477864583,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 2,
+                  "end_row_offset_idx": 3,
+                  "start_col_offset_idx": 4,
+                  "end_col_offset_idx": 5,
+                  "text": "501,73",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 28.149307250976562,
+                    "t": 384.51611328125,
+                    "r": 54.76319885253906,
+                    "b": 397.9354654947917,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 3,
+                  "end_row_offset_idx": 4,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "1.1.1",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 70.11736551920573,
+                    "t": 384.51611328125,
+                    "r": 236.96598307291666,
+                    "b": 398.4516194661458,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 3,
+                  "end_row_offset_idx": 4,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "DeposedeI'anciennemoquette",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 505.6638997395833,
+                    "t": 383.4838460286458,
+                    "r": 555.8208414713541,
+                    "b": 397.9354654947917,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 3,
+                  "end_row_offset_idx": 4,
+                  "start_col_offset_idx": 2,
+                  "end_col_offset_idx": 3,
+                  "text": "30,00 m²",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 593.6944580078125,
+                    "t": 384.0,
+                    "r": 635.1507161458334,
+                    "b": 398.4516194661458,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 3,
+                  "end_row_offset_idx": 4,
+                  "start_col_offset_idx": 3,
+                  "end_col_offset_idx": 4,
+                  "text": "10,75 C",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 665.8590494791666,
+                    "t": 384.0,
+                    "r": 713.96875,
+                    "b": 398.4516194661458,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 3,
+                  "end_row_offset_idx": 4,
+                  "start_col_offset_idx": 4,
+                  "end_col_offset_idx": 5,
+                  "text": "322,50",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 28.149307250976562,
+                    "t": 410.8387044270833,
+                    "r": 56.298614501953125,
+                    "b": 424.258056640625,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 4,
+                  "end_row_offset_idx": 5,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "1.1.2",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 68.58194478352864,
+                    "t": 411.3548177083333,
+                    "r": 307.59515380859375,
+                    "b": 475.3548177083333,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 4,
+                  "end_row_offset_idx": 5,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "Cloisons de separation - BA13 standard sur ossature metallique (1 m) - Rail R90 et double montant M88 (1 m*) - Isolation GR80 (1 m)",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 519.482666015625,
+                    "t": 410.8387044270833,
+                    "r": 556.3326416015625,
+                    "b": 424.774169921875,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 4,
+                  "end_row_offset_idx": 5,
+                  "start_col_offset_idx": 2,
+                  "end_col_offset_idx": 3,
+                  "text": "8,75 u",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 593.6944580078125,
+                    "t": 410.8387044270833,
+                    "r": 635.1507161458334,
+                    "b": 424.774169921875,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 4,
+                  "end_row_offset_idx": 5,
+                  "start_col_offset_idx": 3,
+                  "end_col_offset_idx": 4,
+                  "text": "11,34",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 672.000732421875,
+                    "t": 410.8387044270833,
+                    "r": 713.4569498697916,
+                    "b": 424.774169921875,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 4,
+                  "end_row_offset_idx": 5,
+                  "start_col_offset_idx": 4,
+                  "end_col_offset_idx": 5,
+                  "text": "99,23",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                }
+              ],
+              "table_object_keys": [
+                "label",
+                "id",
+                "page_no",
+                "cluster",
+                "text",
+                "otsl_seq",
+                "num_rows",
+                "num_cols",
+                "table_cells"
+              ]
+            },
+            "14": {
+              "num_rows": 2,
+              "num_cols": 2,
+              "cell_count": 4,
+              "cells_sample": [
+                {
+                  "bbox": {
+                    "l": 381.295166015625,
+                    "t": 675.6128743489584,
+                    "r": 451.92431640625,
+                    "b": 689.54833984375,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "Total net HT",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 648.4576822916666,
+                    "t": 675.0967610677084,
+                    "r": 706.803466796875,
+                    "b": 690.5806477864584,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 0,
+                  "end_row_offset_idx": 1,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "3 451,63",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 381.8069661458333,
+                    "t": 704.0,
+                    "r": 469.3257242838542,
+                    "b": 719.48388671875,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 1,
+                  "end_row_offset_idx": 2,
+                  "start_col_offset_idx": 0,
+                  "end_col_offset_idx": 1,
+                  "text": "NETA PAYER",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                },
+                {
+                  "bbox": {
+                    "l": 637.7097574869791,
+                    "t": 704.0,
+                    "r": 706.803466796875,
+                    "b": 720.51611328125,
+                    "coord_origin": "TOPLEFT"
+                  },
+                  "row_span": 1,
+                  "col_span": 1,
+                  "start_row_offset_idx": 1,
+                  "end_row_offset_idx": 2,
+                  "start_col_offset_idx": 1,
+                  "end_col_offset_idx": 2,
+                  "text": "3451,63",
+                  "column_header": false,
+                  "row_header": false,
+                  "row_section": false,
+                  "fillable": false
+                }
+              ],
+              "table_object_keys": [
+                "label",
+                "id",
+                "page_no",
+                "cluster",
+                "text",
+                "otsl_seq",
+                "num_rows",
+                "num_cols",
+                "table_cells"
+              ]
+            }
+          }
+        }
+      },
+      "_cells_type": "list"
+    }
+  ],
+  "document_keys": [
+    "schema_name",
+    "version",
+    "name",
+    "origin",
+    "furniture",
+    "body",
+    "groups",
+    "texts",
+    "pictures",
+    "tables",
+    "key_value_items",
+    "form_items",
+    "pages"
+  ],
+  "document_export": {
+    "schema_name": "DoclingDocument",
+    "version": "1.9.0",
+    "name": "dummy",
+    "furniture": {
+      "self_ref": "#/furniture",
+      "children": [],
+      "content_layer": "furniture",
+      "name": "_root_",
+      "label": "unspecified"
+    },
+    "body": {
+      "self_ref": "#/body",
+      "children": [],
+      "content_layer": "body",
+      "name": "_root_",
+      "label": "unspecified"
+    },
+    "groups": [],
+    "texts": [],
+    "pictures": [],
+    "tables": [],
+    "key_value_items": [],
+    "form_items": [],
+    "pages": {}
+  },
+  "document_export_method": "export_to_dict"
+}

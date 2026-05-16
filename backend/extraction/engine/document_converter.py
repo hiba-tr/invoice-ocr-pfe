@@ -93,28 +93,74 @@ class DocumentConverter:
         }
 
         # --- FORCER L'OCR POUR LES PDF ---
+        # --- FORCER L'OCR POUR LES PDF (RapidOCR obligatoire) ---
         if InputFormat.PDF in self.format_to_options:
+            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
+            
             opt = self.format_to_options[InputFormat.PDF]
-            # Si les options du pipeline n'existent pas ou n'ont pas l'OCR activé, on les remplace
             current_opts = opt.pipeline_options
-            if current_opts is None or not getattr(current_opts, 'do_ocr', False):
-                new_opts = PdfPipelineOptions()
-                new_opts.do_ocr = True
-                new_opts.ocr_options = OcrAutoOptions(force_full_page_ocr=False)
-                new_opts.do_table_structure = True
-                new_opts.table_structure_options.mode = "accurate"
-                # Conserver les autres attributs si des options existaient déjà
-                if current_opts:
-                    for k, v in current_opts.__dict__.items():
-                        if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+            
+            new_opts = PdfPipelineOptions()
+            new_opts.do_ocr = True
+            new_opts.ocr_options = RapidOcrOptions(
+                force_full_page_ocr=False,
+                lang=["english"]
+            )
+            new_opts.do_table_structure = True
+            new_opts.table_structure_options.mode = "accurate"
+            
+            if current_opts:
+                for k, v in current_opts.__dict__.items():
+                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+                        try:
                             setattr(new_opts, k, v)
-                opt.pipeline_options = new_opts
-                _log.info("OCR forcé activé pour les PDF")
+                        except Exception:
+                            pass
+            
+            opt.pipeline_options = new_opts
+            _log.info("OCR forcé → RapidOCR pour les PDF")
         # -----------------------------
+        # --- FORCER L'OCR POUR LES IMAGES ---
+        # --- FORCER L'OCR POUR LES IMAGES (RapidOCR obligatoire) ---
+        if InputFormat.IMAGE in self.format_to_options:
+            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
+            
+            opt = self.format_to_options[InputFormat.IMAGE]
+            current_opts = opt.pipeline_options
+            
+            new_opts = PdfPipelineOptions()
+            new_opts.do_ocr = True
+            new_opts.ocr_options = RapidOcrOptions(
+                force_full_page_ocr=False,
+                lang=["english"]  # RapidOCR supporte "english" et "chinese"
+            )
+            new_opts.do_table_structure = True
+            new_opts.table_structure_options.mode = "accurate"
+            
+            # Copier les autres attributs existants
+            if current_opts:
+                for k, v in current_opts.__dict__.items():
+                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+                        try:
+                            setattr(new_opts, k, v)
+                        except Exception:
+                            pass
+            
+            opt.pipeline_options = new_opts
+            _log.info("OCR forcé → RapidOCR pour les IMAGES")
+
 
         self._pipelines: dict[InputFormat, BasePipeline] = {}
         for fmt, opt in self.format_to_options.items():
             if opt.pipeline_options is not None:
+                # DIAGNOSTIC
+                opts = opt.pipeline_options
+                print(f"=== FORMAT: {fmt.value} ===")
+                print(f"  pipeline_options type: {type(opts).__name__}")
+                print(f"  do_ocr: {getattr(opts, 'do_ocr', 'N/A')}")
+                print(f"  do_table_structure: {getattr(opts, 'do_table_structure', 'N/A')}")
+                print(f"  ocr_options type: {type(getattr(opts, 'ocr_options', None)).__name__ if getattr(opts, 'ocr_options', None) else None}")
+                
                 self._pipelines[fmt] = opt.pipeline_cls(
                     pipeline_options=opt.pipeline_options
                 )
