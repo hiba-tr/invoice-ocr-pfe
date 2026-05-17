@@ -4,9 +4,11 @@ import { apiCall } from '../api/api';
 import axios from 'axios';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
+import ExtractionProgress from '../components/ExtractionProgress';
+import SemanticValidation from '../components/SemanticValidation';
 import {
   UploadCloud, Save, Plus, Columns,
-  Sparkles, FileText, X
+  Sparkles, FileText, X, Brain
 } from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000';
@@ -27,6 +29,11 @@ export default function Upload() {
   const [meta, setMeta] = useState({ date: '', fournisseur: '', currency: 'EUR', company: '' });
   const [forceOverwrite, setForceOverwrite] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [taskId, setTaskId] = useState(null);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
+  const [validationItems, setValidationItems] = useState([]);
+  const [existingItems, setExistingItems] = useState([]);
 
   const tableRef = useRef(null);
   const tabulatorRef = useRef(null);
@@ -51,43 +58,38 @@ export default function Upload() {
       showToast("Veuillez d'abord choisir un fichier !", 'warning');
       return;
     }
-    showSpinner();
+
+    setShowProgress(true);
+    const formData = new FormData();
+    formData.append('file', files[0]);
+
     try {
-      const formData = new FormData();
-      formData.append('file', files[0]);
-      const resp = await axios.post(`${API_BASE}/upload`, formData);
-      const inv = resp.data.invoices ? resp.data.invoices[0] : resp.data;
-      setExtraction(inv);
-
-      if (inv?.metadata) {
-        setMeta({
-          date: inv.metadata.date || '',
-          fournisseur: inv.metadata.company || inv.metadata.fournisseur || '',
-          currency: inv.metadata.currency || 'EUR',
-          company: inv.metadata.company || '',
-        });
-
-        if (inv.metadata.concession) {
-          try {
-            const match = await apiCall('GET', '/match-concession', null, { nom_extrait: inv.metadata.concession });
-            if (match.matched) setConcessionId(match.concession_id);
-          } catch {
-            // Silencieux : pas de match trouvé
-          }
-        }
-      }
-      showToast('Extraction réussie !', 'success');
+      const response = await axios.post(`${API_BASE}/upload/stream`, formData);
+      const { task_id } = response.data;
+      setTaskId(task_id);
     } catch {
-      showToast("Erreur lors de l'extraction IA", 'danger');
-    } finally {
-      hideSpinner();
+      showToast("Erreur lors du démarrage de l'extraction", 'danger');
+      setShowProgress(false);
     }
+  };
+
+  const handleExtractionComplete = (result) => {
+    setExtraction(result);
+    setShowProgress(false);
+    setTaskId(null);
+    showToast('Extraction réussie !', 'success');
+  };
+
+  const handleExtractionError = (message) => {
+    setShowProgress(false);
+    setTaskId(null);
+    showToast(message || "Erreur d'extraction", 'danger');
   };
 
   const handleCreateConcession = async () => {
     if (!newConcessionName.trim()) return;
     try {
-      const newC = await apiCall('POST', '/concessions', null, { nom: newConcessionName.trim() });
+      const newC = await apiCall('POST', '/concessions', { nom: newConcessionName.trim() });
       setConcessionsList(prev => [...prev, newC]);
       setConcessionId(newC.id_concession);
       setNewConcessionName('');
@@ -97,6 +99,70 @@ export default function Upload() {
     }
   };
 
+  // ==================== VALIDATION SÉMANTIQUE ====================
+  const handleSemanticValidation = async () => {
+    if (!concessionId) {
+      showToast('⚠️ Sélectionnez une Concession.', 'warning');
+      return;
+    }
+    if (!tabulatorRef.current) return;
+
+    showSpinner();
+    try {
+      const itemsData = tabulatorRef.current.getData().map(row => {
+        const { description, ...valeurs } = row;
+        const cleanedValeurs = {};
+        Object.entries(valeurs).forEach(([k, v]) => {
+          if (v !== undefined && v !== null && v !== '') cleanedValeurs[k] = cleanValue(v);
+        });
+        return { description: cleanValue(description || ''), valeurs: cleanedValeurs };
+      });
+
+      // Appeler le pipeline sémantique pour chaque description
+      const validationResults = [];
+      for (const item of itemsData) {
+        if (!item.description) continue;
+        try {
+          const result = await apiCall('GET', '/suggest/confirm', null, {
+            description: item.description,
+            id_concession: concessionId
+          });
+          validationResults.push({
+            ...item,
+            semantic: result
+          });
+        } catch {
+          validationResults.push({ ...item, semantic: { needs_confirmation: false, auto_match: false } });
+        }
+      }
+
+      // Charger les items existants de la concession
+      const items = await apiCall('GET', '/items', null, { id_concession: concessionId });
+      setExistingItems(items);
+
+      // Filtrer ceux qui nécessitent une validation
+      const needsValidation = validationResults.filter(
+        v => v.semantic.needs_confirmation
+      );
+      const autoMatched = validationResults.filter(
+        v => v.semantic.auto_match && !v.semantic.needs_confirmation
+      );
+
+      setValidationItems(validationResults);
+      setShowValidation(true);
+
+      showToast(
+        `${autoMatched.length} items matchés automatiquement, ${needsValidation.length} à valider`,
+        'info'
+      );
+    } catch {
+      showToast('Erreur lors de la validation sémantique', 'danger');
+    } finally {
+      hideSpinner();
+    }
+  };
+
+  // ==================== SAUVEGARDE FINALE ====================
   const saveFacture = async () => {
     if (!concessionId) {
       showToast('⚠️ Sélectionnez une Concession.', 'warning');
@@ -130,90 +196,101 @@ export default function Upload() {
       showToast('✅ Facture enregistrée avec succès !', 'success');
       setExtraction(null);
       setFiles([]);
-    } catch {
-      showToast('❌ Erreur lors de la sauvegarde.', 'danger');
+      setShowValidation(false);
+    } catch (err) {
+      if (err?.response?.status === 409) {
+        showToast('Cette facture existe déjà. Cochez "Écraser si existe".', 'warning');
+      } else {
+        showToast('❌ Erreur lors de la sauvegarde.', 'danger');
+      }
     } finally {
       hideSpinner();
     }
   };
 
-  // Initialize Tabulator when extraction changes
-  // Initialize Tabulator when extraction changes
-// Initialize Tabulator when extraction changes
-useEffect(() => {
-  if (!extraction?.items || !tableRef.current) return;
+  // Initialize Tabulator
+  useEffect(() => {
+    if (!extraction?.items || !tableRef.current) return;
 
-  if (tabulatorRef.current) {
-    tabulatorRef.current.destroy();
-    tabulatorRef.current = null;
-  }
+    if (tabulatorRef.current) {
+      tabulatorRef.current.destroy();
+      tabulatorRef.current = null;
+    }
 
-  const originalColumns = extraction.columns || [];
-  const cleanedColumns = originalColumns.map(col => String(col).trim());
-  const colMap = {};
-  
-  // Colonnes : AUCUNE colonne figée, tout défile ensemble
-  const columns = [
-    {
-      title: extraction.metadata?.first_column_name || 'Description',
-      field: 'description',
-      editor: 'input',
-      minWidth: 250,
-      headerSort: false,
-    },
-  ];
+    const originalColumns = extraction.columns || [];
+    const cleanedColumns = originalColumns.map(col => String(col).trim());
+    const colMap = {};
+    const columns = [
+      {
+        title: extraction.metadata?.first_column_name || 'Description',
+        field: 'description',
+        editor: 'input',
+        minWidth: 250,
+        headerSort: false,
+      },
+    ];
 
-  cleanedColumns.forEach(col => {
-    const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-    colMap[col] = safeField;
-    columns.push({
-      title: col,
-      field: safeField,
-      editor: 'input',
-      minWidth: 140,
-      hozAlign: 'center',
+    cleanedColumns.forEach((col) => {
+      const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+      colMap[col] = safeField;
+      columns.push({
+        title: col,
+        field: safeField,
+        editor: 'input',
+        minWidth: 140,
+        hozAlign: 'center',
+      });
     });
-  });
 
-  const tableData = extraction.items.map((item, idx) => {
-    const row = { id: idx, description: cleanValue(item.description || item.libelle || '') };
-    // Initialiser toutes les colonnes à vide
-    columns.forEach(col => {
-      if (col.field !== 'description' && col.field !== 'id') {
-        row[col.field] = '';
-      }
-    });
-    const valeurs = item.valeurs;
-    if (valeurs && typeof valeurs === 'object' && !Array.isArray(valeurs)) {
-      Object.entries(valeurs).forEach(([key, value]) => {
-        const safeField = key.trim().replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-        if (safeField && Object.prototype.hasOwnProperty.call(row, safeField)) {
-          row[safeField] = cleanValue(value);
+    const tableData = extraction.items.map((item, idx) => {
+      const row = { id: idx, description: cleanValue(item.description || item.libelle || '') };
+      columns.forEach(col => {
+        if (col.field !== 'description' && col.field !== 'id') {
+          row[col.field] = '';
         }
       });
-    }
-    return row;
-  });
-
-  setTimeout(() => {
-    tabulatorRef.current = new Tabulator(tableRef.current, {
-      data: tableData,
-      columns,
-      layout: 'fitDataFill',    // S'adapte exactement à la largeur des données
-      height: 'auto',            // Hauteur automatique selon le contenu
-      maxHeight: '500px',        // Mais pas plus de 500px (scroll si plus)
-      editable: true,
-      movableColumns: false,
-      placeholder: 'Aucune donnée détectée',
+      const valeurs = item.valeurs;
+      if (valeurs && typeof valeurs === 'object' && !Array.isArray(valeurs)) {
+        Object.entries(valeurs).forEach(([key, value]) => {
+          const safeField = key.trim().replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+          if (safeField && row.hasOwnProperty(safeField)) {
+            row[safeField] = cleanValue(value);
+          }
+        });
+      }
+      return row;
     });
-  }, 100);
-}, [extraction]);
+
+    setTimeout(() => {
+      tabulatorRef.current = new Tabulator(tableRef.current, {
+        data: tableData,
+        columns,
+        layout: 'fitDataFill',
+        height: 'auto',
+        maxHeight: '500px',
+        editable: true,
+        movableColumns: false,
+        placeholder: 'Aucune donnée détectée',
+      });
+    }, 100);
+  }, [extraction]);
 
   // ==================== UPLOAD VIEW ====================
+  if (showProgress && taskId && !extraction) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <ExtractionProgress
+          taskId={taskId}
+          onComplete={handleExtractionComplete}
+          onError={handleExtractionError}
+        />
+      </div>
+    );
+  }
+
   if (!extraction) {
     return (
       <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
-        {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary-light dark:text-primary-dark">
             <span className="w-6 h-px bg-primary-light dark:bg-primary-dark" />
@@ -225,7 +302,6 @@ useEffect(() => {
           <p className="text-slate-500 dark:text-slate-400">Glissez vos fichiers ou paramétrez l'extraction</p>
         </div>
 
-        {/* Upload Zone */}
         <div
           className={`upload-zone ${dragOver ? 'border-primary-light dark:border-primary-dark bg-primary-light/5 dark:bg-primary-dark/5' : ''}`}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -238,17 +314,9 @@ useEffect(() => {
             {files.length ? files.map(f => f.name).join(', ') : 'Glissez votre facture ici'}
           </h5>
           <p className="text-slate-400 dark:text-slate-500 text-sm">PDF, PNG, JPG (max 10 Mo)</p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf,.png,.jpg,.jpeg"
-            multiple
-            className="hidden"
-            onChange={(e) => handleFiles(e.target.files)}
-          />
+          <input ref={fileInputRef} type="file" accept=".pdf,.png,.jpg,.jpeg" multiple className="hidden" onChange={(e) => handleFiles(e.target.files)} />
         </div>
 
-        {/* File Queue */}
         {files.length > 0 && (
           <div className="glass-card space-y-2">
             <h6 className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">📎 Fichiers sélectionnés</h6>
@@ -265,7 +333,6 @@ useEffect(() => {
           </div>
         )}
 
-        {/* Extract Button */}
         <button onClick={handleExtract} disabled={!files.length} className="btn-primary w-full text-lg py-4">
           <Sparkles size={22} />
           Lancer l'extraction IA
@@ -274,10 +341,26 @@ useEffect(() => {
     );
   }
 
+  // ==================== VALIDATION VIEW ====================
+  if (showValidation) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-6 animate-slide-up">
+        <SemanticValidation
+          items={validationItems}
+          existingItems={existingItems}
+          concessionId={concessionId}
+          onSave={saveFacture}
+          onBack={() => setShowValidation(false)}
+          forceOverwrite={forceOverwrite}
+          onForceOverwriteChange={setForceOverwrite}
+        />
+      </div>
+    );
+  }
+
   // ==================== RESULTS VIEW ====================
   return (
     <div className="max-w-7xl mx-auto space-y-6 animate-slide-up">
-      {/* Success Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
@@ -294,7 +377,6 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="glass kpi-card accent-cyan">
           <span className="text-2xl">📄</span>
@@ -313,98 +395,63 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Metadata */}
       <div className="glass-card">
         <h3 className="font-display font-bold text-lg mb-4">Métadonnées</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-500 mb-2">Concession</label>
             <div className="flex gap-2">
-              <select
-                value={concessionId}
-                onChange={(e) => setConcessionId(e.target.value)}
-                className="select-glass input-glass flex-1"
-              >
+              <select value={concessionId} onChange={(e) => setConcessionId(e.target.value)} className="select-glass input-glass flex-1">
                 <option value="">-- Choisir --</option>
-                {concessionsList.map(c => (
-                  <option key={c.id_concession} value={c.id_concession}>{c.nom}</option>
-                ))}
+                {concessionsList.map(c => (<option key={c.id_concession} value={c.id_concession}>{c.nom}</option>))}
               </select>
-              <input
-                type="text"
-                placeholder="Nouveau..."
-                value={newConcessionName}
-                onChange={(e) => setNewConcessionName(e.target.value)}
-                className="input-glass w-32"
-              />
+              <input type="text" placeholder="Nouveau..." value={newConcessionName} onChange={(e) => setNewConcessionName(e.target.value)} className="input-glass w-32" />
               <button onClick={handleCreateConcession} className="btn-glass">Créer</button>
             </div>
           </div>
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-500 mb-2">Date</label>
-            <input
-              type="date"
-              value={meta.date}
-              onChange={(e) => setMeta(p => ({ ...p, date: e.target.value }))}
-              className="input-glass"
-            />
+            <input type="date" value={meta.date} onChange={(e) => setMeta(p => ({ ...p, date: e.target.value }))} className="input-glass" />
           </div>
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-500 mb-2">Devise</label>
-            <input
-              type="text"
-              value={meta.currency}
-              onChange={(e) => setMeta(p => ({ ...p, currency: e.target.value }))}
-              className="input-glass"
-            />
+            <input type="text" value={meta.currency} onChange={(e) => setMeta(p => ({ ...p, currency: e.target.value }))} className="input-glass" />
           </div>
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-500 mb-2">Fournisseur</label>
-            <input
-              type="text"
-              value={meta.fournisseur}
-              onChange={(e) => setMeta(p => ({ ...p, fournisseur: e.target.value }))}
-              className="input-glass"
-              placeholder="Nom du fournisseur"
-            />
+            <input type="text" value={meta.fournisseur} onChange={(e) => setMeta(p => ({ ...p, fournisseur: e.target.value }))} className="input-glass" placeholder="Nom du fournisseur" />
           </div>
         </div>
       </div>
 
-      {/* Items Table */}
       <div className="glass-card p-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-display font-bold text-lg text-slate-800 dark:text-white">Articles extraits</h3>
           <div className="flex gap-2">
-            <button className="btn-glass text-sm">
-              <Columns size={16} /> Colonne
-            </button>
-            <button className="btn-glass text-sm">
-              <Plus size={16} /> Ligne
-            </button>
+            <button className="btn-glass text-sm"><Columns size={16} /> Colonne</button>
+            <button className="btn-glass text-sm"><Plus size={16} /> Ligne</button>
           </div>
         </div>
-        {/* Conteneur avec overflow pour défilement horizontal */}
         <div className="overflow-x-auto rounded-xl border border-slate-200/30 dark:border-slate-700/30">
           <div ref={tableRef} />
         </div>
       </div>
 
-      {/* Save Section */}
       <div className="glass-card flex flex-col sm:flex-row justify-between items-center gap-4">
         <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input
-            type="checkbox"
-            checked={forceOverwrite}
-            onChange={(e) => setForceOverwrite(e.target.checked)}
-            className="rounded border-slate-300"
-          />
+          <input type="checkbox" checked={forceOverwrite} onChange={(e) => setForceOverwrite(e.target.checked)} className="rounded border-slate-300" />
           Écraser si existante
         </label>
-        <button onClick={saveFacture} className="btn-primary">
-          <Save size={18} />
-          Enregistrer dans la base
-        </button>
+        <div className="flex gap-2">
+          <button onClick={handleSemanticValidation} className="btn-primary bg-gradient-to-r from-purple-500 to-blue-500">
+            <Brain size={18} />
+            Validation sémantique
+          </button>
+          <button onClick={saveFacture} className="btn-primary">
+            <Save size={18} />
+            Enregistrer
+          </button>
+        </div>
       </div>
     </div>
   );

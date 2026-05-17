@@ -6,10 +6,24 @@ Détecte intelligemment n'importe quelle structure de facture.
 import json
 import re
 import math
+import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union, Tuple
 
+_log = logging.getLogger(__name__)
 
+try:
+    from backend.extraction.engine.models.utils.image_preprocessing import (
+        PreprocessingPipeline,
+        FinancialNLP,
+        IntelligentCorrector,
+        OcrCorrector,
+    )
+    _HAS_INTELLIGENT_PIPELINE = True
+    _log.info("Pipeline intelligent chargé")
+except ImportError as e:
+    _HAS_INTELLIGENT_PIPELINE = False
+    _log.warning(f" Pipeline intelligent non disponible : {e}")
 # ─────────────────────────────────────────────────────────────────────────────
 # Constantes universelles (multilingues)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -591,6 +605,8 @@ def postprocess_invoice(
     raw_input: Union[str, Path, dict],
     output_path=None,
 ) -> Dict[str, Any]:
+    """Post-processing avec pipeline intelligent intégré."""
+    
     if isinstance(raw_input, (str, Path)):
         with open(raw_input, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
@@ -600,39 +616,105 @@ def postprocess_invoice(
     pages: List[Dict] = raw_data.get("pages", [])
     metadata = extract_metadata(pages)
 
-    # Extraire depuis tous les tableaux
     all_items = []
     first_col_name = "Description"
-    for page in pages:
-        for table in page.get("tables", []):
-            items, col_name = extract_table_items(table)
-            if items:
-                all_items.extend(items)
-                first_col_name = col_name
+    ocr_correction_applied = False
 
-    # Fallback sur texte libre si aucun tableau utile
+    # ═══════════════════════════════════════════════════════════
+    # PIPELINE INTELLIGENT (prioritaire)
+    # ═══════════════════════════════════════════════════════════
+    if _HAS_INTELLIGENT_PIPELINE:
+        try:
+            all_text = raw_data.get("all_text", "")
+            
+            if all_text.strip():
+                _log.info("Application du pipeline intelligent...")
+                
+                pipeline = PreprocessingPipeline()
+                corrected = pipeline.process_text(all_text, learn=True)
+                
+                if corrected and corrected.get('items'):
+                    nlp = FinancialNLP()
+                    lines = corrected.get('lines', [])
+                    
+                    if lines:
+                        columns_info = nlp.identify_columns(lines)
+                        _log.info(f"Colonnes identifiées : {[c['name'] for c in columns_info]}")
+                        
+                        all_items = nlp.extract_items(lines)
+                        
+                        if all_items:
+                            ocr_correction_applied = True
+                            metadata['ocr_corrected'] = True
+                            metadata['method'] = 'intelligent_pipeline'
+                            metadata['vocabulary_learned'] = corrected.get('vocabulary_size', 0)
+                            metadata['columns_detected'] = [c['name'] for c in columns_info]
+                            _log.info(f"Pipeline intelligent : {len(all_items)} items extraits")
+                        else:
+                            all_items = corrected['items']
+                            ocr_correction_applied = True
+                            metadata['ocr_corrected'] = True
+                            metadata['method'] = 'ocr_corrector'
+        
+        except Exception as e:
+            _log.warning(f"Pipeline intelligent échoué : {e}, fallback classique")
+
+    # ═══════════════════════════════════════════════════════════
+    # FALLBACK : Extraction classique par tableaux
+    # ═══════════════════════════════════════════════════════════
     if not all_items:
-        all_items = extract_text_cell_items(pages)
+        _log.info("📊 Fallback : extraction classique par tableaux...")
+        for page in pages:
+            for table in page.get("tables", []):
+                items, col_name = extract_table_items(table)
+                if items:
+                    all_items.extend(items)
+                    first_col_name = col_name
+
+        if not all_items:
+            all_items = extract_text_cell_items(pages)
+        
+        metadata['method'] = 'classic_table_extraction'
 
     metadata["first_column_name"] = first_col_name
 
-    # Collecter toutes les colonnes détectées
+    # ═══════════════════════════════════════════════════════════
+    # Collecter les colonnes
+    # ═══════════════════════════════════════════════════════════
     columns: List[str] = []
+    
     for item in all_items:
-        for col in item["valeurs"].keys():
-            if col not in columns:
-                columns.append(col)
+        valeurs = item.get("valeurs", {})
+        
+        if isinstance(valeurs, dict):
+            for col in valeurs.keys():
+                if col not in columns:
+                    columns.append(col)
+        elif isinstance(valeurs, list):
+            for i in range(len(valeurs)):
+                col_name = f"Valeur_{i+1}"
+                if col_name not in columns:
+                    columns.append(col_name)
+
+    if not columns:
+        columns = ["Description"]
 
     result = {
         "metadata": metadata,
-        "columns":  columns,
-        "items":    all_items,
+        "columns": columns,
+        "items": all_items,
     }
+    
+    if ocr_correction_applied:
+        result['ocr_correction'] = {
+            'applied': True,
+            'method': metadata.get('method', 'unknown'),
+        }
 
     if output_path:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
-        print(f"✅ Résultat sauvegardé dans: {output_path}")
+        _log.info(f" Résultat sauvegardé dans: {output_path}")
 
     return result
 

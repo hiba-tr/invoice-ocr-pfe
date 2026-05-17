@@ -1,9 +1,7 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
+
 
 def generate_resume_text(facture_data: Dict[str, Any]) -> str:
-    """
-    Génère un résumé en langage naturel à partir des données structurées.
-    """
     numero = facture_data.get("id_facture")
     fournisseur = facture_data.get("fournisseur") or facture_data.get("concession")
     client = facture_data.get("client")
@@ -11,8 +9,7 @@ def generate_resume_text(facture_data: Dict[str, Any]) -> str:
     objet = facture_data.get("objet")
     items = facture_data.get("items", [])
     devise = facture_data.get("devise", "USD")
-    
-    # Calcul des montants (similaire à avant)
+
     total_ht = 0.0
     tva_montant = 0.0
     for item in items:
@@ -29,36 +26,29 @@ def generate_resume_text(facture_data: Dict[str, Any]) -> str:
             else:
                 total_ht += val
     total_ttc = total_ht + tva_montant
-    
-    # Construction du texte
+
     lines = []
-    
-    # 1. Informations générales
     info_parts = []
     if numero:
-        info_parts.append(f"Facture n°{numero}")
+        info_parts.append(f"Facture n{numero}")
     if fournisseur:
-        info_parts.append(f"émise par {fournisseur}")
+        info_parts.append(f"emise par {fournisseur}")
     if client:
-        info_parts.append(f"à destination de {client}")
+        info_parts.append(f"a destination de {client}")
     if date_emission:
         info_parts.append(f"en date du {date_emission}")
     if info_parts:
         lines.append(" ".join(info_parts) + ".")
-    
-    # 2. Objet
+
     if objet:
         lines.append(f"Objet : {objet}.")
-    
-    # 3. Détails des opérations
+
     if items:
         nb_articles = len(items)
-        # Catégories = descriptions uniques
         categories = list({item.get("description", "") for item in items if item.get("description")})
-        categories_str = ", ".join(categories[:5])  # max 5
+        categories_str = ", ".join(categories[:5])
         lines.append(f"Cette facture comporte {nb_articles} article(s) concernant : {categories_str}.")
-    
-    # 4. Montants
+
     montant_parts = []
     if total_ht > 0:
         montant_parts.append(f"montant total HT de {total_ht:,.2f} {devise}")
@@ -69,24 +59,18 @@ def generate_resume_text(facture_data: Dict[str, Any]) -> str:
         montant_parts.append(f"soit un total TTC de {total_ttc:,.2f} {devise}")
     if montant_parts:
         lines.append("Montants : " + ", ".join(montant_parts) + ".")
-    
-    # 5. Conclusion synthétique
+
     if items:
         types_ops = list({item.get("description", "") for item in items if item.get("description")})
         if types_ops:
-            first_type = types_ops[0]
-            lines.append(f"Cette facture regroupe principalement des opérations de type « {first_type} ».")
-    
+            lines.append(f"Cette facture regroupe principalement des operations de type {types_ops[0]}.")
+
     return "\n".join(lines)
 
 
 def generate_resume(facture_data: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Retourne un dictionnaire compatible avec ResumeOut, incluant le texte formaté.
-    """
     items = facture_data.get("items", [])
     devise = facture_data.get("devise", "USD")
-
     total_ht = 0.0
     tva_montant = 0.0
 
@@ -107,19 +91,16 @@ def generate_resume(facture_data: Dict[str, Any]) -> Dict[str, Any]:
 
     total_ttc = total_ht + tva_montant
     tva_taux = (tva_montant / total_ht * 100) if total_ht != 0 else 0.0
-
     categories = list({item.get("description", "") for item in items if item.get("description")})
     exemples = [item.get("description") for item in items[:3] if item.get("description")]
-
-    # Génération du texte formaté
     resume_text = generate_resume_text(facture_data)
 
     return {
         "resume": {
             "numero": facture_data.get("id_facture"),
             "date_emission": facture_data.get("date_facture"),
-            "fournisseur": facture_data.get("fournisseur") or facture_data.get("concession", "Non spécifié"),
-            "client": facture_data.get("client", "Non spécifié"),
+            "fournisseur": facture_data.get("fournisseur") or facture_data.get("concession", "Non specifie"),
+            "client": facture_data.get("client", "Non specifie"),
             "objet": facture_data.get("objet", "Facture de prestations"),
             "nb_articles": len(items),
             "categories_principales": categories[:5],
@@ -130,6 +111,6 @@ def generate_resume(facture_data: Dict[str, Any]) -> Dict[str, Any]:
             "total_ttc": round(total_ttc, 2),
             "devise": devise,
             "date_insertion": facture_data.get("date_insertion"),
-            "resume_texte": resume_text   # Ajout du texte
+            "resume_texte": resume_text,
         }
     }

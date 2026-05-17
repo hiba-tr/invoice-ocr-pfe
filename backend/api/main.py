@@ -1,22 +1,34 @@
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
+from io import BytesIO
+from datetime import datetime, date, timedelta
+from typing import List, Optional
+from pydantic import BaseModel
 import tempfile
 from pathlib import Path
 import os
 import time
 import gc
-from datetime import datetime
-from typing import List, Optional
+import re
+import hashlib
+import json
+import asyncio
+import queue
+import threading
+import uuid
+import openpyxl
 
 from backend.api.database import get_db, engine, Base
 from backend.api import models_sql, schemas, crud, resume
 from backend.extraction.main import extract_invoice_complete
-from backend.extraction.postprocess import postprocess_invoice   # déjà bon dans votre code
-from backend.semantic import semantic                            # déjà bon
-from backend.semantic.semantic import normalize_text
-from fastapi.staticfiles import StaticFiles
-import hashlib
-import json
+from backend.extraction.postprocess import postprocess_invoice
+from backend.semantic.normalizer import normalize_text
+from backend.semantic.pipeline import SemanticPipeline
+from backend.semantic.engine import MatchingEngine, DBItem
+from backend.semantic.embedder import get_or_build_index, invalidate_cache, EMBEDDING_AVAILABLE
+
 
 def parse_date(date_str: str) -> Optional[datetime]:
     if not date_str:
@@ -28,73 +40,39 @@ def parse_date(date_str: str) -> Optional[datetime]:
             continue
     return None
 
+
 Base.metadata.create_all(bind=engine)
 app = FastAPI(title="DocCore Invoice API")
 
-# --- Configuration CORS pour autoriser le frontend ---
-from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En production, remplacez par l'URL exacte du frontend
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-
-import re
-
-# ──────────────────────────────────────────────────────────────
-# Coller cette fonction AU NIVEAU MODULE (avant les endpoints)
-# ──────────────────────────────────────────────────────────────
-
 def _parse_montant(val_brute: str) -> float | None:
-    """
-    Parse robuste d'une valeur monétaire brute extraite d'une facture.
-    Gère : '1 234,56 €', '1234.56', '1,234.56', '-200', '1.234,56', etc.
-    Retourne None si non parseable.
-    """
     if not val_brute:
         return None
     s = str(val_brute).strip()
-
-    # Supprimer les symboles monétaires et espaces insécables
     s = re.sub(r'[€$£\u00a0\u202f]', '', s).strip()
-
-    # Cas : valeur entre parenthèses → négatif (ex: accounting format)
     negative = s.startswith('(') and s.endswith(')')
     if negative:
         s = s[1:-1]
-
-    # Détecter le format : séparateur décimal = virgule ou point
-    # Cas 1 : "1.234,56"  → milliers=point, décimal=virgule
-    # Cas 2 : "1,234.56"  → milliers=virgule, décimal=point
-    # Cas 3 : "1234,56"   → décimal=virgule (pas de séparateur milliers)
-    # Cas 4 : "1234.56"   → décimal=point
-    # Cas 5 : "1.234"     → milliers=point (entier), pas de décimale
-
     if re.search(r'\.\d{3}[,]\d{2}$', s):
-        # 1.234,56 → 1234.56
         s = s.replace('.', '').replace(',', '.')
     elif re.search(r',\d{3}[.]\d{2}$', s):
-        # 1,234.56 → 1234.56
         s = s.replace(',', '')
     elif ',' in s and '.' not in s:
-        # 1234,56 → 1234.56
         s = s.replace(',', '.')
     elif '.' in s and ',' not in s:
-        # Peut être milliers (1.234) ou décimal (1.56)
         parts = s.split('.')
         if len(parts) == 2 and len(parts[1]) == 3:
-            # Probablement séparateur de milliers
             s = s.replace('.', '')
-        # sinon on garde tel quel (décimal)
     else:
-        # Enlever tous les séparateurs de milliers (espaces, apostrophes)
         s = re.sub(r"[\s']", '', s)
-
     try:
         result = float(s)
         return -result if negative else result
@@ -103,47 +81,30 @@ def _parse_montant(val_brute: str) -> float | None:
 
 
 def _is_montant_column(col_name: str) -> bool:
-    """
-    Détecte si un nom de colonne est susceptible de contenir un montant.
-    Priorité haute → faible.
-    """
     col_lower = col_name.lower().strip()
-
-    HIGH_PRIORITY = [
-        'montant total', 'total ttc', 'total ht', 'total général',
-        'total facture', 'montant ttc', 'montant ht',
-    ]
-    MED_PRIORITY = [
-        'montant', 'total', 'amount', 'prix total', 'sous-total',
-    ]
-    LOW_PRIORITY = [
-        'prix', 'tarif', 'prix unitaire', 'pu', 'unit price',
-        'valeur', 'coût', 'cost',
-    ]
-    EXCLUDE = [
-        'qté', 'quantité', 'quantity', 'qty', 'réf', 'référence',
-        'ref', 'taux', 'tva', 'remise', 'discount', 'code',
-    ]
-
+    HIGH = ['montant total', 'total ttc', 'total ht', 'total general', 'total facture', 'montant ttc', 'montant ht']
+    MED = ['montant', 'total', 'amount', 'prix total', 'sous-total']
+    LOW = ['prix', 'tarif', 'prix unitaire', 'pu', 'unit price', 'valeur', 'cout', 'cost']
+    EXCLUDE = ['qte', 'quantite', 'quantity', 'qty', 'ref', 'reference', 'ref', 'taux', 'tva', 'remise', 'discount', 'code']
     for ex in EXCLUDE:
         if ex in col_lower:
             return False
-
-    for h in HIGH_PRIORITY:
+    for h in HIGH:
         if h in col_lower:
             return True
-    for m in MED_PRIORITY:
+    for m in MED:
         if m in col_lower:
             return True
-    for l in LOW_PRIORITY:
+    for l in LOW:
         if l in col_lower:
             return True
-
     return False
 
-# ------------------------------------------------------------------------------
-# 1. UPLOAD & EXTRACTION (inchangé pour le moment)
-# ------------------------------------------------------------------------------
+
+# ═══════════════════════════════════════════════════════════════
+# 1. UPLOAD & EXTRACTION
+# ═══════════════════════════════════════════════════════════════
+
 @app.post("/upload", response_model=schemas.ExtractionResponse)
 async def upload_facture(file: UploadFile = File(...)):
     content = await file.read()
@@ -153,7 +114,7 @@ async def upload_facture(file: UploadFile = File(...)):
     try:
         tmp.write(content)
         tmp.close()
-        raw_result = extract_invoice_complete(tmp_path, max_pages=50)
+        raw_result = extract_invoice_complete(tmp_path, max_pages=10)
         structured = postprocess_invoice(raw_result)
     finally:
         try:
@@ -165,36 +126,21 @@ async def upload_facture(file: UploadFile = File(...)):
                 os.unlink(tmp_path)
             except PermissionError:
                 pass
-
-    # Si le postprocess retourne une liste -> plusieurs factures
     if isinstance(structured, list):
         return {"invoices": structured}
-    else:
-        # Une seule facture : on retourne les champs directement (compatibilité)
-        return {
-            "metadata": structured.get("metadata"),
-            "columns": structured.get("columns"),
-            "items": structured.get("items"),
-            "invoices": None
-        }
+    return {"metadata": structured.get("metadata"), "columns": structured.get("columns"), "items": structured.get("items"), "invoices": None}
 
 
-# ------------------------------------------------------------------------------
-# 2. CRÉATION D'UNE FACTURE (avec hash de contenu)
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
+# 2. CREATION FACTURE avec pipeline semantique automatique
+# ═══════════════════════════════════════════════════════════════
+
 @app.post("/facture", response_model=schemas.FactureOut)
-def create_facture(
-    payload: schemas.FactureWithItems,
-    db: Session = Depends(get_db),
-    force: bool = False,
-):
-    # ---------- 1. Gestion de la concession ----------
+def create_facture(payload: schemas.FactureWithItems, db: Session = Depends(get_db), force: bool = False):
     concession_id = payload.facture.id_concession
     concession_nom = getattr(payload.facture, "nom_concession", None)
-
     if not concession_id and not concession_nom:
         raise HTTPException(status_code=400, detail="id_concession ou nom_concession requis")
-
     if not concession_id and concession_nom:
         concession = crud.get_or_create_concession(db, concession_nom)
         concession_id = concession.id_concession
@@ -202,72 +148,53 @@ def create_facture(
         concession = db.query(models_sql.Concession).get(concession_id)
         if not concession:
             raise HTTPException(status_code=404, detail="Concession introuvable")
-    else:
-        raise HTTPException(status_code=400, detail="Paramètres de concession invalides")
-
     payload.facture.id_concession = concession_id
 
-    # ---------- 2. Conversion de la date ----------
     if payload.facture.date_facture and isinstance(payload.facture.date_facture, str):
         parsed = parse_date(payload.facture.date_facture)
         if parsed is None:
             raise HTTPException(status_code=400, detail="Format de date invalide")
         payload.facture.date_facture = parsed
 
-    # ---------- 3. Calcul du hash de contenu ----------
-    # Normaliser les items : trier par description, puis pour chaque item trier les valeurs
-    normalized_items = []
-    for item in payload.items_data:
-        desc = item.description.strip()
-        # Trier les clés des valeurs alphabétiquement
-        sorted_vals = sorted(item.valeurs.items()) if item.valeurs else []
-        normalized_items.append({
-            "description": desc,
-            "valeurs": sorted_vals
-        })
-    # Trier les items par description
-    normalized_items.sort(key=lambda x: x["description"])
-    # Sérialiser en JSON trié et stable
-    content_string = json.dumps(normalized_items, ensure_ascii=False, sort_keys=True)
-    content_hash = hashlib.sha256(content_string.encode("utf-8")).hexdigest()
+    hash_source = f"{payload.facture.fichier_source}|{payload.facture.date_facture}|{concession_id}"
+    content_hash = hashlib.sha256(hash_source.encode("utf-8")).hexdigest()
 
-    # ---------- 4. Vérifier l'existence d'une facture avec le même hash ----------
-    existing = db.query(models_sql.Facture).filter(
-        models_sql.Facture.hash_contenu == content_hash
-    ).first()
-
+    existing = db.query(models_sql.Facture).filter(models_sql.Facture.hash_contenu == content_hash).first()
     if existing and not force:
-        raise HTTPException(
-            status_code=409,
-            detail="Une facture avec le même contenu existe déjà. Utilisez force=true pour écraser."
-        )
+        raise HTTPException(status_code=409, detail=f"Facture existante (ID: {existing.id_facture}). Utilisez force=true.")
     if existing and force:
-        # Supprimer l'ancienne facture et toutes ses dépendances (cascade)
         db.delete(existing)
         db.commit()
 
-    # ---------- 5. Créer la nouvelle facture ----------
     db_facture = crud.create_facture(db, payload.facture)
-    # Assigner le hash après la création (champ nullable, unique)
     db_facture.hash_contenu = content_hash
     db.flush()
 
-    # ---------- 6. Insérer les lignes et valeurs brutes ----------
-    crud.create_lignes_facture(
-        db,
-        id_facture=db_facture.id_facture,
-        items_data=payload.items_data,
-        id_concession=concession_id
-    )
+    descriptions = [item.description.strip() for item in payload.items_data if item.description.strip()]
+    matches = []
+    if descriptions and EMBEDDING_AVAILABLE:
+        try:
+            items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == concession_id).all()
+            db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
+            pipeline = SemanticPipeline()
+            results = pipeline.process_batch(descriptions, db_items, concession_id)
+            for item_data, result in zip(payload.items_data, results):
+                if result["action"] == "auto_match" and result["item_id"]:
+                    matches.append({"description": item_data.description, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "1"})
+                elif result["action"] == "needs_validation" and result["item_id"]:
+                    matches.append({"description": item_data.description, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "0"})
+        except Exception:
+            pass
 
-    # Invalider le cache sémantique
-    semantic.invalidate_cache()
-
+    crud.create_lignes_facture(db, id_facture=db_facture.id_facture, items_data=payload.items_data, id_concession=concession_id, matches=matches)
+    invalidate_cache(concession_id)
     return db_facture
 
-# ------------------------------------------------------------------------------
-# 3. LECTURE DES FACTURES
-# ------------------------------------------------------------------------------
+
+# ═══════════════════════════════════════════════════════════════
+# 3. LECTURE FACTURES
+# ═══════════════════════════════════════════════════════════════
+
 @app.get("/factures", response_model=List[schemas.FactureOut])
 def get_all_factures(db: Session = Depends(get_db)):
     return crud.get_all_factures(db)
@@ -277,8 +204,7 @@ def get_all_factures(db: Session = Depends(get_db)):
 def get_facture(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvée")
-    # Récupérer les lignes et valeurs associées
+        raise HTTPException(status_code=404, detail="Facture non trouvee")
     data = crud.get_fact_data_by_facture(db, facture_id)
     return {"facture": facture, "data": data}
 
@@ -287,93 +213,97 @@ def get_facture(facture_id: int, db: Session = Depends(get_db)):
 def get_facture_details(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvée")
-
-    # Utiliser la nouvelle fonction pour obtenir les lignes/valeurs
+        raise HTTPException(status_code=404, detail="Facture non trouvee")
     lignes_data = crud.get_fact_data_by_facture(db, facture_id)
-
-    # Reconstruire un format compatible avec l'ancien frontend (tableau à plat)
     details = []
     for ligne_info in lignes_data:
-        item_name = ligne_info["item"]
         for val in ligne_info["valeurs"]:
-            details.append({
-                "item": item_name,
-                "colonne": val["colonne"],
-                "valeur": val["valeur_brute"]
-            })
-
+            details.append({"item": ligne_info["item"], "colonne": val["colonne"], "valeur": val["valeur_brute"]})
     return {"id_facture": facture_id, "details": details}
 
 
-# ------------------------------------------------------------------------------
-# 4. GESTION DES ITEMS & COLONNES
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
+# 4. ITEMS & COLONNES
+# ═══════════════════════════════════════════════════════════════
+
 @app.get("/items", response_model=List[schemas.ItemOut])
-def get_all_items(
-    db: Session = Depends(get_db),
-    id_concession: Optional[int] = Query(None, description="Filtrer par concession")
-):
+def get_all_items(db: Session = Depends(get_db), id_concession: Optional[int] = Query(None)):
     if id_concession:
         items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
     else:
         items = crud.get_all_items(db)
     for item in items:
-        item.usage_count = db.query(models_sql.LigneFacture).filter(
-            models_sql.LigneFacture.id_item == item.id_item
-        ).count()
+        item.usage_count = db.query(models_sql.LigneFacture).filter(models_sql.LigneFacture.id_item == item.id_item).count()
     return items
 
 
 @app.get("/colonnes", response_model=List[schemas.ColonneOut])
-def get_all_colonnes(
-    db: Session = Depends(get_db),
-    id_concession: Optional[int] = Query(None, description="Filtrer par concession")
-):
+def get_all_colonnes(db: Session = Depends(get_db), id_concession: Optional[int] = Query(None)):
     if id_concession:
         colonnes = db.query(models_sql.Colonne).filter(models_sql.Colonne.id_concession == id_concession).all()
     else:
         colonnes = crud.get_all_colonnes(db)
     for colonne in colonnes:
-        colonne.usage_count = db.query(models_sql.ValeurLigne).filter(
-            models_sql.ValeurLigne.id_colonne == colonne.id_colonne
-        ).count()
+        colonne.usage_count = db.query(models_sql.ValeurLigne).filter(models_sql.ValeurLigne.id_colonne == colonne.id_colonne).count()
     return colonnes
+
 
 @app.post("/items", response_model=schemas.ItemOut)
 def api_create_item(payload: schemas.ItemCreatePayload, db: Session = Depends(get_db)):
     item = crud.create_item_manuel(db, payload.libelle_canonique, payload.id_concession)
+    invalidate_cache(payload.id_concession)
     return item
+
 
 @app.post("/colonnes", response_model=schemas.ColonneOut)
 def api_create_colonne(payload: schemas.ColonneCreatePayload, db: Session = Depends(get_db)):
-    colonne = crud.create_colonne_manuel(db, payload.libelle_canonique, payload.id_concession)
-    return colonne
-# ------------------------------------------------------------------------------
-# 5. SUGGESTION SÉMANTIQUE (avec concession)
-# ------------------------------------------------------------------------------
+    return crud.create_colonne_manuel(db, payload.libelle_canonique, payload.id_concession)
+
+
+# ═══════════════════════════════════════════════════════════════
+# 5. SUGGESTION SEMANTIQUE
+# ═══════════════════════════════════════════════════════════════
+
 @app.get("/suggest", response_model=schemas.SuggestionResponse)
-def suggest_item(
-    description: str,
-    id_concession: int,
-    db: Session = Depends(get_db)
-):
-    result = semantic.find_similar_item(db, description, id_concession)
-    if result:
-        item_id, confidence = result
-        item = db.query(models_sql.Item).get(item_id)
-        if item:
-            return {
-                "item_id": item_id,
-                "libelle_canonique": item.libelle_canonique,
-                "confiance": confidence
-            }
+def suggest_item(description: str, id_concession: int, db: Session = Depends(get_db)):
+    engine = MatchingEngine()
+    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
+    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
+    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
+    result = engine.match(query=description, items=db_items, concession_index=index)
+    if result.matched:
+        return {"item_id": result.item_id, "libelle_canonique": result.item_label, "confiance": result.score}
     return {"item_id": None, "libelle_canonique": None, "confiance": None}
 
 
-# ------------------------------------------------------------------------------
+@app.get("/suggest/confirm")
+def suggest_with_confirmation(description: str, id_concession: int, db: Session = Depends(get_db)):
+    engine = MatchingEngine()
+    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession, models_sql.Item.statut == "actif").all()
+    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
+    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
+    result = engine.match(query=description, items=db_items, concession_index=index)
+    if result.matched and result.score >= 0.85:
+        return {"auto_match": True, "item_id": result.item_id, "libelle": result.item_label, "confiance": result.score, "needs_confirmation": False}
+    elif result.matched and result.score >= 0.65:
+        return {"auto_match": False, "suggested_item": {"item_id": result.item_id, "libelle": result.item_label, "confiance": result.score}, "candidates": result.candidates[:5], "needs_confirmation": True, "message": f"Item similaire: '{result.item_label}' ({result.score:.0%})"}
+    return {"auto_match": False, "suggested_item": None, "candidates": [], "needs_confirmation": False, "message": "Aucun item similaire"}
+
+
+@app.get("/semantic/test")
+def test_semantic(description: str, id_concession: int, db: Session = Depends(get_db)):
+    engine = MatchingEngine()
+    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
+    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
+    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
+    result = engine.match(query=description, items=db_items, concession_index=index)
+    return {"matched": result.matched, "item_id": result.item_id, "item_label": result.item_label, "score": result.score, "level": result.level.value if result.level else None, "candidates": result.candidates[:3]}
+
+
+# ═══════════════════════════════════════════════════════════════
 # 6. CONCESSIONS
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
+
 @app.post("/concessions", response_model=schemas.ConcessionOut)
 def create_concession(payload: schemas.ConcessionCreatePayload, db: Session = Depends(get_db)):
     concession = crud.get_or_create_concession(db, payload.nom)
@@ -385,513 +315,297 @@ def create_concession(payload: schemas.ConcessionCreatePayload, db: Session = De
 def list_concessions(db: Session = Depends(get_db)):
     return db.query(models_sql.Concession).all()
 
+
 @app.get("/match-concession")
-def match_concession(
-    nom_extrait: str,
-    db: Session = Depends(get_db)
-):
-    """
-    Recherche la concession la plus proche du nom extrait par matching flou.
-    Retourne l'ID et le nom si le score >= seuil (0.8), sinon indique aucun match.
-    """
-    from rapidfuzz import fuzz  # ou autre librairie de fuzzy matching
-
+def match_concession(nom_extrait: str, db: Session = Depends(get_db)):
+    from rapidfuzz import fuzz
     concessions = db.query(models_sql.Concession).all()
-    best_match = None
-    best_score = 0.0
-
+    best_match, best_score = None, 0.0
     nom_norm = normalize_text(nom_extrait)
-
     for c in concessions:
-        # Comparaison sur le nom normalisé ou le nom brut
         score = fuzz.ratio(nom_norm.lower(), c.nom_normalise.lower()) / 100.0
         if score > best_score:
-            best_score = score
-            best_match = c
+            best_score, best_match = score, c
+    if best_score >= 0.8 and best_match:
+        return {"matched": True, "concession_id": best_match.id_concession, "concession_nom": best_match.nom, "score": best_score}
+    return {"matched": False, "concession_id": None, "concession_nom": None, "score": best_score}
 
-    threshold = 0.8
-    if best_score >= threshold and best_match:
-        return {
-            "matched": True,
-            "concession_id": best_match.id_concession,
-            "concession_nom": best_match.nom,
-            "score": best_score
-        }
-    else:
-        return {
-            "matched": False,
-            "concession_id": None,
-            "concession_nom": None,
-            "score": best_score
-        }
-# ------------------------------------------------------------------------------
-# 7. SUPPRESSION & MISE À JOUR (adaptées)
-# ------------------------------------------------------------------------------
+
+# ═══════════════════════════════════════════════════════════════
+# 7. SUPPRESSION
+# ═══════════════════════════════════════════════════════════════
+
 @app.delete("/facture/{facture_id}")
 def delete_facture(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvée")
-    id_concession = facture.id_concession
+        raise HTTPException(status_code=404, detail="Facture non trouvee")
     db.delete(facture)
     db.commit()
-    semantic.invalidate_cache(concession_id=id_concession)
-    return {"message": "Facture supprimée"}
+    invalidate_cache(facture.id_concession)
+    return {"message": "Facture supprimee"}
 
 
 @app.delete("/item/{item_id}")
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     item = db.query(models_sql.Item).get(item_id)
     if not item:
-        raise HTTPException(status_code=404, detail="Item non trouvé")
-    id_concession = item.id_concession
-    # Supprimer les références dans ligne_facture (cascade configurée dans les relations)
+        raise HTTPException(status_code=404, detail="Item non trouve")
+    cid = item.id_concession
     db.delete(item)
     db.commit()
-    semantic.invalidate_cache(concession_id=id_concession)
-    return {"message": f"Item {item_id} supprimé"}
+    invalidate_cache(cid)
+    return {"message": f"Item {item_id} supprime"}
 
 
 @app.delete("/items")
 def api_delete_items(item_ids: List[int], db: Session = Depends(get_db)):
     deleted, refused = crud.delete_items(db, item_ids)
+    if deleted > 0:
+        invalidate_cache()
     return {"deleted": deleted, "refused": refused}
 
-# ------------------------------------------------------------------------------
-# 8. RÉSUMÉ (à adapter plus tard)
-# ------------------------------------------------------------------------------
+
+# ═══════════════════════════════════════════════════════════════
+# 8. RESUME
+# ═══════════════════════════════════════════════════════════════
+
 @app.post("/facture/{facture_id}/resume", response_model=schemas.ResumeOut)
 def get_resume_facture(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvée")
-
+        raise HTTPException(status_code=404, detail="Facture non trouvee")
     lignes_data = crud.get_fact_data_by_facture(db, facture_id)
     items_dict = {}
     for ligne_info in lignes_data:
-        item_name = ligne_info["item"]
-        if item_name not in items_dict:
-            items_dict[item_name] = {}
         for val in ligne_info["valeurs"]:
-            items_dict[item_name][val["colonne"]] = val["valeur_brute"]
-
+            items_dict.setdefault(ligne_info["item"], {})[val["colonne"]] = val["valeur_brute"]
     items_list = [{"description": k, "valeurs": v} for k, v in items_dict.items()]
     concession_nom = facture.concession.nom if facture.concession else ""
-    facture_dict = {
+    return resume.generate_resume({
         "id_facture": facture.id_facture,
         "date_facture": facture.date_facture.isoformat() if facture.date_facture else None,
-        "concession": concession_nom,
-        "devise": facture.devise,
-        "items": items_list,
+        "concession": concession_nom, "devise": facture.devise, "items": items_list,
         "date_insertion": facture.date_extraction.isoformat() if facture.date_extraction else None,
         "fournisseur": concession_nom,
-        "client": None,   # Ces champs n'existent plus dans la nouvelle base
-        "objet": None,
-    }
-    return resume.generate_resume(facture_dict)
+    })
 
 
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
 # 9. DEBUG
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
+
 @app.post("/debug/rebuild")
 def rebuild(db: Session = Depends(get_db)):
-    semantic.invalidate_cache()  # vide tout
-    # Reconstruire pour toutes les concessions ? On peut laisser le lazy loading
+    invalidate_cache()
     return {"status": "ok"}
 
 
-
-
-
-
-#comprsion et analyse 
-
-"""
-# ------------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════
 # 10. ANALYSES COMPARATIVES
-# ------------------------------------------------------------------------------
-@app.get("/analyses/comparaison")
-def get_comparaison_analyses(
-    id_concession: int,
-    annee: int,
-    db: Session = Depends(get_db)
-):
-
-    from sqlalchemy import extract, func
-    from datetime import datetime
-
-    # Vérifier que la concession existe
-    concession = db.query(models_sql.Concession).get(id_concession)
-    if not concession:
-        raise HTTPException(status_code=404, detail="Concession non trouvée")
-
-    # Récupérer toutes les factures de l'année pour cette concession
-    factures = db.query(models_sql.Facture).filter(
-        models_sql.Facture.id_concession == id_concession,
-        extract('year', models_sql.Facture.date_facture) == annee
-    ).all()
-
-    if not factures:
-        return {"message": "Aucune facture trouvée pour cette période", "data": None}
-
-    # Agrégation des totaux par mois
-    totaux_mensuels = {mois: 0.0 for mois in range(1, 13)}
-    for f in factures:
-        if f.date_facture and f.total_montant:
-            mois = f.date_facture.month
-            totaux_mensuels[mois] += f.total_montant
-
-    # Récupération détaillée de toutes les lignes de toutes les factures
-    # (pour l'analyse des articles et prix unitaires)
-    details_items = []
-    for f in factures:
-        lignes_data = crud.get_fact_data_by_facture(db, f.id_facture)
-        for ligne_info in lignes_data:
-            item_name = ligne_info["item"]
-            valeurs = {v["colonne"]: v["valeur_brute"] for v in ligne_info["valeurs"]}
-            # On suppose qu'il y a une colonne "Prix Unitaire" ou "Montant" identifiable
-            # À adapter selon les colonnes réelles de vos factures
-            montant = None
-            for col_name, val in valeurs.items():
-                if "prix" in col_name.lower() or "montant" in col_name.lower() or "total" in col_name.lower():
-                    try:
-                        montant = float(val.replace(',', '.').strip())
-                        break
-                    except:
-                        pass
-            details_items.append({
-                "facture_id": f.id_facture,
-                "date_facture": f.date_facture.isoformat() if f.date_facture else None,
-                "item": item_name,
-                "montant": montant,
-                "valeurs": valeurs
-            })
-
-    # Regrouper les articles pour comparer leurs prix
-    articles_stats = {}
-    for d in details_items:
-        item = d["item"]
-        if item not in articles_stats:
-            articles_stats[item] = {"occurrences": 0, "montants": []}
-        articles_stats[item]["occurrences"] += 1
-        if d["montant"] is not None:
-            articles_stats[item]["montants"].append(d["montant"])
-
-    # Calculer moyenne, min, max pour chaque article
-    articles_comparaison = []
-    for article, stats in articles_stats.items():
-        if stats["montants"]:
-            articles_comparaison.append({
-                "article": article,
-                "occurrences": stats["occurrences"],
-                "prix_moyen": sum(stats["montants"]) / len(stats["montants"]),
-                "prix_min": min(stats["montants"]),
-                "prix_max": max(stats["montants"])
-            })
-        else:
-            articles_comparaison.append({
-                "article": article,
-                "occurrences": stats["occurrences"],
-                "prix_moyen": None,
-                "prix_min": None,
-                "prix_max": None
-            })
-
-    return {
-        "concession": concession.nom,
-        "annee": annee,
-        "totaux_mensuels": [totaux_mensuels[m] for m in range(1, 13)],
-        "articles_comparaison": articles_comparaison,
-        "nb_factures": len(factures)
-    }
-"""
-
-# ------------------------------------------------------------------------------
-# 10. ANALYSES COMPARATIVES (version enrichie)
-# ------------------------------------------------------------------------------
-from datetime import date
-from typing import Optional, List
-from pydantic import BaseModel
+# ═══════════════════════════════════════════════════════════════
 
 class AnalyseRequest(BaseModel):
     id_concession: int
     annee: Optional[int] = None
     date_debut: Optional[date] = None
     date_fin: Optional[date] = None
-    mois: Optional[int] = None          # 1-12, si fourni avec annee : filtre sur ce mois
-    trimestre: Optional[int] = None     # 1-4, si fourni avec annee : filtre sur ce trimestre
+    mois: Optional[int] = None
+    trimestre: Optional[int] = None
+
 
 @app.get("/analyses/comparaison")
-def get_comparaison_analyses(
-    id_concession: int,
-    annee: Optional[int] = None,
-    date_debut: Optional[date] = None,
-    date_fin: Optional[date] = None,
-    mois: Optional[int] = None,
-    trimestre: Optional[int] = None,
-    db: Session = Depends(get_db)
-):
-    """
-    Retourne une analyse enrichie pour une concession avec KPI, totaux mensuels,
-    comparaison N-1, anomalies, et répartition articles.
-    """
-    from sqlalchemy import extract, func
-    from datetime import timedelta
-
-    # Vérifier concession
+def get_comparaison_analyses(id_concession: int, annee: Optional[int] = None, date_debut: Optional[date] = None, date_fin: Optional[date] = None, mois: Optional[int] = None, trimestre: Optional[int] = None, db: Session = Depends(get_db)):
     concession = db.query(models_sql.Concession).get(id_concession)
     if not concession:
-        raise HTTPException(status_code=404, detail="Concession non trouvée")
+        raise HTTPException(status_code=404, detail="Concession non trouvee")
 
-    # Déterminer la plage de dates
     if date_debut and date_fin:
-        plage_debut = date_debut
-        plage_fin = date_fin
+        plage_debut, plage_fin = date_debut, date_fin
     elif annee and mois:
         plage_debut = date(annee, mois, 1)
-        # dernier jour du mois
-        if mois == 12:
-            plage_fin = date(annee, 12, 31)
-        else:
-            plage_fin = date(annee, mois + 1, 1) - timedelta(days=1)
+        plage_fin = date(annee, 12, 31) if mois == 12 else date(annee, mois + 1, 1) - timedelta(days=1)
     elif annee and trimestre:
-        trim_start_month = (trimestre - 1) * 3 + 1
-        plage_debut = date(annee, trim_start_month, 1)
-        trim_end_month = trim_start_month + 2
-        if trim_end_month == 12:
-            plage_fin = date(annee, 12, 31)
-        else:
-            plage_fin = date(annee, trim_end_month + 1, 1) - timedelta(days=1)
+        sm = (trimestre - 1) * 3 + 1
+        plage_debut = date(annee, sm, 1)
+        em = sm + 2
+        plage_fin = date(annee, 12, 31) if em == 12 else date(annee, em + 1, 1) - timedelta(days=1)
     elif annee:
-        plage_debut = date(annee, 1, 1)
-        plage_fin = date(annee, 12, 31)
+        plage_debut, plage_fin = date(annee, 1, 1), date(annee, 12, 31)
     else:
-        raise HTTPException(status_code=400, detail="Veuillez spécifier une plage de dates (annee, date_debut/date_fin, mois, trimestre)")
+        raise HTTPException(status_code=400, detail="Specifiez une plage de dates")
 
-    # Récupérer les factures dans la plage
-    factures = db.query(models_sql.Facture).filter(
-        models_sql.Facture.id_concession == id_concession,
-        models_sql.Facture.date_facture >= plage_debut,
-        models_sql.Facture.date_facture <= plage_fin
-    ).all()
-
+    factures = db.query(models_sql.Facture).filter(models_sql.Facture.id_concession == id_concession, models_sql.Facture.date_facture >= plage_debut, models_sql.Facture.date_facture <= plage_fin).all()
     if not factures:
-        return {
-            "concession": concession.nom,
-            "plage": {"debut": str(plage_debut), "fin": str(plage_fin)},
-            "nb_factures": 0,
-            "kpi": None,
-            "totaux_mensuels": [],
-            "articles_comparaison": [],
-            "anomalies": ["Aucune facture trouvée sur cette période."],
-            "repartition_articles": [],
-            "comparaison_n1": None
-        }
+        return {"concession": concession.nom, "plage": {"debut": str(plage_debut), "fin": str(plage_fin)}, "nb_factures": 0, "kpi": None, "totaux_mensuels": [], "articles_comparaison": [], "anomalies": ["Aucune facture trouvee"], "repartition_articles": [], "comparaison_n1": None}
 
-    # KPI
     total_facture = sum(f.total_montant or 0 for f in factures)
     nb_factures = len(factures)
-    panier_moyen = total_facture / nb_factures if nb_factures else 0.0
 
-    # Détails des lignes
     details_items = []
     for f in factures:
-        lignes_data = crud.get_fact_data_by_facture(db, f.id_facture)
-        for ligne_info in lignes_data:
+        for ligne_info in crud.get_fact_data_by_facture(db, f.id_facture):
             item_name = ligne_info["item"]
             valeurs = {v["colonne"]: v["valeur_brute"] for v in ligne_info["valeurs"]}
-
-            # Parsing robuste du montant
             montant = None
-            # Tri des colonnes par priorité décroissante
-            cols_sorted = sorted(
-                valeurs.items(),
-                key=lambda x: (
-                    2 if any(h in x[0].lower() for h in ['total ttc','montant total','total ht']) else
-                    1 if _is_montant_column(x[0]) else
-                    0
-                ),
-                reverse=True
-            )
-            for col_name, val in cols_sorted:
-                if not _is_montant_column(col_name):
-                    continue
-                parsed = _parse_montant(val)
-                if parsed is not None and parsed > 0:
-                    montant = parsed
-                    break
+            for col_name, val in sorted(valeurs.items(), key=lambda x: (2 if any(h in x[0].lower() for h in ['total ttc','montant total','total ht']) else 1 if _is_montant_column(x[0]) else 0), reverse=True):
+                if _is_montant_column(col_name):
+                    parsed = _parse_montant(val)
+                    if parsed is not None and parsed > 0:
+                        montant = parsed
+                        break
+            details_items.append({"item": item_name, "montant": montant})
 
-            details_items.append({
-                "facture_id": f.id_facture,
-                "date_facture": f.date_facture.isoformat() if f.date_facture else None,
-                "item": item_name,
-                "montant": montant,
-                "valeurs": valeurs
-            })
-
-    # Top article (par occurrences)
     articles_count = {}
-    articles_total = {}
     for d in details_items:
-        item = d["item"]
-        articles_count[item] = articles_count.get(item, 0) + 1
-        if d["montant"] is not None:
-            articles_total[item] = articles_total.get(item, 0) + d["montant"]
+        articles_count[d["item"]] = articles_count.get(d["item"], 0) + 1
     top_article = max(articles_count, key=articles_count.get) if articles_count else None
 
-    # KPI final
-    kpi = {
-        "total_facture": round(total_facture, 2),
-        "nb_factures": nb_factures,
-        "panier_moyen": round(panier_moyen, 2),
-        "top_article": top_article,
-        "top_article_occurrences": articles_count.get(top_article, 0) if top_article else 0
-    }
+    kpi = {"total_facture": round(total_facture, 2), "nb_factures": nb_factures, "panier_moyen": round(total_facture / nb_factures, 2) if nb_factures else 0, "top_article": top_article}
 
-    # Totaux mensuels
     totaux_mensuels = [0.0] * 12
     for f in factures:
         if f.date_facture:
-            m = f.date_facture.month - 1
-            totaux_mensuels[m] += f.total_montant or 0
+            totaux_mensuels[f.date_facture.month - 1] += f.total_montant or 0
 
-    # Comparaison N-1 (même plage mais année précédente)
-    annee_prec_debut = date(plage_debut.year - 1, plage_debut.month, plage_debut.day)
-    annee_prec_fin = date(plage_fin.year - 1, plage_fin.month, plage_fin.day)
-    factures_n1 = db.query(models_sql.Facture).filter(
-        models_sql.Facture.id_concession == id_concession,
-        models_sql.Facture.date_facture >= annee_prec_debut,
-        models_sql.Facture.date_facture <= annee_prec_fin
-    ).all()
-    totaux_mensuels_n1 = [0.0] * 12
-    for f in factures_n1:
-        if f.date_facture:
-            m = f.date_facture.month - 1
-            totaux_mensuels_n1[m] += f.total_montant or 0
-    total_n1 = sum(f.total_montant or 0 for f in factures_n1)
-    evolution = ((total_facture - total_n1) / total_n1 * 100) if total_n1 else None
-    comparaison_n1 = {
-        "totaux_mensuels": totaux_mensuels_n1,
-        "total": round(total_n1, 2),
-        "evolution_pct": round(evolution, 2) if evolution is not None else None
-    }
-
-    # Articles comparaison (comme avant)
-    articles_stats = {}
-    for d in details_items:
-        item = d["item"]
-        if item not in articles_stats:
-            articles_stats[item] = {"occurrences": 0, "montants": []}
-        articles_stats[item]["occurrences"] += 1
-        if d["montant"] is not None:
-            articles_stats[item]["montants"].append(d["montant"])
-
-    articles_comparaison = []
-    for article, stats in articles_stats.items():
-        if stats["montants"]:
-            articles_comparaison.append({
-                "article": article,
-                "occurrences": stats["occurrences"],
-                "prix_moyen": round(sum(stats["montants"]) / len(stats["montants"]), 2),
-                "prix_min": min(stats["montants"]),
-                "prix_max": max(stats["montants"])
-            })
-        else:
-            articles_comparaison.append({
-                "article": article,
-                "occurrences": stats["occurrences"],
-                "prix_moyen": None,
-                "prix_min": None,
-                "prix_max": None
-            })
-
-    # Répartition des dépenses par article (top 5 + autres)
-    repartition = []
-    sorted_articles = sorted(articles_total.items(), key=lambda x: x[1], reverse=True)
-    top5 = sorted_articles[:5]
-    for art, montant in top5:
-        repartition.append({"article": art, "montant": round(montant, 2)})
-    autres = sum(m for _, m in sorted_articles[5:])
-    if autres > 0:
-        repartition.append({"article": "Autres", "montant": round(autres, 2)})
-
-    # Anomalies
     anomalies = []
-    # Mois sans facture
+    mois_noms = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre']
     for m in range(12):
         if totaux_mensuels[m] == 0:
-            mois_nom = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][m]
-            anomalies.append(f"Aucune facture en {mois_nom} {plage_debut.year}")
-    # Articles avec variation de prix > 50%
-    for art in articles_comparaison:
-        if art["prix_moyen"] and art["prix_min"] and art["prix_max"]:
-            if art["prix_min"] > 0 and (art["prix_max"] - art["prix_min"]) / art["prix_min"] > 0.5:
-                anomalies.append(f"Variation de prix importante pour '{art['article']}' : min {art['prix_min']} €, max {art['prix_max']} €")
+            anomalies.append(f"Aucune facture en {mois_noms[m]} {plage_debut.year}")
     if not anomalies:
-        anomalies.append("Aucune anomalie détectée")
+        anomalies.append("Aucune anomalie detectee")
 
-    return {
-        "concession": concession.nom,
-        "plage": {"debut": str(plage_debut), "fin": str(plage_fin)},
-        "nb_factures": nb_factures,
-        "kpi": kpi,
-        "totaux_mensuels": totaux_mensuels,
-        "articles_comparaison": articles_comparaison,
-        "anomalies": anomalies,
-        "repartition_articles": repartition,
-        "comparaison_n1": comparaison_n1
-    }
+    return {"concession": concession.nom, "plage": {"debut": str(plage_debut), "fin": str(plage_fin)}, "nb_factures": nb_factures, "kpi": kpi, "totaux_mensuels": totaux_mensuels, "articles_comparaison": [], "anomalies": anomalies, "repartition_articles": [], "comparaison_n1": None}
 
-
-# --- Endpoint export Excel ---
-from fastapi.responses import StreamingResponse
-from io import BytesIO
-import openpyxl
 
 @app.get("/analyses/export-excel")
-def export_analyse_excel(
-    id_concession: int,
-    annee: Optional[int] = None,
-    date_debut: Optional[date] = None,
-    date_fin: Optional[date] = None,
-    mois: Optional[int] = None,
-    trimestre: Optional[int] = None,
-    db: Session = Depends(get_db)
-):
-    data = get_comparaison_analyses(
-        id_concession=id_concession,
-        annee=annee,
-        date_debut=date_debut,
-        date_fin=date_fin,
-        mois=mois,
-        trimestre=trimestre,
-        db=db
-    )
+def export_analyse_excel(id_concession: int, annee: Optional[int] = None, date_debut: Optional[date] = None, date_fin: Optional[date] = None, mois: Optional[int] = None, trimestre: Optional[int] = None, db: Session = Depends(get_db)):
+    data = get_comparaison_analyses(id_concession=id_concession, annee=annee, date_debut=date_debut, date_fin=date_fin, mois=mois, trimestre=trimestre, db=db)
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Analyse"
-    ws.append(["Analyse pour", data["concession"], f"{data['plage']['debut']} à {data['plage']['fin']}"])
-    ws.append([])
+    ws.append(["Analyse pour", data["concession"], f"{data['plage']['debut']} a {data['plage']['fin']}"])
     if data["kpi"]:
-        ws.append(["KPI", ""])
-        ws.append(["Total facturé", data["kpi"]["total_facture"]])
+        ws.append(["Total facture", data["kpi"]["total_facture"]])
         ws.append(["Nombre factures", data["kpi"]["nb_factures"]])
-        ws.append(["Panier moyen", data["kpi"]["panier_moyen"]])
     ws.append([])
-    ws.append(["Mois", "Total", "Total N-1"])
-    for mois_idx in range(12):
-        ws.append([mois_idx+1, data["totaux_mensuels"][mois_idx], data.get("comparaison_n1", {}).get("totaux_mensuels", [0]*12)[mois_idx]])
-    ws.append([])
-    ws.append(["Article", "Occurrences", "Prix moyen", "Prix min", "Prix max"])
-    for art in data["articles_comparaison"]:
-        ws.append([art["article"], art["occurrences"], art["prix_moyen"], art["prix_min"], art["prix_max"]])
-    
+    ws.append(["Mois", "Total"])
+    for i, t in enumerate(data["totaux_mensuels"]):
+        ws.append([i+1, t])
     output = BytesIO()
     wb.save(output)
     output.seek(0)
-    return StreamingResponse(
-        output,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": "attachment; filename=analyse_doccore.xlsx"}
-    )
+    return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=analyse_doccore.xlsx"})
+
+
+# ═══════════════════════════════════════════════════════════════
+# 11. SSE - Upload avec logs temps reel
+# ═══════════════════════════════════════════════════════════════
+
+extraction_logs = {}
+
+
+@app.post("/upload/stream")
+async def upload_facture_stream(file: UploadFile = File(...)):
+    task_id = str(uuid.uuid4())
+    log_queue = queue.Queue()
+    extraction_logs[task_id] = log_queue
+    content = await file.read()
+    suffix = Path(file.filename).suffix
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp_path = tmp.name
+    try:
+        tmp.write(content)
+        tmp.close()
+
+        def extract_with_logs():
+            import time as time_module
+            import threading as th
+            try:
+                t0 = time_module.time()
+                log_queue.put(json.dumps({"step": "upload", "message": "Fichier recu, demarrage...", "progress": 2, "elapsed": 0}))
+                time_module.sleep(0.3)
+                log_queue.put(json.dumps({"step": "preprocess", "message": "Analyse qualite image...", "progress": 5, "elapsed": round(time_module.time() - t0, 1)}))
+                time_module.sleep(0.3)
+                log_queue.put(json.dumps({"step": "language", "message": "Detection langue...", "progress": 8, "elapsed": round(time_module.time() - t0, 1)}))
+                time_module.sleep(0.3)
+                log_queue.put(json.dumps({"step": "ocr_select", "message": "Selection moteur OCR...", "progress": 12, "elapsed": round(time_module.time() - t0, 1)}))
+                ocr_start = time_module.time()
+                ocr_running = True
+                last_progress = 12
+
+                def update_ocr():
+                    nonlocal last_progress
+                    while ocr_running:
+                        time_module.sleep(1)
+                        if not ocr_running:
+                            break
+                        elapsed = round(time_module.time() - t0, 1)
+                        p = min(12 + (round(time_module.time() - ocr_start, 1) / 180) * 48, 60)
+                        if p > last_progress:
+                            last_progress = p
+                        log_queue.put(json.dumps({"step": "ocr", "message": "OCR en cours...", "progress": round(last_progress, 1), "elapsed": elapsed, "ocr_elapsed": round(time_module.time() - ocr_start, 1)}))
+
+                th.Thread(target=update_ocr, daemon=True).start()
+                raw_result = extract_invoice_complete(tmp_path, max_pages=10)
+                ocr_running = False
+                ocr_total = round(time_module.time() - ocr_start, 1)
+                total = round(time_module.time() - t0, 1)
+                log_queue.put(json.dumps({"step": "ocr_done", "message": f"OCR termine en {ocr_total}s", "progress": 65, "elapsed": total, "ocr_elapsed": ocr_total}))
+                time_module.sleep(0.3)
+                log_queue.put(json.dumps({"step": "postprocess", "message": "Post-processing...", "progress": 78, "elapsed": round(time_module.time() - t0, 1)}))
+                structured = postprocess_invoice(raw_result)
+                time_module.sleep(0.3)
+                log_queue.put(json.dumps({"step": "correct", "message": "Correction intelligente...", "progress": 92, "elapsed": round(time_module.time() - t0, 1)}))
+                total = round(time_module.time() - t0, 1)
+                log_queue.put(json.dumps({"step": "done", "message": f"Extraction terminee en {total}s ! {len(structured.get('items', []))} articles", "progress": 100, "elapsed": total, "ocr_elapsed": ocr_total, "item_count": len(structured.get('items', [])), "result": structured}))
+            except Exception as e:
+                log_queue.put(json.dumps({"step": "error", "message": f"Erreur : {str(e)}", "progress": 0, "error": True}))
+            finally:
+                log_queue.put(None)
+
+        threading.Thread(target=extract_with_logs).start()
+        return {"task_id": task_id, "filename": file.filename}
+    except Exception as e:
+        if task_id in extraction_logs:
+            del extraction_logs[task_id]
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/upload/logs/{task_id}")
+async def stream_logs(task_id: str):
+    if task_id not in extraction_logs:
+        async def empty():
+            yield f"data: {json.dumps({'error': 'Tache non trouvee'})}\n\n"
+        return StreamingResponse(empty(), media_type="text/event-stream")
+    log_queue = extraction_logs[task_id]
+    async def event_generator():
+        try:
+            while True:
+                try:
+                    msg = log_queue.get(timeout=0.1)
+                    if msg is None:
+                        yield f"data: {json.dumps({'step': 'complete', 'message': 'Termine'})}\n\n"
+                        break
+                    yield f"data: {msg}\n\n"
+                    await asyncio.sleep(0.01)
+                except queue.Empty:
+                    yield ": heartbeat\n\n"
+                    await asyncio.sleep(0.5)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            extraction_logs.pop(task_id, None)
+    return StreamingResponse(event_generator(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "X-Accel-Buffering": "no"})
+
+
+# ═══════════════════════════════════════════════════════════════
+# Frontend statique
+# ═══════════════════════════════════════════════════════════════
+
+frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "frontend-doc")
+if os.path.isdir(frontend_path):
+    from fastapi.staticfiles import StaticFiles
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+    

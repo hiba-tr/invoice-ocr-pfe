@@ -43,7 +43,7 @@ class EasyOcrModel(BaseOcrModel):
         )
         self.options: EasyOcrOptions
 
-        self.scale = 3  # multiplier for 72 dpi == 216 dpi.
+        self.scale = 2  # multiplier for 72 dpi == 144  dpi.
 
         if self.enabled:
             try:
@@ -132,7 +132,7 @@ class EasyOcrModel(BaseOcrModel):
             yield from page_batch
             return
  
-        from backend.extraction.engine.models.utils.image_preprocessor import ImagePreprocessor
+        from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor
         preprocessor = ImagePreprocessor()
  
         for page in page_batch:

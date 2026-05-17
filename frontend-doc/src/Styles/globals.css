@@ -557,3 +557,8 @@
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }      /* Taille normale */
+  50%      { transform: scale(1.08); }    /* Bombe vers le haut/bas (+8%) */
+}

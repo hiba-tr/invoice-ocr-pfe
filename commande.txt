@@ -5,9 +5,7 @@ sqlplus doccore/doccore@//localhost:1521/xepdb1
 cmd
 cd C:\doc_core
 venv\Scripts\activate
-2. Démarrer l'API FastAPI (dans un terminal)
-cmd
-uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn backend.api.main:app --reload --host 0.0.0.0 --port 8000
 Laissez ce terminal ouvert.
 
 3. Ouvrir un deuxième terminal (toujours dans C:\doc_core, avec l'environnement activé) et lancer vite

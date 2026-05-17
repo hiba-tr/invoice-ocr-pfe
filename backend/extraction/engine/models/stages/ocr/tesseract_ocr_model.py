@@ -55,7 +55,7 @@ class TesseractOcrModel(BaseOcrModel):
             yield from page_batch
             return
 
-        from backend.extraction.engine.models.utils.image_preprocessor import ImagePreprocessor
+        from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor
         preprocessor = ImagePreprocessor()
 
         for page in page_batch:

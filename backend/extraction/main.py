@@ -12,7 +12,6 @@ from typing import Optional, List, Dict, Any, Tuple
 import time
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-import os
 from backend.extraction.engine.document_converter import DocumentConverter, PdfFormatOption, ImageFormatOption
 from backend.extraction.engine.datamodel.base_models import InputFormat
 from backend.extraction.engine.datamodel.pipeline_options import (
@@ -78,9 +77,7 @@ def extract_invoice_complete(
     max_pages: int = 100,
     page_range: tuple = (1, 999999)
 ) -> Dict[str, Any]:
-    """
-    Extraction COMPLÈTE de la facture avec toutes les informations
-    """
+    """Extraction COMPLETE de la facture avec preprocessing intelligent."""
     
     input_file = Path(input_path)
     
@@ -93,7 +90,54 @@ def extract_invoice_complete(
     elif suffix in ['.jpg', '.jpeg', '.png', '.tiff', '.tif', '.bmp', '.webp']:
         input_format = InputFormat.IMAGE
     else:
-        raise ValueError(f"Format non supporté: {suffix}")
+        raise ValueError(f"Format non supporte: {suffix}")
+    
+    # Preprocessing uniquement pour les IMAGES
+    if input_format == InputFormat.IMAGE:
+        try:
+            from PIL import Image
+            import numpy as np
+            import cv2
+            
+            _log.info("Preprocessing de l'image...")
+            image = Image.open(input_file)
+            
+            # Upscale x3
+            image = image.resize((image.width * 3, image.height * 3), Image.LANCZOS)
+            
+            # Niveaux de gris
+            image = image.convert("L")
+            img_array = np.array(image)
+            
+            # CLAHE
+            clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+            img_array = clahe.apply(img_array)
+            
+            # Debruitage
+            img_array = cv2.fastNlMeansDenoising(
+                img_array, None, h=5, templateWindowSize=5, searchWindowSize=11
+            )
+            
+            # Nettete
+            blurred = cv2.GaussianBlur(img_array, (3, 3), 0)
+            img_array = cv2.addWeighted(img_array, 2.0, blurred, -1.0, 0)
+            
+            # Binarisation
+            _, img_array = cv2.threshold(img_array, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            
+            # Inverser si fond noir
+            if np.sum(img_array < 128) > np.sum(img_array >= 128):
+                img_array = cv2.bitwise_not(img_array)
+            
+            # Sauvegarder
+            image = Image.fromarray(img_array)
+            temp_path = input_file.parent / f"_preprocessed_{input_file.name}"
+            image.save(temp_path)
+            input_path = str(temp_path)
+            _log.info(f"Image preprocessee : {temp_path}")
+            
+        except Exception as e:
+            _log.warning(f"Preprocessing image echoue : {e}")
     
     _log.info(f"Traitement du fichier: {input_file.name}")
     
@@ -403,7 +447,6 @@ def extract_invoice_complete(
         raise
     
 
-import time;
 def main():
     start_time = time.perf_counter()
 

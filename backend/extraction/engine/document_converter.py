@@ -40,7 +40,7 @@ from backend.extraction.engine.exceptions import ConversionError
 from backend.extraction.engine.pipeline.base_pipeline import BasePipeline
 from backend.extraction.engine.pipeline.standard_pdf_pipeline import StandardPdfPipeline
 from backend.extraction.engine.utils.utils import chunkify
-from backend.extraction.engine.models.utils.image_preprocessor import ImagePreprocessor  
+from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor  
 
 _log = logging.getLogger(__name__)
 
