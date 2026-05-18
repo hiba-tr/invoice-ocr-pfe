@@ -1,0 +1,59 @@
+{
+  "pages": [
+    {
+      "page_no": 1,
+      "tables": [
+        {
+          "table_id": "0",
+          "num_rows": 7,
+          "num_cols": 4,
+          "headers": [
+            "DESCRIPTION",
+            "PRIX",
+            "QUANTITE",
+            "TOTAL"
+          ],
+          "data_start_row": 1,
+          "data": [
+            [
+              "Création de logo",
+              "006",
+              "01",
+              "006"
+            ],
+            [
+              "Conception d'un flyer",
+              "300",
+              "01",
+              "300"
+            ],
+            [
+              "Carte de visite",
+              "300",
+              "03",
+              "3006"
+            ],
+            [
+              "lllustration personnalisée",
+              "200",
+              "04",
+              "800"
+            ],
+            [
+              "Refontedusiteweb",
+              "1500",
+              "01",
+              "1500"
+            ],
+            [
+              "Banniere publicitaire",
+              "250",
+              "01",
+              "250"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

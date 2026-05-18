@@ -69,6 +69,12 @@ def build_schema(
         columns.append(ColumnDef(index=i, header_raw=raw.strip(), semantic=semantic,
                                 data_type=data_type, currency=currency))
     _log.info(f"[SchemaDetector] Schéma découvert: {[c.semantic for c in columns]}")
+        # Si la première colonne a un header vide, elle devient la colonne description
+    if columns and (not columns[0].header_raw.strip()):
+        columns[0].header_raw = "Description"
+        columns[0].semantic = "description"
+        columns[0].data_type = "text"    
+        
         # Si aucune colonne n'a la sémantique "description", forcer la première colonne non-numérique à être "description"
     if not any(c.semantic == "description" for c in columns):
         for col in columns:

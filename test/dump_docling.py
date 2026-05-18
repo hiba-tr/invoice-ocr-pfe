@@ -1,7 +1,7 @@
 import json
 import sys
 from pathlib import Path
-
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 # Ajuste l'import si ta classe DocumentConverter n'est pas dans docling directement
 # mais dans ton module personnalisé. Ici, on suppose que ton convertisseur est
 # celui que tu as montré, donc :

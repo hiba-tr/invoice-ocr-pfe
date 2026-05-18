@@ -172,7 +172,7 @@ class Section:
             if st is None:
                 return None
             return {k: v.to_dict() for k, v in st.items()}
-        return {
+        d = {
             "name": self.name,
             "row_index": self.row_index,
             "item_count": self.item_count,
@@ -181,6 +181,9 @@ class Section:
             "subtotal_calculated": _fmt_subtotal(self.subtotal_calculated),
             "subtotal_declared": _fmt_subtotal(self.subtotal_declared),
         }
+        if self.columns_schema:
+            d["columns"] = self.columns_schema
+        return d
 
 @dataclass
 class FinancialSummary:

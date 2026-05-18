@@ -135,11 +135,19 @@ def process_from_dict(
     for table in merged_tables:
         rows = table.get("rows", [])
         col_semantics = table.get("column_semantics", [])
-
+        section_schema_dict = {
+            "headers": table.get("column_headers_raw", []),
+            "semantics": table.get("column_semantics", []),
+        }
         items, totals = build_items_from_rows(rows, col_semantics, schema, currency)
         # ✅ Inclure les lignes de totaux dans la section pour l'affichage
         all_items = items + totals
-        sections.append(Section(name="Items", row_index=0, items=all_items))
+        sections.append(Section(
+            name="Items",
+            row_index=0,
+            items=all_items,
+            columns_schema=section_schema_dict
+        ))
         global_totals.extend(totals)   # conserver pour l'analyse financière
 
     # ── 6. Identité ────────────────────────────────────────────────────────

@@ -137,7 +137,6 @@ function renderExtractionResults() {
   container.style.display = 'block';
   const data = state.extractionResult;
 
-  // ✅ Lire les items depuis les sections
   const sections = data.sections || [];
   const allItems = sections.flatMap(s => s.items || []);
   const identity = data.identity || {};
@@ -150,10 +149,8 @@ function renderExtractionResults() {
     first_column_name: data.columns?.headers?.[0] || 'Description'
   };
 
-  const items = allItems;
-  const nbItems = items.length;
-
-  const totalAmount = items.reduce((sum, it) => {
+  const nbItems = allItems.length;
+  const totalAmount = allItems.reduce((sum, it) => {
     const vals = Object.values(it.amounts || {});
     const numericVals = vals.map(v => (v && v.value) || 0);
     return sum + numericVals.reduce((a, b) => a + b, 0);
@@ -224,7 +221,7 @@ function renderExtractionResults() {
           <button class="btn btn-sm btn-outline-primary" id="suggest-btn"><i class="fas fa-lightbulb"></i> Vérifier correspondances</button>
         </div>
       </div>
-      <div id="items-table" style="min-height:300px;"></div>
+      <div id="tables-container"></div>
     </div>
   `;
   html += `<div id="suggestions-area" class="mt-3"></div>`;
@@ -238,8 +235,9 @@ function renderExtractionResults() {
   container.innerHTML = html;
 
   // Initialisation des champs et de la table (inchangé)
+  initTablesFromSections(sections, data.columns);
+
   setTimeout(() => initConcessionField(metadata.concession), 10);
-  initItemsTable(items, data.columns?.headers?.[0] || 'Description');
   document.getElementById('add-column-btn')?.addEventListener('click', addNewColumn);
   document.getElementById('suggest-btn')?.addEventListener('click', autoApplySuggestions);
   document.getElementById('save-btn')?.addEventListener('click', saveFacture);
@@ -333,12 +331,69 @@ async function autoApplySuggestions() {
     showToast(`${updatedCount} article(s) harmonisé(s) avec la base`, 'info');
   }
 }
+function initTablesFromSections(sections, globalSchema) {
+  const tablesContainer = document.getElementById('tables-container');
+  if (!tablesContainer) return;
+  tablesContainer.innerHTML = '';
 
+  state.secondaryTables = [];   // pour stocker les instances Tabulator secondaires
+
+  sections.forEach((section, idx) => {
+    const sectionSchema = section.columns || globalSchema;
+    if (!sectionSchema || !sectionSchema.headers || sectionSchema.headers.length === 0) return;
+
+    const containerId = `items-table-${idx}`;
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'card-custom mb-3';
+    sectionDiv.innerHTML = `
+      <h5 class="fw-bold mb-3" style="font-family:var(--font-display);">${section.name || 'Tableau ' + (idx+1)}</h5>
+      <div id="${containerId}" style="min-height:200px;"></div>
+    `;
+    tablesContainer.appendChild(sectionDiv);
+
+    initItemsTable(section.items || [], sectionSchema.headers[0] || 'Description', containerId, sectionSchema);
+  });
+}
+function recalculerTotauxTable(table, containerId) {
+  if (!table) return;
+  const data = table.getData();
+  const columns = table.getColumns();
+  const montantFields = columns.map(col => col.getField()).filter(f => f !== 'description' && f !== '__total_ligne');
+  let totalGeneral = 0;
+  data.forEach(row => {
+    let totalLigne = 0;
+    montantFields.forEach(field => {
+      const val = row[field];
+      if (val !== undefined && val !== null && val !== '') {
+        let strVal = String(val).replace(/[^\d.,\-()]/g, '');
+        if (strVal.startsWith('(') && strVal.endsWith(')')) strVal = '-' + strVal.slice(1, -1);
+        const num = parseFloat(strVal.replace(',', '.'));
+        if (!isNaN(num)) totalLigne += num;
+      }
+    });
+    row['__total_ligne'] = totalLigne;
+    totalGeneral += totalLigne;
+  });
+  const footerSpan = document.getElementById(`total-general-footer-${containerId}`);
+  if (footerSpan) footerSpan.textContent = totalGeneral.toFixed(2) + ' €';
+  if (containerId === 'items-table' || containerId === 'items-table-0') {
+    state.totalGeneral = totalGeneral;
+  }
+  table.blockRedraw();
+  try {
+    data.forEach((row, idx) => {
+      const rowComp = table.getRows()[idx];
+      if (rowComp) rowComp.update({ __total_ligne: row.__total_ligne });
+    });
+  } finally {
+    table.restoreRedraw();
+  }
+}
 // ---- Le reste des fonctions (table, calculs, colonnes, etc.) reste inchangé ----
 let isCalculating = false;
 let tableInstance = null;
-function initItemsTable(items, firstColName) {
-  const schema = state.extractionResult.columns;
+function initItemsTable(items, firstColName, containerId = 'items-table', schemaOverride = null) {
+  const schema = schemaOverride || state.extractionResult.columns;
   if (!schema || !schema.headers) {
     console.warn('Schéma de colonnes introuvable');
     return;
@@ -400,7 +455,7 @@ function initItemsTable(items, firstColName) {
     // Trouver le champ de description (le premier champ qui correspond à une sémantique de description)
     const descField = uniqueFields.find((f, i) =>
       semantics[i] === 'description' || semantics[i] === 'designation' || semantics[i] === 'libelle' || semantics[i] === 'article' || semantics[i] === 'item'
-    );
+    ) || uniqueFields[0];   // fallback : première colonne
     if (descField) {
       row[descField] = it.description;
     }
@@ -431,9 +486,14 @@ function initItemsTable(items, firstColName) {
   state.tableColumns = colDefs;
 
   // 5. Créer la table Tabulator
-  const tableEl = document.getElementById('items-table');
-  if (tableInstance) tableInstance.destroy();
-  tableInstance = new Tabulator(tableEl, {
+  const tableEl = document.getElementById(containerId);
+  if (!tableEl) return;
+
+  if (Tabulator.findTable(`#${containerId}`)) {
+    Tabulator.findTable(`#${containerId}`).destroy();
+  }
+
+  const newTable = new Tabulator(`#${containerId}`, {
     data: tableData,
     columns: colDefs,
     layout: 'fitColumns',
@@ -444,15 +504,22 @@ function initItemsTable(items, firstColName) {
       { label: "Renommer", action: (e, column) => renameColumn(column) },
       { label: "Supprimer", action: (e, column) => deleteColumn(column) }
     ],
-    footerElement: `<div style='padding:8px; text-align:right; font-weight:bold;'>Total général : <span id='total-general-footer'>0.00 €</span></div>`
+    footerElement: `<div style='padding:8px; text-align:right; font-weight:bold;'>Total général : <span id='total-general-footer-${containerId}'>0.00 €</span></div>`
   });
-  state.tableInstance = tableInstance;
 
-  tableInstance.on('dataLoaded', () => { if (!isCalculating) { isCalculating = true; recalculerTotaux(); isCalculating = false; } mettreAJourFooter(); });
-  tableInstance.on('cellEdited', () => { if (!isCalculating) { isCalculating = true; recalculerTotaux(); isCalculating = false; } mettreAJourFooter(); state.editedTableData = tableInstance.getData(); });
-  setTimeout(() => { if (!isCalculating) { isCalculating = true; recalculerTotaux(); isCalculating = false; } mettreAJourFooter(); }, 50);
+  // Stocker la table principale
+  if (containerId === 'items-table' || containerId === 'items-table-0') {
+    state.tableInstance = newTable;
+  } else {
+    state.secondaryTables.push(newTable);
+  }
+
+  // Écouteurs avec la nouvelle fonction de calcul
+  newTable.on('dataLoaded', () => recalculerTotauxTable(newTable, containerId));
+  newTable.on('cellEdited', () => { recalculerTotauxTable(newTable, containerId); });
+  setTimeout(() => recalculerTotauxTable(newTable, containerId), 50);
 }
-function recalculerTotaux() {
+  function recalculerTotaux() {
   if (!state.tableInstance) return;
   const data = state.tableInstance.getData();
   const columns = state.tableInstance.getColumns();

@@ -275,7 +275,14 @@ async def upload_facture(file: UploadFile = File(...)):
                 totals[sem] = f"{int(val):,}".replace(",", " ")
             else:
                 totals[sem] = f"{val:,.2f}".replace(",", " ").replace(".", ",")
-
+        # Injecter les paires clé-valeur (KV regions) dans le résultat
+    all_kv = [cell for page in raw_result["pages"] for kv in page.get("kv_regions", []) for cell in kv.get("cells", [])]
+    structured["key_values"] = all_kv
+        # === LOG APRÈS INJECTION ===
+    print("=== KEY VALUES INJECTED ===")
+    print(json.dumps(all_kv, indent=2, default=str, ensure_ascii=False))
+    print("=== STRUCTURED FINAL (avec key_values) ===")
+    print(json.dumps(structured, indent=2, default=str, ensure_ascii=False))
     return JSONResponse(content=structured)
 # ------------------------------------------------------------------------------
 # 2. CRÉATION D'UNE FACTURE (avec hash de contenu)

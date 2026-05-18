@@ -1,0 +1,206 @@
+{
+  "pages": [
+    {
+      "page_no": 1,
+      "tables": [
+        {
+          "table_id": "8",
+          "num_rows": 27,
+          "num_cols": 5,
+          "headers": [
+            "",
+            "Planned",
+            "Actual",
+            "Variance",
+            "% Var."
+          ],
+          "data_start_row": 1,
+          "data": [
+            [
+              "One-Time:Nursery",
+              "1,055",
+              "795",
+              "-260",
+              "-24.6%"
+            ],
+            [
+              "One-Time: Gear",
+              "935",
+              "640",
+              "-295",
+              "-31.6%"
+            ],
+            [
+              "One-Time: Clothing",
+              "325",
+              "125",
+              "-200",
+              "-61.5%"
+            ],
+            [
+              "One-Time: Feeding",
+              "390",
+              "128",
+              "-262",
+              "-67.2%"
+            ],
+            [
+              "One-Time: Safety",
+              "185",
+              "73",
+              "-112",
+              "-60.5%"
+            ],
+            [
+              "One-Time: Travel",
+              "240",
+              "225",
+              "-15",
+              "-6.3%"
+            ],
+            [
+              "One-Time: Other",
+              "190",
+              "145",
+              "-45",
+              "-23.7%"
+            ],
+            [
+              "Monthly: Diapers",
+              "1,200",
+              "1,164",
+              "-36",
+              "-3.0%"
+            ],
+            [
+              "Monthly:Formula",
+              "1,800",
+              "1,746",
+              "-54",
+              "-3.0%"
+            ],
+            [
+              "Monthly: Childcare",
+              "15,000",
+              "14,550",
+              "-450",
+              "-3.0%"
+            ],
+            [
+              "Monthly: Medical",
+              "1,500",
+              "1,455",
+              "-45",
+              "-3.0%"
+            ],
+            [
+              "Monthly: Clothing",
+              "480",
+              "466",
+              "-14",
+              "-2.9%"
+            ],
+            [
+              "Monthly: Toys",
+              "360",
+              "349",
+              "-11",
+              "-3.1%"
+            ],
+            [
+              "Monthly:Other",
+              "780",
+              "757",
+              "-23",
+              "-2.9%"
+            ],
+            [
+              "TOTAL",
+              "24,440",
+              "22,618",
+              "-1,822",
+              "-7.5%"
+            ],
+            [
+              "ANNUAL BUDGETSTATUS",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "TotalPlannedFirst-YearBudget",
+              "24,440",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Total Actual Spending (to date)",
+              "22,618",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Remaining Budget",
+              "1,822",
+              "",
+              "",
+              ""
+            ],
+            [
+              "SAVINGS MILESTONES",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "Goal",
+              "Target",
+              "Current",
+              "Remaining",
+              "Progress"
+            ],
+            [
+              "Emergencyfund(3monthsexpenses)",
+              "4,650",
+              "3,200",
+              "1,450",
+              "68.8%"
+            ],
+            [
+              "One-time purchases budget",
+              "3,320",
+              "2,131",
+              "1,189",
+              "64.2%"
+            ],
+            [
+              "Childcare deposit/firstmonth",
+              "1,200",
+              "1,200",
+              "0",
+              "100.0%"
+            ],
+            [
+              "Firstyearbudgetsetaside",
+              "22.000",
+              "8,500",
+              "13,500",
+              "38.6%"
+            ],
+            [
+              "529 college savings started",
+              "1,000",
+              "500",
+              "500",
+              "50.0%"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
