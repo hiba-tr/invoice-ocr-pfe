@@ -1,17 +1,13 @@
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
-from typing import List, Optional
 
 from backend.extraction.engine.backend.abstract_backend import (
     AbstractDocumentBackend,
-    PaginatedDocumentBackend,
 )
 from backend.extraction.engine.datamodel.base_models import (
     ConversionStatus,
     DoclingComponentType,
-    ErrorItem,
-    Page,
+    ErrorItem
 )
 from backend.extraction.engine.datamodel.document import ConversionResult, InputDocument
 from backend.extraction.engine.datamodel.pipeline_options import PipelineOptions, ConvertPipelineOptions

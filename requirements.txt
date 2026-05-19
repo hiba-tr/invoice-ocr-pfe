@@ -84,3 +84,8 @@ python-levenshtein>=0.20.0 # optionnel, accélère rapidfuzz
 
 # Interface Streamlit
 streamlit>=1.30.0
+
+pip install word2number
+pip install num2words
+pip install sacremoses
+pip install sentencepiece

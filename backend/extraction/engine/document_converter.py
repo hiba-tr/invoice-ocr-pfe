@@ -1,4 +1,3 @@
-import hashlib
 import logging
 import sys
 import time
@@ -17,30 +16,20 @@ from backend.extraction.engine.backend.image_backend import ImageDocumentBackend
 
 from backend.extraction.engine.datamodel.backend_options import BackendOptions, PdfBackendOptions
 from backend.extraction.engine.datamodel.base_models import (
-    BaseFormatOption,
-    ConversionStatus,
-    DoclingComponentType,
-    DocumentStream,
-    ErrorItem,
-    InputFormat,
+    BaseFormatOption, ConversionStatus, DoclingComponentType,
+    DocumentStream, ErrorItem, InputFormat,
 )
 from backend.extraction.engine.datamodel.document import (
-    ConversionResult,
-    InputDocument,
-    _DocumentConversionInput,
+    ConversionResult, InputDocument, _DocumentConversionInput,
 )
-from backend.extraction.engine.datamodel.pipeline_options import PipelineOptions, PdfPipelineOptions, OcrAutoOptions
+from backend.extraction.engine.datamodel.pipeline_options import  PdfPipelineOptions
 from backend.extraction.engine.datamodel.settings import (
-    DEFAULT_PAGE_RANGE,
-    DocumentLimits,
-    PageRange,
-    settings,
+    DEFAULT_PAGE_RANGE, DocumentLimits, PageRange, settings,
 )
 from backend.extraction.engine.exceptions import ConversionError
 from backend.extraction.engine.pipeline.base_pipeline import BasePipeline
-from backend.extraction.engine.pipeline.standard_pdf_pipeline import StandardPdfPipeline
+from backend.extraction.engine.pipeline.document_extraction_pipeline import DocumentExtractionPipeline
 from backend.extraction.engine.utils.utils import chunkify
-from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor  
 
 _log = logging.getLogger(__name__)
 
@@ -57,12 +46,12 @@ class FormatOption(BaseFormatOption):
 
 
 class ImageFormatOption(FormatOption):
-    pipeline_cls: Type = StandardPdfPipeline
+    pipeline_cls: Type = DocumentExtractionPipeline
     backend: Type[AbstractDocumentBackend] = ImageDocumentBackend
 
 
 class PdfFormatOption(FormatOption):
-    pipeline_cls: Type = StandardPdfPipeline
+    pipeline_cls: Type = DocumentExtractionPipeline
     backend: Type[AbstractDocumentBackend] = PyPdfiumDocumentBackend
     backend_options: Optional[PdfBackendOptions] = None
 
@@ -102,35 +91,80 @@ class DocumentConverter:
             for format in self.allowed_formats
         }
 
-        self.image_preprocessor = ImagePreprocessor()
-        self.ocr_quality_mode = "high"   # fast / balanced / high
-
         # --- FORCER L'OCR POUR LES PDF ---
+        # --- FORCER L'OCR POUR LES PDF (RapidOCR obligatoire) ---
         if InputFormat.PDF in self.format_to_options:
+            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
+            
             opt = self.format_to_options[InputFormat.PDF]
             current_opts = opt.pipeline_options
-            if current_opts is None or not getattr(current_opts, 'do_ocr', False):
-                new_opts = PdfPipelineOptions()
-                new_opts.do_ocr = True
-                new_opts.ocr_options = OcrAutoOptions(force_full_page_ocr=True)
-                new_opts.do_table_structure = True
-                new_opts.table_structure_options.mode = "accurate"
-                if current_opts:
-                    for k, v in current_opts.__dict__.items():
-                        if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+            
+            new_opts = PdfPipelineOptions()
+            new_opts.do_ocr = True
+            new_opts.ocr_options = RapidOcrOptions(
+                force_full_page_ocr=False,
+                lang=["english"]
+            )
+            new_opts.do_table_structure = True
+            new_opts.table_structure_options.mode = "accurate"
+            
+            if current_opts:
+                for k, v in current_opts.__dict__.items():
+                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+                        try:
                             setattr(new_opts, k, v)
-                opt.pipeline_options = new_opts
-                _log.info("OCR forcé activé pour les PDF")
+                        except Exception:
+                            pass
+            
+            opt.pipeline_options = new_opts
+            _log.info("OCR forcé → RapidOCR pour les PDF")
         # -----------------------------
+        # --- FORCER L'OCR POUR LES IMAGES ---
+        # --- FORCER L'OCR POUR LES IMAGES (RapidOCR obligatoire) ---
+        if InputFormat.IMAGE in self.format_to_options:
+            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
+            
+            opt = self.format_to_options[InputFormat.IMAGE]
+            current_opts = opt.pipeline_options
+            
+            new_opts = PdfPipelineOptions()
+            new_opts.do_ocr = True
+            new_opts.ocr_options = RapidOcrOptions(
+                force_full_page_ocr=False,
+                lang=["english"]  # RapidOCR supporte "english" et "chinese"
+            )
+            new_opts.do_table_structure = True
+            new_opts.table_structure_options.mode = "accurate"
+            
+            # Copier les autres attributs existants
+            if current_opts:
+                for k, v in current_opts.__dict__.items():
+                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
+                        try:
+                            setattr(new_opts, k, v)
+                        except Exception:
+                            pass
+            
+            opt.pipeline_options = new_opts
+            _log.info("OCR forcé → RapidOCR pour les IMAGES")
+
 
         self._pipelines: dict[InputFormat, BasePipeline] = {}
         for fmt, opt in self.format_to_options.items():
             if opt.pipeline_options is not None:
+                # DIAGNOSTIC
+                opts = opt.pipeline_options
+                print(f"=== FORMAT: {fmt.value} ===")
+                print(f"  pipeline_options type: {type(opts).__name__}")
+                print(f"  do_ocr: {getattr(opts, 'do_ocr', 'N/A')}")
+                print(f"  do_table_structure: {getattr(opts, 'do_table_structure', 'N/A')}")
+                print(f"  ocr_options type: {type(getattr(opts, 'ocr_options', None)).__name__ if getattr(opts, 'ocr_options', None) else None}")
+                
                 self._pipelines[fmt] = opt.pipeline_cls(
                     pipeline_options=opt.pipeline_options
                 )
                 _log.info(f"Pipeline initialisé pour {fmt.value}")
-                
+
     def initialize_pipeline(self, format: InputFormat):
         """Vérifie qu'un pipeline est disponible pour le format"""
         if format not in self._pipelines:
@@ -285,4 +319,3 @@ class DocumentConverter:
                     status=ConversionStatus.FAILURE,
                 )
         return conv_res
-    

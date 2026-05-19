@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from datetime import datetime
 
 
@@ -7,6 +7,7 @@ from datetime import datetime
 # CONCESSION
 # ------------------------------------------------------------------------------
 class ConcessionCreatePayload(BaseModel):
+    """Payload pour créer une concession."""
     nom: str
 
 
@@ -24,6 +25,7 @@ class ConcessionOut(BaseModel):
 # ITEM
 # ------------------------------------------------------------------------------
 class ItemCreatePayload(BaseModel):
+    """Payload pour créer un item manuellement."""
     libelle_canonique: str
     id_concession: Optional[int] = None
 
@@ -33,9 +35,9 @@ class ItemOut(BaseModel):
     id_concession: Optional[int] = None
     libelle_canonique: str
     libelle_recherche: Optional[str] = None
-    statut: Optional[str] = "actif"
+    statut: Optional[str] = "actif"                 # binôme
     date_creation: datetime
-    date_derniere_util: Optional[datetime] = None
+    date_derniere_util: Optional[datetime] = None   # binôme
     usage_count: int = 0
 
     class Config:
@@ -46,6 +48,7 @@ class ItemOut(BaseModel):
 # COLONNE
 # ------------------------------------------------------------------------------
 class ColonneCreatePayload(BaseModel):
+    """Payload pour créer une colonne manuellement."""
     libelle_canonique: str
     id_concession: Optional[int] = None
 
@@ -63,7 +66,7 @@ class ColonneOut(BaseModel):
 
 
 # ------------------------------------------------------------------------------
-# FACTURE
+# FACTURE (fusion : ton 'valide' + champs binôme)
 # ------------------------------------------------------------------------------
 class FactureCreate(BaseModel):
     id_concession: Optional[int] = None
@@ -72,9 +75,10 @@ class FactureCreate(BaseModel):
     date_facture: Optional[datetime] = None
     devise: Optional[str] = "EUR"
     fichier_source: Optional[str] = None
-    statut: Optional[str] = "traite"
+    valide: Optional[str] = "0"           # ton champ
+    statut: Optional[str] = "traite"      # binôme
     total_montant: Optional[float] = None
-    fournisseur: Optional[str] = None
+    fournisseur: Optional[str] = None     # binôme
 
 
 class FactureOut(BaseModel):
@@ -84,8 +88,10 @@ class FactureOut(BaseModel):
     date_facture: Optional[datetime] = None
     date_extraction: datetime
     total_montant: Optional[float] = None
+    total_quantite: Optional[float] = None   # changé en float (binôme)
     devise: Optional[str] = "EUR"
     fichier_source: Optional[str] = None
+    valide: Optional[str] = "0"
     statut: Optional[str] = "traite"
     fournisseur: Optional[str] = None
 
@@ -94,37 +100,83 @@ class FactureOut(BaseModel):
 
 
 # ------------------------------------------------------------------------------
+# LIGNE FACTURE & VALEUR (conservées pour usage futur)
+# ------------------------------------------------------------------------------
+class LigneFactureOut(BaseModel):
+    id_ligne: int
+    id_facture: int
+    id_item: int
+    confiance: Optional[float] = 1.0
+    auto_match: Optional[str] = '1'
+    
+    class Config:
+        from_attributes = True
+
+
+class ValeurLigneOut(BaseModel):
+    id_valeur: int
+    id_ligne: int
+    id_colonne: int
+    valeur_brute: str
+    valeur_numerique: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ------------------------------------------------------------------------------
 # EXTRACTION
 # ------------------------------------------------------------------------------
+class ExtractionMetadata(BaseModel):
+    company: Optional[str] = None
+    concession: Optional[str] = None
+    date: Optional[str] = None
+    currency: Optional[str] = "USD"
+    first_column_name: Optional[str] = "Description"
+
+
+class ExtractionItem(BaseModel):
+    description: str
+    valeurs: Dict[str, Optional[Any]]
+
+
+class ExtractionResult(BaseModel):
+    metadata: dict
+    columns: List[str]
+    items: List[dict]
+
+
 class ExtractionResponse(BaseModel):
     metadata: Optional[dict] = None
     columns: Optional[List[str]] = None
     items: Optional[List[dict]] = None
-    invoices: Optional[List[dict]] = None
+    invoices: Optional[List[dict]] = None   # pour les lots de factures
 
 
 # ------------------------------------------------------------------------------
-# LIGNE FACTURE
+# PAYLOAD COMBINÉ POUR LA CRÉATION DE FACTURE
 # ------------------------------------------------------------------------------
 class LigneFacturePayload(BaseModel):
+    """Une ligne d'article avec ses valeurs brutes par colonne."""
     description: str
     valeurs: Dict[str, str]
-
+    
 
 class FactureWithItems(BaseModel):
+    """Payload complet envoyé par le frontend pour enregistrer une facture."""
     facture: FactureCreate
     items_data: List[LigneFacturePayload]
 
 
 # ------------------------------------------------------------------------------
-# SUGGESTION
+# SUGGESTION SÉMANTIQUE
 # ------------------------------------------------------------------------------
 class SuggestionResponse(BaseModel):
     item_id: Optional[int] = None
     libelle_canonique: Optional[str] = None
     confiance: Optional[float] = None
-    needs_confirmation: Optional[bool] = None
-    candidates: Optional[List[dict]] = None
+    needs_confirmation: Optional[bool] = None   # binôme
+    candidates: Optional[List[dict]] = None     # binôme
 
 
 # ------------------------------------------------------------------------------
@@ -150,3 +202,31 @@ class ResumeDetail(BaseModel):
 
 class ResumeOut(BaseModel):
     resume: ResumeDetail
+
+# ------------------------------------------------------------------------------
+# SECTION (pour la nouvelle gestion multi-tableaux)
+# ------------------------------------------------------------------------------
+class ColonneSectionPayload(BaseModel):
+    """Définition d'une colonne dans une section (nom + ordre)."""
+    header: str
+    ordre: int  # position de la colonne dans le tableau
+
+
+class SectionPayload(BaseModel):
+    """Un tableau (section) avec son titre, ses colonnes et ses lignes."""
+    titre: str                           # ex: "Main d'œuvre"
+    colonnes: List[ColonneSectionPayload]  # les en-têtes ordonnés
+    items_data: List[LigneFacturePayload]  # les lignes de cette section
+
+
+# ------------------------------------------------------------------------------
+# MODIFICATION du payload FactureWithItems pour accepter des sections
+# ------------------------------------------------------------------------------
+class FactureWithItems(BaseModel):
+    """Payload complet envoyé par le frontend pour enregistrer une facture.
+       Peut contenir soit une liste plate d'items_data (ancien comportement),
+       soit une liste de sections avec leurs colonnes et lignes (nouveau).
+    """
+    facture: FactureCreate
+    items_data: Optional[List[LigneFacturePayload]] = None  # pour rétrocompatibilité
+    sections: Optional[List[SectionPayload]] = None         # nouveau mode

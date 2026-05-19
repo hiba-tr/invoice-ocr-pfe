@@ -5,16 +5,12 @@ import itertools
 import logging
 import threading
 import time
-import warnings
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple, cast
-  
-from docling_core.types.doc import (
-    Size,
-    PageItem,
-)
+from typing import Any, Callable, Iterable, List, Sequence, Tuple
+
+
 
 from backend.extraction.engine.backend.abstract_backend import AbstractDocumentBackend
 from backend.extraction.engine.backend.pdf_backend import PdfDocumentBackend
@@ -27,13 +23,11 @@ from backend.extraction.engine.datamodel.base_models import (
 )
 from backend.extraction.engine.datamodel.document import ConversionResult
 from backend.extraction.engine.datamodel.pipeline_options import ThreadedPdfPipelineOptions
-from backend.extraction.engine.datamodel.settings import settings
 from backend.extraction.engine.models.factories import (
     get_layout_factory,
     get_ocr_factory,
     get_table_structure_factory,
 )
-
 from backend.extraction.engine.models.stages.page_assemble.page_assemble_model import (
     PageAssembleModel,
     PageAssembleOptions,
@@ -42,10 +36,8 @@ from backend.extraction.engine.models.stages.page_preprocessing.page_preprocessi
     PagePreprocessingModel,
     PagePreprocessingOptions,
 )
-
 from backend.extraction.engine.pipeline.base_pipeline import ConvertPipeline
 from backend.extraction.engine.utils.profiling import ProfilingScope, TimeRecorder
-from backend.extraction.engine.utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 
@@ -59,7 +51,7 @@ class ThreadedItem:
     """Envelope that travels between pipeline stages."""
 
     payload: Page | None
-    run_id: int  # Unique per *execute* call, monotonic across pipeline instance
+    run_id: int 
     page_no: int
     conv_res: ConversionResult
     error: Exception | None = None
@@ -181,16 +173,22 @@ class ThreadedPipelineStage:
         self._thread: threading.Thread | None = None
         self._running = False
         self._postprocess = postprocess
-        self._timed_out_run_ids = timed_out_run_ids or set()
+        self._timed_out_run_ids = (
+            timed_out_run_ids if timed_out_run_ids is not None else set()
+        )
 
+    # ---------------------------------------------------------------- wiring
     def add_output_queue(self, q: ThreadedQueue) -> None:
         self._outputs.append(q)
 
+    # -------------------------------------------------------------- lifecycle
     def start(self) -> None:
         if self._running:
             return
         self._running = True
-        self._thread = threading.Thread(target=self._run, name=f"Stage-{self.name}", daemon=False)
+        self._thread = threading.Thread(
+            target=self._run, name=f"Stage-{self.name}", daemon=False
+        )
         self._thread.start()
 
     def stop(self) -> None:
@@ -198,9 +196,17 @@ class ThreadedPipelineStage:
             return
         self._running = False
         self.input_queue.close()
-        if self._thread:
+        if self._thread is not None:
+            # Give thread 2s to finish naturally before abandoning
             self._thread.join(timeout=15.0)
+            if self._thread.is_alive():
+                _log.warning(
+                    "Stage %s thread did not terminate within 15s. "
+                    "Thread is likely stuck in a blocking call and will be abandoned (resources may leak).",
+                    self.name,
+                )
 
+    # ------------------------------------------------------------------ _run
     def _run(self) -> None:
         try:
             while self._running:
@@ -209,12 +215,13 @@ class ThreadedPipelineStage:
                     break
                 processed = self._process_batch(batch)
                 self._emit(processed)
-        except Exception:  
+        except Exception:  # pragma: no cover - top-level guard
             _log.exception("Fatal error in stage %s", self.name)
         finally:
             for q in self._outputs:
                 q.close()
 
+    # ----------------------------------------------------- _process_batch()
     def _process_batch(self, batch: Sequence[ThreadedItem]) -> list[ThreadedItem]:
         """Run *model* on *batch* grouped by run_id to maximise batching."""
         groups: dict[int, list[ThreadedItem]] = defaultdict(list)
@@ -223,6 +230,8 @@ class ThreadedPipelineStage:
 
         result: list[ThreadedItem] = []
         for rid, items in groups.items():
+            # If run_id is timed out, skip processing but pass through items as-is
+            # This allows already-completed work to flow through while aborting new work
             if rid in self._timed_out_run_ids:
                 for it in items:
                     it.is_failed = True
@@ -235,10 +244,13 @@ class ThreadedPipelineStage:
             if not good:
                 result.extend(items)
                 continue
-
             try:
-                pages_with_payloads = [(i, i.payload) for i in good if i.payload is not None]
+                # Filter out None payloads and ensure type safety
+                pages_with_payloads = [
+                    (i, i.payload) for i in good if i.payload is not None
+                ]
                 if len(pages_with_payloads) != len(good):
+                    # Some items have None payloads, mark all as failed
                     for it in items:
                         it.is_failed = True
                         it.error = RuntimeError("Page payload is None")
@@ -246,23 +258,11 @@ class ThreadedPipelineStage:
                     continue
 
                 pages: List[Page] = [payload for _, payload in pages_with_payloads]
-
-
-                processed_pages = list(self.model(good[0].conv_res, pages))
-                # ====================== DEBUG CONFIDENCE OCR ======================
-                if self.name == "ocr":
-                    for idx, p in enumerate(processed_pages):
-                        conf = getattr(p, 'confidence', None) or getattr(p, 'ocr_confidence', None)
-                        page_no = good[idx].page_no if idx < len(good) else "?"
-                        if conf is not None:
-                            print(f"[OCR DEBUG] Page {page_no} → Confidence: {conf:.4f}")
-                        else:
-                            print(f"[OCR DEBUG] Page {page_no} → Pas de score de confidence")
-                # =====================================================================
-
-                if len(processed_pages) != len(pages):
-                    raise RuntimeError(f"Model {self.name} returned wrong number of pages")
-
+                processed_pages = list(self.model(good[0].conv_res, pages))  # type: ignore[arg-type]
+                if len(processed_pages) != len(pages):  # strict mismatch guard
+                    raise RuntimeError(
+                        f"Model {self.name} returned wrong number of pages"
+                    )
                 for idx, page in enumerate(processed_pages):
                     result.append(
                         ThreadedItem(
@@ -273,13 +273,16 @@ class ThreadedPipelineStage:
                         )
                     )
             except Exception as exc:
-                _log.error("Stage %s failed for run %d: %s", self.name, rid, exc, exc_info=True)
+                _log.error(
+                    "Stage %s failed for run %d: %s", self.name, rid, exc, exc_info=True
+                )
                 for it in items:
                     it.is_failed = True
                     it.error = exc
                 result.extend(items)
         return result
 
+    # -------------------------------------------------------------- _emit()
     def _emit(self, items: Iterable[ThreadedItem]) -> None:
         for item in items:
             if self._postprocess is not None:
@@ -309,7 +312,6 @@ class PreprocessThreadedStage(ThreadedPipelineStage):
             timed_out_run_ids=timed_out_run_ids,
         )
 
-    # On garde la version originale pour le preprocess (pas d'amélioration OCR ici)
     def _process_batch(self, batch: Sequence[ThreadedItem]) -> list[ThreadedItem]:
         groups: dict[int, list[ThreadedItem]] = defaultdict(list)
         for itm in batch:
@@ -317,6 +319,8 @@ class PreprocessThreadedStage(ThreadedPipelineStage):
 
         result: list[ThreadedItem] = []
         for rid, items in groups.items():
+            # If run_id is timed out, skip processing but pass through items as-is
+            # This allows already-completed work to flow through while aborting new work
             if rid in self._timed_out_run_ids:
                 for it in items:
                     it.is_failed = True
@@ -337,7 +341,9 @@ class PreprocessThreadedStage(ThreadedPipelineStage):
                         raise RuntimeError("Page payload is None")
                     if page._backend is None:
                         backend = it.conv_res.input._backend
-                        assert isinstance(backend, PdfDocumentBackend)
+                        assert isinstance(backend, PdfDocumentBackend), (
+                            "Threaded pipeline only supports PdfDocumentBackend."
+                        )
                         page_backend = backend.load_page(page.page_no - 1)
                         page._backend = page_backend
                         if page_backend.is_valid():
@@ -346,11 +352,12 @@ class PreprocessThreadedStage(ThreadedPipelineStage):
 
                 pages = [payload for _, payload in pages_with_payloads]
                 processed_pages = list(
-                    self.model(good[0].conv_res, pages)
+                    self.model(good[0].conv_res, pages)  # type: ignore[arg-type]
                 )
                 if len(processed_pages) != len(pages):
-                    raise RuntimeError("PagePreprocessingModel returned unexpected number of pages")
-
+                    raise RuntimeError(
+                        "PagePreprocessingModel returned unexpected number of pages"
+                    )
                 for idx, processed_page in enumerate(processed_pages):
                     result.append(
                         ThreadedItem(
@@ -362,7 +369,13 @@ class PreprocessThreadedStage(ThreadedPipelineStage):
                     )
             except Exception as exc:
                 page_numbers = [it.page_no for it in good]
-                _log.error("Stage preprocess failed for run %d, pages %s: %s", rid, page_numbers, exc)
+                _log.error(
+                    "Stage preprocess failed for run %d, pages %s: %s",
+                    rid,
+                    page_numbers,
+                    exc,
+                    exc_info=False,  # Put to True if you want detailed exception info
+                )
                 for it in good:
                     it.is_failed = True
                     it.error = exc
@@ -385,7 +398,7 @@ class RunContext:
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class StandardPdfPipeline(ConvertPipeline):
+class DocumentExtractionPipeline(ConvertPipeline):
     """High-performance PDF pipeline with multi-threaded stages."""
 
     def __init__(self, pipeline_options: ThreadedPdfPipelineOptions) -> None:
@@ -393,6 +406,7 @@ class StandardPdfPipeline(ConvertPipeline):
         self.pipeline_options: ThreadedPdfPipelineOptions = pipeline_options
         self.artifacts_path = None
         self._run_seq = itertools.count(1)  # deterministic, monotonic run ids
+
         # initialise heavy models once
         self._init_models()
 
@@ -464,14 +478,12 @@ class StandardPdfPipeline(ConvertPipeline):
     def _create_run_ctx(self) -> RunContext:
         opts = self.pipeline_options
         timed_out_run_ids: set[int] = set()
-
         preprocess = PreprocessThreadedStage(
             batch_timeout=opts.batch_polling_interval_seconds,
             queue_max_size=opts.queue_max_size,
             model=self.preprocessing_model,
             timed_out_run_ids=timed_out_run_ids,
         )
-
         ocr = ThreadedPipelineStage(
             name="ocr",
             model=self.ocr_model,
@@ -480,7 +492,6 @@ class StandardPdfPipeline(ConvertPipeline):
             queue_max_size=opts.queue_max_size,
             timed_out_run_ids=timed_out_run_ids,
         )
-
         layout = ThreadedPipelineStage(
             name="layout",
             model=self.layout_model,
@@ -489,7 +500,6 @@ class StandardPdfPipeline(ConvertPipeline):
             queue_max_size=opts.queue_max_size,
             timed_out_run_ids=timed_out_run_ids,
         )
-
         table = ThreadedPipelineStage(
             name="table",
             model=self.table_model,
@@ -498,7 +508,6 @@ class StandardPdfPipeline(ConvertPipeline):
             queue_max_size=opts.queue_max_size,
             timed_out_run_ids=timed_out_run_ids,
         )
-
         assemble = ThreadedPipelineStage(
             name="assemble",
             model=self.assemble_model,
@@ -509,7 +518,7 @@ class StandardPdfPipeline(ConvertPipeline):
             timed_out_run_ids=timed_out_run_ids,
         )
 
-        # wiring
+        # wire stages
         output_q = ThreadedQueue(opts.queue_max_size)
         preprocess.add_output_queue(ocr.input_queue)
         ocr.add_output_queue(layout.input_queue)

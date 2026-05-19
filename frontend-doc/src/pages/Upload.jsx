@@ -54,26 +54,56 @@ export default function Upload() {
   };
 
   const handleExtract = async () => {
-    if (!files.length) {
-      showToast("Veuillez d'abord choisir un fichier !", 'warning');
-      return;
+    if (!files.length) { 
+      showToast("Veuillez d'abord choisir un fichier !", 'warning'); 
+      return; 
     }
-
+    
     setShowProgress(true);
     const formData = new FormData();
     formData.append('file', files[0]);
-
+    
     try {
-      const response = await axios.post(`${API_BASE}/upload/stream`, formData);
-      const { task_id } = response.data;
-      setTaskId(task_id);
-    } catch {
-      showToast("Erreur lors du démarrage de l'extraction", 'danger');
+      const response = await axios.post(`${API_BASE}/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
       setShowProgress(false);
+      
+      const result = response.data;
+      
+      // 🔍 Debug
+      console.log("=== RÉPONSE API ===");
+      console.log("Colonnes reçues:", result.columns);
+      console.log("Items reçus:", result.items?.length);
+      if (result.items?.length > 0) {
+        console.log("Premier item:", result.items[0]);
+      }
+      
+      if (result.invoices) {
+        handleExtractionComplete({ 
+          items: result.invoices[0]?.items || [], 
+          columns: result.invoices[0]?.columns || [], 
+          metadata: result.invoices[0]?.metadata || {} 
+        });
+      } else {
+        handleExtractionComplete({
+          items: result.items || [],
+          columns: result.columns || [],
+          metadata: result.metadata || {}
+        });
+      }
+    } catch (error) {
+      console.error('Erreur extraction:', error);
+      setShowProgress(false);
+      showToast("Erreur lors de l'extraction", 'danger');
     }
   };
 
   const handleExtractionComplete = (result) => {
+    console.log("=== handleExtractionComplete ===");
+    console.log("Items:", result.items?.length);
+    console.log("Colonnes:", result.columns);
     setExtraction(result);
     setShowProgress(false);
     setTaskId(null);
@@ -99,7 +129,6 @@ export default function Upload() {
     }
   };
 
-  // ==================== VALIDATION SÉMANTIQUE ====================
   const handleSemanticValidation = async () => {
     if (!concessionId) {
       showToast('⚠️ Sélectionnez une Concession.', 'warning');
@@ -118,7 +147,6 @@ export default function Upload() {
         return { description: cleanValue(description || ''), valeurs: cleanedValeurs };
       });
 
-      // Appeler le pipeline sémantique pour chaque description
       const validationResults = [];
       for (const item of itemsData) {
         if (!item.description) continue;
@@ -136,25 +164,14 @@ export default function Upload() {
         }
       }
 
-      // Charger les items existants de la concession
       const items = await apiCall('GET', '/items', null, { id_concession: concessionId });
       setExistingItems(items);
-
-      // Filtrer ceux qui nécessitent une validation
-      const needsValidation = validationResults.filter(
-        v => v.semantic.needs_confirmation
-      );
-      const autoMatched = validationResults.filter(
-        v => v.semantic.auto_match && !v.semantic.needs_confirmation
-      );
-
       setValidationItems(validationResults);
       setShowValidation(true);
 
-      showToast(
-        `${autoMatched.length} items matchés automatiquement, ${needsValidation.length} à valider`,
-        'info'
-      );
+      const needsValidation = validationResults.filter(v => v.semantic.needs_confirmation);
+      const autoMatched = validationResults.filter(v => v.semantic.auto_match && !v.semantic.needs_confirmation);
+      showToast(`${autoMatched.length} items matchés automatiquement, ${needsValidation.length} à valider`, 'info');
     } catch {
       showToast('Erreur lors de la validation sémantique', 'danger');
     } finally {
@@ -162,8 +179,7 @@ export default function Upload() {
     }
   };
 
-  // ==================== SAUVEGARDE FINALE ====================
-  const saveFacture = async () => {
+  const saveFacture = async (decisions = {}) => {
     if (!concessionId) {
       showToast('⚠️ Sélectionnez une Concession.', 'warning');
       return;
@@ -172,13 +188,21 @@ export default function Upload() {
 
     showSpinner();
     try {
-      const itemsData = tabulatorRef.current.getData().map(row => {
+      const itemsData = tabulatorRef.current.getData().map((row, idx) => {
         const { description, ...valeurs } = row;
         const cleanedValeurs = {};
         Object.entries(valeurs).forEach(([k, v]) => {
           if (v !== undefined && v !== null && v !== '') cleanedValeurs[k] = cleanValue(v);
         });
-        return { description: cleanValue(description || ''), valeurs: cleanedValeurs };
+        
+        const decision = decisions[idx] || { decision: 'new', targetItemId: null };
+        return {
+          description: cleanValue(description || ''),
+          valeurs: cleanedValeurs,
+          semantic_decision: decision.decision,
+          semantic_target_id: decision.targetItemId,
+          semantic_auto: decision.preselected ? '1' : '0',
+        };
       });
 
       const payload = {
@@ -208,7 +232,7 @@ export default function Upload() {
     }
   };
 
-  // Initialize Tabulator
+  // ✅ Initialize Tabulator - VERSION CORRIGÉE
   useEffect(() => {
     if (!extraction?.items || !tableRef.current) return;
 
@@ -219,7 +243,12 @@ export default function Upload() {
 
     const originalColumns = extraction.columns || [];
     const cleanedColumns = originalColumns.map(col => String(col).trim());
-    const colMap = {};
+    
+    console.log("=== INIT TABULATOR ===");
+    console.log("Colonnes originales:", cleanedColumns);
+    console.log("Items reçus:", extraction.items.length);
+    
+    // Construire les colonnes Tabulator
     const columns = [
       {
         title: extraction.metadata?.first_column_name || 'Description',
@@ -230,9 +259,9 @@ export default function Upload() {
       },
     ];
 
+    // Pour chaque colonne, créer une colonne Tabulator
     cleanedColumns.forEach((col) => {
       const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-      colMap[col] = safeField;
       columns.push({
         title: col,
         field: safeField,
@@ -242,24 +271,67 @@ export default function Upload() {
       });
     });
 
+    // Construire les données avec le bon mapping
     const tableData = extraction.items.map((item, idx) => {
-      const row = { id: idx, description: cleanValue(item.description || item.libelle || '') };
-      columns.forEach(col => {
-        if (col.field !== 'description' && col.field !== 'id') {
-          row[col.field] = '';
+      const row = { 
+        id: idx, 
+        description: cleanValue(item.description || item.libelle || '') 
+      };
+      
+      // Initialiser toutes les colonnes à vide
+      cleanedColumns.forEach(col => {
+        const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+        row[safeField] = '';
+      });
+      
+      // Remplir les valeurs
+      const valeurs = item.valeurs || {};
+      
+      // Méthode 1: Chercher par correspondance exacte du titre
+      Object.entries(valeurs).forEach(([key, value]) => {
+        // Chercher la colonne dont le titre correspond à la clé
+        const matchingCol = cleanedColumns.find(col => 
+          col.toLowerCase() === key.toLowerCase()
+        );
+        
+        if (matchingCol) {
+          const safeField = matchingCol.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+          row[safeField] = cleanValue(value);
+          console.log(`  Match exact: ${key} -> ${matchingCol} = ${value}`);
+        } else {
+          // Méthode 2: Chercher par similarité (suppression des caractères spéciaux)
+          const normalizedKey = key.toLowerCase().replace(/[^a-z]/g, '');
+          const matchingColFuzzy = cleanedColumns.find(col => {
+            const normalizedCol = col.toLowerCase().replace(/[^a-z]/g, '');
+            return normalizedCol === normalizedKey;
+          });
+          
+          if (matchingColFuzzy) {
+            const safeField = matchingColFuzzy.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+            row[safeField] = cleanValue(value);
+            console.log(`  Match fuzzy: ${key} -> ${matchingColFuzzy} = ${value}`);
+          } else {
+            // Méthode 3: Utiliser directement la clé comme nom de champ
+            const safeField = key.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
+            // Vérifier si ce champ existe dans les colonnes
+            const columnExists = columns.some(col => col.field === safeField);
+            if (columnExists) {
+              row[safeField] = cleanValue(value);
+              console.log(`  Match direct: ${key} -> ${safeField} = ${value}`);
+            } else {
+              console.log(`  Aucun match pour: ${key}`);
+            }
+          }
         }
       });
-      const valeurs = item.valeurs;
-      if (valeurs && typeof valeurs === 'object' && !Array.isArray(valeurs)) {
-        Object.entries(valeurs).forEach(([key, value]) => {
-          const safeField = key.trim().replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-          if (safeField && row.hasOwnProperty(safeField)) {
-            row[safeField] = cleanValue(value);
-          }
-        });
-      }
+      
       return row;
     });
+
+    console.log("TableData construit:", tableData.length, "lignes");
+    if (tableData.length > 0) {
+      console.log("Première ligne:", tableData[0]);
+    }
 
     setTimeout(() => {
       tabulatorRef.current = new Tabulator(tableRef.current, {
@@ -272,6 +344,8 @@ export default function Upload() {
         movableColumns: false,
         placeholder: 'Aucune donnée détectée',
       });
+      
+      console.log("Tabulator initialisé avec", columns.length, "colonnes");
     }, 100);
   }, [extraction]);
 

@@ -1,7 +1,12 @@
+"""
+DocCore Invoice API — Version fusionnée
+Chaîne : extraction (backend.extraction.main) → postprocess → stockage avec matching sémantique
+"""
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import  StreamingResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from io import BytesIO
 from datetime import datetime, date, timedelta
 from typing import List, Optional
@@ -19,16 +24,23 @@ import queue
 import threading
 import uuid
 import openpyxl
+import logging
 
 from backend.api.database import get_db, engine, Base
 from backend.api import models_sql, schemas, crud, resume
-from backend.extraction.main import extract_invoice_complete
-from backend.extraction.postprocess import postprocess_invoice
-from backend.semantic.normalizer import normalize_text
-from backend.semantic.pipeline import SemanticPipeline
-from backend.semantic.engine import MatchingEngine, DBItem
-from backend.semantic.embedder import get_or_build_index, invalidate_cache, EMBEDDING_AVAILABLE
+from backend.extraction.invoice_extraction_bridge import extract_invoice
+from backend.postprocess.pipeline import process_from_dict
+from backend.semantic.preprocessing.normalizer import normalize_text
+from backend.semantic.matching.pipeline import SemanticPipeline
+from backend.semantic.matching.engine import MatchingEngine, DBItem
+from backend.semantic.embeddings.indexer import get_or_build_index, invalidate_cache
+from backend.semantic.embeddings.embedder import EMBEDDING_AVAILABLE
+_log = logging.getLogger(__name__)
 
+
+# ═══════════════════════════════════════════════════════════════
+# HELPERS
+# ═══════════════════════════════════════════════════════════════
 
 def parse_date(date_str: str) -> Optional[datetime]:
     if not date_str:
@@ -39,18 +51,6 @@ def parse_date(date_str: str) -> Optional[datetime]:
         except ValueError:
             continue
     return None
-
-
-Base.metadata.create_all(bind=engine)
-app = FastAPI(title="DocCore Invoice API")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 def _parse_montant(val_brute: str) -> float | None:
@@ -101,6 +101,39 @@ def _is_montant_column(col_name: str) -> bool:
     return False
 
 
+def _match_description(description: str, id_concession: int, db: Session) -> dict:
+    """Helper commun pour tous les endpoints de matching."""
+    items = db.query(models_sql.Item).filter(
+        models_sql.Item.id_concession == id_concession,
+        or_(models_sql.Item.statut == "actif", models_sql.Item.statut == None)
+    ).all()
+    
+    if not items:
+        return {"action": "create_new", "reason": "aucun item dans la base"}
+    
+    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche,
+                       libelle_canonique=i.libelle_canonique) for i in items]
+    
+    pipeline = SemanticPipeline()
+    return pipeline.process_item(description, db_items, id_concession)
+
+
+# ═══════════════════════════════════════════════════════════════
+# INITIALISATION
+# ═══════════════════════════════════════════════════════════════
+
+Base.metadata.create_all(bind=engine)
+app = FastAPI(title="DocCore Invoice API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 # ═══════════════════════════════════════════════════════════════
 # 1. UPLOAD & EXTRACTION
 # ═══════════════════════════════════════════════════════════════
@@ -114,8 +147,8 @@ async def upload_facture(file: UploadFile = File(...)):
     try:
         tmp.write(content)
         tmp.close()
-        raw_result = extract_invoice_complete(tmp_path, max_pages=10)
-        structured = postprocess_invoice(raw_result)
+        raw_result = extract_invoice(tmp_path, max_pages=10)
+        structured = process_from_dict(raw_result)
     finally:
         try:
             os.unlink(tmp_path)
@@ -126,17 +159,74 @@ async def upload_facture(file: UploadFile = File(...)):
                 os.unlink(tmp_path)
             except PermissionError:
                 pass
-    if isinstance(structured, list):
+
+    if isinstance(structured, dict):
         return {"invoices": structured}
-    return {"metadata": structured.get("metadata"), "columns": structured.get("columns"), "items": structured.get("items"), "invoices": None}
+    
+    # ✅ Construction correcte de la réponse
+    response_data = {
+        "metadata": {},
+        "columns": [],
+        "items": []
+    }
+    
+    # Extraire les métadonnées
+    if hasattr(structured, 'identity'):
+        response_data["metadata"] = {
+            "company": getattr(structured.identity, 'company', None),
+            "concession": getattr(structured.identity, 'concession', None),
+            "date": getattr(structured.identity, 'period', None),
+            "currency": getattr(structured.identity, 'currency', 'USD'),
+            "first_column_name": "Description"
+        }
+    
+    # Extraire les colonnes (headers)
+    headers = []
+    if hasattr(structured, 'schema') and hasattr(structured.schema, 'headers_display'):
+        headers = structured.schema.headers_display
+    elif hasattr(structured, 'schema') and hasattr(structured.schema, 'columns'):
+        headers = [col.header_raw for col in structured.schema.columns]
+    response_data["columns"] = headers
+    
+    # Extraire les items avec le bon mapping
+    items = []
+    if hasattr(structured, 'sections'):
+        for section in structured.sections:
+            for item in section.items:
+                if item.row_type == "total":
+                    continue
+                
+                # Construire les valeurs avec le header comme clé
+                valeurs = {}
+                semantics = structured.schema.semantics if hasattr(structured.schema, 'semantics') else []
+                
+                for i, sem in enumerate(semantics):
+                    if i < len(headers):
+                        header = headers[i]
+                        amt = item.values.get(sem)
+                        if amt:
+                            if amt.value is not None:
+                                valeurs[header] = amt.value
+                            elif amt.raw:
+                                valeurs[header] = amt.raw
+                
+                items.append({
+                    "description": item.description,
+                    "valeurs": valeurs
+                })
+    
+    response_data["items"] = items
+    
+    return response_data
 
 
 # ═══════════════════════════════════════════════════════════════
-# 2. CREATION FACTURE avec pipeline semantique automatique
+# 2. CREATION FACTURE avec pipeline sémantique automatique
 # ═══════════════════════════════════════════════════════════════
 
 @app.post("/facture", response_model=schemas.FactureOut)
 def create_facture(payload: schemas.FactureWithItems, db: Session = Depends(get_db), force: bool = False):
+    # Gestion concession
     concession_id = payload.facture.id_concession
     concession_nom = getattr(payload.facture, "nom_concession", None)
     if not concession_id and not concession_nom:
@@ -150,14 +240,29 @@ def create_facture(payload: schemas.FactureWithItems, db: Session = Depends(get_
             raise HTTPException(status_code=404, detail="Concession introuvable")
     payload.facture.id_concession = concession_id
 
+    # Date
     if payload.facture.date_facture and isinstance(payload.facture.date_facture, str):
         parsed = parse_date(payload.facture.date_facture)
         if parsed is None:
             raise HTTPException(status_code=400, detail="Format de date invalide")
         payload.facture.date_facture = parsed
 
-    hash_source = f"{payload.facture.fichier_source}|{payload.facture.date_facture}|{concession_id}"
-    content_hash = hashlib.sha256(hash_source.encode("utf-8")).hexdigest()
+    # Hash de contenu
+    all_items = []
+    if payload.items_data:
+        all_items = payload.items_data
+    elif payload.sections:
+        for section in payload.sections:
+            all_items.extend(section.items_data)
+
+    normalized_items = []
+    for item in all_items:
+        desc = item.description.strip()
+        sorted_vals = sorted(item.valeurs.items()) if item.valeurs else []
+        normalized_items.append({"description": desc, "valeurs": sorted_vals})
+    normalized_items.sort(key=lambda x: x["description"])
+    content_string = json.dumps(normalized_items, ensure_ascii=False, sort_keys=True)
+    content_hash = hashlib.sha256(content_string.encode("utf-8")).hexdigest()
 
     existing = db.query(models_sql.Facture).filter(models_sql.Facture.hash_contenu == content_hash).first()
     if existing and not force:
@@ -170,23 +275,35 @@ def create_facture(payload: schemas.FactureWithItems, db: Session = Depends(get_
     db_facture.hash_contenu = content_hash
     db.flush()
 
-    descriptions = [item.description.strip() for item in payload.items_data if item.description.strip()]
-    matches = []
-    if descriptions and EMBEDDING_AVAILABLE:
-        try:
-            items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == concession_id).all()
-            db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
-            pipeline = SemanticPipeline()
-            results = pipeline.process_batch(descriptions, db_items, concession_id)
-            for item_data, result in zip(payload.items_data, results):
-                if result["action"] == "auto_match" and result["item_id"]:
-                    matches.append({"description": item_data.description, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "1"})
-                elif result["action"] == "needs_validation" and result["item_id"]:
-                    matches.append({"description": item_data.description, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "0"})
-        except Exception:
-            pass
+    # Matching sémantique
+    descriptions = []
+    if payload.items_data:
+        descriptions = [item.description.strip() for item in payload.items_data if item.description.strip()]
+    elif payload.sections:
+        for section in payload.sections:
+            for item in section.items_data:
+                desc = item.description.strip()
+                if desc:
+                    descriptions.append(desc)
 
-    crud.create_lignes_facture(db, id_facture=db_facture.id_facture, items_data=payload.items_data, id_concession=concession_id, matches=matches)
+    matches = []
+    if descriptions:
+        try:
+            for desc in descriptions:
+                result = _match_description(desc, concession_id, db)
+                if result["action"] in ("high_confidence", "exact") and result["item_id"]:
+                    matches.append({"description": desc, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "1"})
+                elif result["action"] == "needs_validation" and result["item_id"]:
+                    matches.append({"description": desc, "item_id": result["item_id"], "confiance": result["score"], "auto_match": "0"})
+        except Exception as e:
+            _log.error(f"Erreur matching batch: {e}")
+
+    # Insertion des lignes
+    if payload.sections:
+        crud.create_lignes_facture(db, id_facture=db_facture.id_facture, id_concession=concession_id, matches=matches, sections=payload.sections)
+    else:
+        crud.create_lignes_facture(db, id_facture=db_facture.id_facture, items_data=payload.items_data or [], id_concession=concession_id, matches=matches)
+
     invalidate_cache(concession_id)
     return db_facture
 
@@ -222,6 +339,39 @@ def get_facture_details(facture_id: int, db: Session = Depends(get_db)):
     return {"id_facture": facture_id, "details": details}
 
 
+@app.get("/facture/{facture_id}/sections")
+def get_facture_sections(facture_id: int, db: Session = Depends(get_db)):
+    facture = crud.get_facture_by_id(db, facture_id)
+    if not facture:
+        raise HTTPException(status_code=404, detail="Facture non trouvee")
+
+    sections_db = db.query(models_sql.SectionFacture).filter(
+        models_sql.SectionFacture.id_facture == facture_id
+    ).order_by(models_sql.SectionFacture.section_index).all()
+
+    result = []
+    for section in sections_db:
+        cols = db.query(models_sql.SectionColonne).filter(
+            models_sql.SectionColonne.id_section == section.id_section
+        ).order_by(models_sql.SectionColonne.ordre).all()
+        headers = [db.query(models_sql.Colonne).get(col.id_colonne).libelle_canonique for col in cols if db.query(models_sql.Colonne).get(col.id_colonne)]
+
+        lignes = db.query(models_sql.LigneFacture).filter(models_sql.LigneFacture.id_section == section.id_section).all()
+        items_data = []
+        for ligne in lignes:
+            item = db.query(models_sql.Item).get(ligne.id_item)
+            valeurs = db.query(models_sql.ValeurLigne).filter(models_sql.ValeurLigne.id_ligne == ligne.id_ligne).all()
+            valeurs_dict = {}
+            for v in valeurs:
+                colonne = db.query(models_sql.Colonne).get(v.id_colonne)
+                if colonne and colonne.libelle_canonique in headers:
+                    valeurs_dict[colonne.libelle_canonique] = v.valeur_brute
+            items_data.append({"description": item.libelle_canonique if item else "", "valeurs": valeurs_dict})
+        result.append({"titre": section.titre, "headers": headers, "items_data": items_data})
+
+    return {"facture_id": facture_id, "sections": result}
+
+
 # ═══════════════════════════════════════════════════════════════
 # 4. ITEMS & COLONNES
 # ═══════════════════════════════════════════════════════════════
@@ -229,11 +379,22 @@ def get_facture_details(facture_id: int, db: Session = Depends(get_db)):
 @app.get("/items", response_model=List[schemas.ItemOut])
 def get_all_items(db: Session = Depends(get_db), id_concession: Optional[int] = Query(None)):
     if id_concession:
-        items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
+        items = db.query(models_sql.Item).filter(
+            models_sql.Item.id_concession == id_concession,
+            models_sql.Item.statut == "actif"
+        ).order_by(models_sql.Item.libelle_canonique).all()
     else:
         items = crud.get_all_items(db)
+
+    from sqlalchemy import func
+    counts = dict(
+        db.query(models_sql.LigneFacture.id_item, func.count(models_sql.LigneFacture.id_ligne))
+        .filter(models_sql.LigneFacture.id_item.in_([i.id_item for i in items]))
+        .group_by(models_sql.LigneFacture.id_item).all()
+    ) if items else {}
+
     for item in items:
-        item.usage_count = db.query(models_sql.LigneFacture).filter(models_sql.LigneFacture.id_item == item.id_item).count()
+        item.usage_count = counts.get(item.id_item, 0)
     return items
 
 
@@ -266,38 +427,32 @@ def api_create_colonne(payload: schemas.ColonneCreatePayload, db: Session = Depe
 
 @app.get("/suggest", response_model=schemas.SuggestionResponse)
 def suggest_item(description: str, id_concession: int, db: Session = Depends(get_db)):
-    engine = MatchingEngine()
-    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
-    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
-    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
-    result = engine.match(query=description, items=db_items, concession_index=index)
-    if result.matched:
-        return {"item_id": result.item_id, "libelle_canonique": result.item_label, "confiance": result.score}
+    result = _match_description(description, id_concession, db)
+    if result["item_id"]:
+        item = db.query(models_sql.Item).get(result["item_id"])
+        return {"item_id": result["item_id"], "libelle_canonique": item.libelle_canonique if item else None, "confiance": result["score"]}
     return {"item_id": None, "libelle_canonique": None, "confiance": None}
 
 
 @app.get("/suggest/confirm")
 def suggest_with_confirmation(description: str, id_concession: int, db: Session = Depends(get_db)):
-    engine = MatchingEngine()
-    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession, models_sql.Item.statut == "actif").all()
-    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
-    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
-    result = engine.match(query=description, items=db_items, concession_index=index)
-    if result.matched and result.score >= 0.85:
-        return {"auto_match": True, "item_id": result.item_id, "libelle": result.item_label, "confiance": result.score, "needs_confirmation": False}
-    elif result.matched and result.score >= 0.65:
-        return {"auto_match": False, "suggested_item": {"item_id": result.item_id, "libelle": result.item_label, "confiance": result.score}, "candidates": result.candidates[:5], "needs_confirmation": True, "message": f"Item similaire: '{result.item_label}' ({result.score:.0%})"}
-    return {"auto_match": False, "suggested_item": None, "candidates": [], "needs_confirmation": False, "message": "Aucun item similaire"}
+    result = _match_description(description, id_concession, db)
+    if result["action"] in ("high_confidence", "exact") and result["item_id"]:
+        item = db.query(models_sql.Item).get(result["item_id"])
+        return {"auto_match": True, "item_id": result["item_id"], "libelle": item.libelle_canonique if item else "", "confiance": result["score"], "needs_confirmation": False}
+    elif result["action"] == "needs_validation" and result["item_id"]:
+        item = db.query(models_sql.Item).get(result["item_id"])
+        return {"auto_match": False, "suggested_item": {"item_id": result["item_id"], "libelle": item.libelle_canonique if item else "", "confiance": result["score"]}, "candidates": result.get("candidates", [])[:5], "needs_confirmation": True, "message": f"Item similaire: '{item.libelle_canonique if item else '?'}' ({result['score']:.0%})"}
+    elif result["action"] == "skip":
+        return {"auto_match": False, "suggested_item": None, "candidates": [], "needs_confirmation": False, "message": f"Texte ignoré: {result.get('reason', '')}"}
+    return {"auto_match": False, "suggested_item": None, "candidates": result.get("candidates", [])[:5], "needs_confirmation": False, "message": "Aucun item similaire trouvé."}
 
 
 @app.get("/semantic/test")
 def test_semantic(description: str, id_concession: int, db: Session = Depends(get_db)):
-    engine = MatchingEngine()
-    items = db.query(models_sql.Item).filter(models_sql.Item.id_concession == id_concession).all()
-    db_items = [DBItem(id_item=i.id_item, libelle_recherche=i.libelle_recherche, libelle_canonique=i.libelle_canonique) for i in items]
-    index = get_or_build_index(concession_id=id_concession, item_ids=[i.id_item for i in db_items], item_texts=[i.libelle_recherche for i in db_items], item_labels=[i.libelle_canonique for i in db_items]) if EMBEDDING_AVAILABLE else None
-    result = engine.match(query=description, items=db_items, concession_index=index)
-    return {"matched": result.matched, "item_id": result.item_id, "item_label": result.item_label, "score": result.score, "level": result.level.value if result.level else None, "candidates": result.candidates[:3]}
+    result = _match_description(description, id_concession, db)
+    item = db.query(models_sql.Item).get(result["item_id"]) if result["item_id"] else None
+    return {"matched": result["item_id"] is not None, "item_id": result["item_id"], "item_label": item.libelle_canonique if item else None, "score": result["score"], "level": result.get("niveau"), "candidates": result.get("candidates", [])[:3]}
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -339,7 +494,7 @@ def match_concession(nom_extrait: str, db: Session = Depends(get_db)):
 def delete_facture(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvee")
+        raise HTTPException(status_code=404)
     db.delete(facture)
     db.commit()
     invalidate_cache(facture.id_concession)
@@ -350,7 +505,7 @@ def delete_facture(facture_id: int, db: Session = Depends(get_db)):
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     item = db.query(models_sql.Item).get(item_id)
     if not item:
-        raise HTTPException(status_code=404, detail="Item non trouve")
+        raise HTTPException(status_code=404)
     cid = item.id_concession
     db.delete(item)
     db.commit()
@@ -374,7 +529,7 @@ def api_delete_items(item_ids: List[int], db: Session = Depends(get_db)):
 def get_resume_facture(facture_id: int, db: Session = Depends(get_db)):
     facture = crud.get_facture_by_id(db, facture_id)
     if not facture:
-        raise HTTPException(status_code=404, detail="Facture non trouvee")
+        raise HTTPException(status_code=404)
     lignes_data = crud.get_fact_data_by_facture(db, facture_id)
     items_dict = {}
     for ligne_info in lignes_data:
@@ -382,13 +537,7 @@ def get_resume_facture(facture_id: int, db: Session = Depends(get_db)):
             items_dict.setdefault(ligne_info["item"], {})[val["colonne"]] = val["valeur_brute"]
     items_list = [{"description": k, "valeurs": v} for k, v in items_dict.items()]
     concession_nom = facture.concession.nom if facture.concession else ""
-    return resume.generate_resume({
-        "id_facture": facture.id_facture,
-        "date_facture": facture.date_facture.isoformat() if facture.date_facture else None,
-        "concession": concession_nom, "devise": facture.devise, "items": items_list,
-        "date_insertion": facture.date_extraction.isoformat() if facture.date_extraction else None,
-        "fournisseur": concession_nom,
-    })
+    return resume.generate_resume({"id_facture": facture.id_facture, "date_facture": facture.date_facture.isoformat() if facture.date_facture else None, "concession": concession_nom, "devise": facture.devise, "items": items_list, "date_insertion": facture.date_extraction.isoformat() if facture.date_extraction else None, "fournisseur": concession_nom})
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -418,7 +567,7 @@ class AnalyseRequest(BaseModel):
 def get_comparaison_analyses(id_concession: int, annee: Optional[int] = None, date_debut: Optional[date] = None, date_fin: Optional[date] = None, mois: Optional[int] = None, trimestre: Optional[int] = None, db: Session = Depends(get_db)):
     concession = db.query(models_sql.Concession).get(id_concession)
     if not concession:
-        raise HTTPException(status_code=404, detail="Concession non trouvee")
+        raise HTTPException(status_code=404)
 
     if date_debut and date_fin:
         plage_debut, plage_fin = date_debut, date_fin
@@ -433,7 +582,7 @@ def get_comparaison_analyses(id_concession: int, annee: Optional[int] = None, da
     elif annee:
         plage_debut, plage_fin = date(annee, 1, 1), date(annee, 12, 31)
     else:
-        raise HTTPException(status_code=400, detail="Specifiez une plage de dates")
+        raise HTTPException(status_code=400)
 
     factures = db.query(models_sql.Facture).filter(models_sql.Facture.id_concession == id_concession, models_sql.Facture.date_facture >= plage_debut, models_sql.Facture.date_facture <= plage_fin).all()
     if not factures:
@@ -441,42 +590,12 @@ def get_comparaison_analyses(id_concession: int, annee: Optional[int] = None, da
 
     total_facture = sum(f.total_montant or 0 for f in factures)
     nb_factures = len(factures)
-
-    details_items = []
-    for f in factures:
-        for ligne_info in crud.get_fact_data_by_facture(db, f.id_facture):
-            item_name = ligne_info["item"]
-            valeurs = {v["colonne"]: v["valeur_brute"] for v in ligne_info["valeurs"]}
-            montant = None
-            for col_name, val in sorted(valeurs.items(), key=lambda x: (2 if any(h in x[0].lower() for h in ['total ttc','montant total','total ht']) else 1 if _is_montant_column(x[0]) else 0), reverse=True):
-                if _is_montant_column(col_name):
-                    parsed = _parse_montant(val)
-                    if parsed is not None and parsed > 0:
-                        montant = parsed
-                        break
-            details_items.append({"item": item_name, "montant": montant})
-
-    articles_count = {}
-    for d in details_items:
-        articles_count[d["item"]] = articles_count.get(d["item"], 0) + 1
-    top_article = max(articles_count, key=articles_count.get) if articles_count else None
-
-    kpi = {"total_facture": round(total_facture, 2), "nb_factures": nb_factures, "panier_moyen": round(total_facture / nb_factures, 2) if nb_factures else 0, "top_article": top_article}
-
     totaux_mensuels = [0.0] * 12
     for f in factures:
         if f.date_facture:
             totaux_mensuels[f.date_facture.month - 1] += f.total_montant or 0
 
-    anomalies = []
-    mois_noms = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre']
-    for m in range(12):
-        if totaux_mensuels[m] == 0:
-            anomalies.append(f"Aucune facture en {mois_noms[m]} {plage_debut.year}")
-    if not anomalies:
-        anomalies.append("Aucune anomalie detectee")
-
-    return {"concession": concession.nom, "plage": {"debut": str(plage_debut), "fin": str(plage_fin)}, "nb_factures": nb_factures, "kpi": kpi, "totaux_mensuels": totaux_mensuels, "articles_comparaison": [], "anomalies": anomalies, "repartition_articles": [], "comparaison_n1": None}
+    return {"concession": concession.nom, "plage": {"debut": str(plage_debut), "fin": str(plage_fin)}, "nb_factures": nb_factures, "kpi": {"total_facture": round(total_facture, 2), "nb_factures": nb_factures, "panier_moyen": round(total_facture / nb_factures, 2) if nb_factures else 0}, "totaux_mensuels": totaux_mensuels, "articles_comparaison": [], "anomalies": [], "repartition_articles": [], "comparaison_n1": None}
 
 
 @app.get("/analyses/export-excel")
@@ -500,11 +619,10 @@ def export_analyse_excel(id_concession: int, annee: Optional[int] = None, date_d
 
 
 # ═══════════════════════════════════════════════════════════════
-# 11. SSE - Upload avec logs temps reel
+# 11. SSE - Upload avec logs temps réel
 # ═══════════════════════════════════════════════════════════════
 
 extraction_logs = {}
-
 
 @app.post("/upload/stream")
 async def upload_facture_stream(file: UploadFile = File(...)):
@@ -518,7 +636,6 @@ async def upload_facture_stream(file: UploadFile = File(...)):
     try:
         tmp.write(content)
         tmp.close()
-
         def extract_with_logs():
             import time as time_module
             import threading as th
@@ -534,7 +651,6 @@ async def upload_facture_stream(file: UploadFile = File(...)):
                 ocr_start = time_module.time()
                 ocr_running = True
                 last_progress = 12
-
                 def update_ocr():
                     nonlocal last_progress
                     while ocr_running:
@@ -546,16 +662,15 @@ async def upload_facture_stream(file: UploadFile = File(...)):
                         if p > last_progress:
                             last_progress = p
                         log_queue.put(json.dumps({"step": "ocr", "message": "OCR en cours...", "progress": round(last_progress, 1), "elapsed": elapsed, "ocr_elapsed": round(time_module.time() - ocr_start, 1)}))
-
                 th.Thread(target=update_ocr, daemon=True).start()
-                raw_result = extract_invoice_complete(tmp_path, max_pages=10)
+                raw_result = extract_invoice(tmp_path, max_pages=10)
                 ocr_running = False
                 ocr_total = round(time_module.time() - ocr_start, 1)
                 total = round(time_module.time() - t0, 1)
                 log_queue.put(json.dumps({"step": "ocr_done", "message": f"OCR termine en {ocr_total}s", "progress": 65, "elapsed": total, "ocr_elapsed": ocr_total}))
                 time_module.sleep(0.3)
                 log_queue.put(json.dumps({"step": "postprocess", "message": "Post-processing...", "progress": 78, "elapsed": round(time_module.time() - t0, 1)}))
-                structured = postprocess_invoice(raw_result)
+                structured = process_from_dict(raw_result)
                 time_module.sleep(0.3)
                 log_queue.put(json.dumps({"step": "correct", "message": "Correction intelligente...", "progress": 92, "elapsed": round(time_module.time() - t0, 1)}))
                 total = round(time_module.time() - t0, 1)
@@ -564,7 +679,6 @@ async def upload_facture_stream(file: UploadFile = File(...)):
                 log_queue.put(json.dumps({"step": "error", "message": f"Erreur : {str(e)}", "progress": 0, "error": True}))
             finally:
                 log_queue.put(None)
-
         threading.Thread(target=extract_with_logs).start()
         return {"task_id": task_id, "filename": file.filename}
     except Exception as e:
@@ -608,4 +722,3 @@ frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "
 if os.path.isdir(frontend_path):
     from fastapi.staticfiles import StaticFiles
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
-    
