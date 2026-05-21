@@ -2,12 +2,18 @@ import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { apiCall } from '../api/api';
 import { Trash2, ChevronDown, Bot, FileText, Clock } from 'lucide-react';
+import ResumeModal from '../components/ResumeModal';
 
 export default function History() {
   const { showSpinner, hideSpinner, showToast } = useApp();
   const [factures, setFactures] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
   const [details, setDetails] = useState({});
+  
+  // État pour le modal de résumé
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedFactureId, setSelectedFactureId] = useState(null);
+  const [selectedFactureData, setSelectedFactureData] = useState(null);
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -43,16 +49,16 @@ export default function History() {
     }
   };
 
-  const handleResumeIA = async (id) => {
-    showSpinner();
-    try {
-      const res = await apiCall('POST', `/facture/${id}/resume`);
-      alert(res.resume?.resume_texte || 'Aucun résumé disponible.');
-    } catch {
-      showToast('Erreur résumé IA', 'danger');
-    } finally {
-      hideSpinner();
-    }
+  const handleResumeIA = (id, factureData) => {
+    setSelectedFactureId(id);
+    setSelectedFactureData(factureData);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedFactureId(null);
+    setSelectedFactureData(null);
   };
 
   // Fonction pour reconstruire le tableau à partir des détails
@@ -87,6 +93,8 @@ export default function History() {
     return { columns, rows };
   };
 
+  const primaryColor = '#06b6d4';
+
   if (!factures.length) {
     return (
       <div className="max-w-7xl mx-auto text-center py-16 glass-card">
@@ -99,7 +107,7 @@ export default function History() {
   return (
     <div className="max-w-7xl mx-auto space-y-4 animate-fade-in">
       <h2 className="font-display text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-        <Clock size={24} className="text-primary-light dark:text-primary-dark" />
+        <Clock size={24} style={{ color: primaryColor }} />
         Historique des factures
       </h2>
 
@@ -116,7 +124,7 @@ export default function History() {
               onClick={() => setExpandedId(isExpanded ? null : f.id_facture)}
             >
               <div className="flex items-center gap-4 flex-wrap">
-                <span className="font-display font-bold text-lg text-primary-light dark:text-primary-dark">
+                <span className="font-display font-bold text-lg" style={{ color: primaryColor }}>
                   #{f.id_facture}
                 </span>
                 <span className="text-sm text-slate-500 dark:text-slate-400">
@@ -150,20 +158,24 @@ export default function History() {
                 {/* Actions */}
                 <div className="flex justify-end gap-2 mb-4">
                   <button
-                    onClick={(e) => { e.stopPropagation(); handleResumeIA(f.id_facture); }}
-                    className="btn-glass text-blue-600 dark:text-blue-400 text-sm"
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      handleResumeIA(f.id_facture, f); 
+                    }}
+                    className="btn-glass text-sm flex items-center gap-1"
+                    style={{ color: primaryColor }}
                   >
                     <Bot size={16} /> Résumé IA
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleDelete(f.id_facture); }}
-                    className="btn-glass text-red-600 dark:text-red-400 text-sm"
+                    className="btn-glass text-sm flex items-center gap-1 text-red-600 dark:text-red-400"
                   >
                     <Trash2 size={16} /> Supprimer
                   </button>
                 </div>
 
-                {/* Tableau complet - AUCUNE colonne figée, tout défile */}
+                {/* Tableau complet */}
                 {rows.length > 0 ? (
                   <div className="overflow-x-auto rounded-xl border border-slate-200/30 dark:border-slate-700/30">
                     <table className="w-full text-sm" style={{ minWidth: '100%' }}>
@@ -172,7 +184,8 @@ export default function History() {
                           {columns.map(col => (
                             <th
                               key={col}
-                              className="px-4 py-3 text-left font-mono text-xs uppercase tracking-wider text-blue-700 dark:text-cyan-400 whitespace-nowrap"
+                              className="px-4 py-3 text-left font-mono text-xs uppercase tracking-wider whitespace-nowrap"
+                              style={{ color: primaryColor }}
                             >
                               {col}
                             </th>
@@ -212,6 +225,14 @@ export default function History() {
           </div>
         );
       })}
+
+      {/* Modal de résumé IA */}
+      <ResumeModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        factureId={selectedFactureId}
+        factureData={selectedFactureData}
+      />
     </div>
   );
 }

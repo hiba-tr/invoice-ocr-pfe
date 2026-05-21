@@ -2,16 +2,15 @@ import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { apiCall } from '../api/api';
 import axios from 'axios';
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import 'tabulator-tables/dist/css/tabulator.min.css';
 import ExtractionProgress from '../components/ExtractionProgress';
 import SemanticValidation from '../components/SemanticValidation';
 import {
   UploadCloud, Save, Plus, Columns,
-  Sparkles, FileText, X, Brain
+  Sparkles, FileText, X, Brain, Trash2
 } from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000';
+const primaryColor = '#06b6d4';
 
 const cleanValue = (val) => {
   if (val === null || val === undefined) return '';
@@ -35,8 +34,11 @@ export default function Upload() {
   const [validationItems, setValidationItems] = useState([]);
   const [existingItems, setExistingItems] = useState([]);
 
-  const tableRef = useRef(null);
-  const tabulatorRef = useRef(null);
+  // État du tableau natif (remplace Tabulator)
+  const [tableColumns, setTableColumns] = useState([]); // ['Description', 'Col1', ...]
+  const [tableRows, setTableRows] = useState([]);       // [{ description, col1, ... }, ...]
+  const [editingCell, setEditingCell] = useState(null); // { rowIdx, col }
+
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -54,45 +56,39 @@ export default function Upload() {
   };
 
   const handleExtract = async () => {
-    if (!files.length) { 
-      showToast("Veuillez d'abord choisir un fichier !", 'warning'); 
-      return; 
+    if (!files.length) {
+      showToast("Veuillez d'abord choisir un fichier !", 'warning');
+      return;
     }
-    
+
     setShowProgress(true);
     const formData = new FormData();
     formData.append('file', files[0]);
-    
+
     try {
       const response = await axios.post(`${API_BASE}/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
-      setShowProgress(false);
-      
+
       const result = response.data;
-      
-      // 🔍 Debug
-      console.log("=== RÉPONSE API ===");
-      console.log("Colonnes reçues:", result.columns);
-      console.log("Items reçus:", result.items?.length);
-      if (result.items?.length > 0) {
-        console.log("Premier item:", result.items[0]);
-      }
-      
-      if (result.invoices) {
-        handleExtractionComplete({ 
-          items: result.invoices[0]?.items || [], 
-          columns: result.invoices[0]?.columns || [], 
-          metadata: result.invoices[0]?.metadata || {} 
-        });
-      } else {
-        handleExtractionComplete({
-          items: result.items || [],
-          columns: result.columns || [],
-          metadata: result.metadata || {}
-        });
-      }
+      window.dispatchEvent(new CustomEvent('extraction-complete', { detail: { success: true, result } }));
+
+      setTimeout(() => {
+        setShowProgress(false);
+        if (result.invoices) {
+          handleExtractionComplete({
+            items: result.invoices[0]?.items || [],
+            columns: result.invoices[0]?.columns || [],
+            metadata: result.invoices[0]?.metadata || {}
+          });
+        } else {
+          handleExtractionComplete({
+            items: result.items || [],
+            columns: result.columns || [],
+            metadata: result.metadata || {}
+          });
+        }
+      }, 500);
     } catch (error) {
       console.error('Erreur extraction:', error);
       setShowProgress(false);
@@ -101,12 +97,10 @@ export default function Upload() {
   };
 
   const handleExtractionComplete = (result) => {
-    console.log("=== handleExtractionComplete ===");
-    console.log("Items:", result.items?.length);
-    console.log("Colonnes:", result.columns);
     setExtraction(result);
     setShowProgress(false);
     setTaskId(null);
+    buildNativeTable(result);
     showToast('Extraction réussie !', 'success');
   };
 
@@ -114,6 +108,69 @@ export default function Upload() {
     setShowProgress(false);
     setTaskId(null);
     showToast(message || "Erreur d'extraction", 'danger');
+  };
+
+  // Construit le tableau natif à partir du résultat d'extraction
+  const buildNativeTable = (result) => {
+    const originalColumns = result.columns || [];
+    const seen = new Set();
+    const cleanedColumns = originalColumns
+      .map(col => String(col).trim())
+      .filter(col => {
+        const norm = col.toLowerCase().replace(/[^a-z]/g, '');
+        if (seen.has(norm)) return false;
+        seen.add(norm);
+        return true;
+      });
+
+    const descLabel = result.metadata?.first_column_name || 'Description';
+    const allColumns = [descLabel, ...cleanedColumns];
+
+    const rows = (result.items || []).map((item) => {
+      const row = { [descLabel]: cleanValue(item.description || item.libelle || '') };
+      cleanedColumns.forEach(col => { row[col] = ''; });
+
+      const valeurs = item.valeurs || {};
+      Object.entries(valeurs).forEach(([key, value]) => {
+        const match = cleanedColumns.find(col => col.toLowerCase() === key.toLowerCase())
+          || cleanedColumns.find(col =>
+            col.toLowerCase().replace(/[^a-z]/g, '') === key.toLowerCase().replace(/[^a-z]/g, '')
+          );
+        if (match) row[match] = cleanValue(value);
+      });
+
+      return row;
+    });
+
+    setTableColumns(allColumns);
+    setTableRows(rows);
+  };
+
+  // Edition inline d'une cellule
+  const handleCellEdit = (rowIdx, col, value) => {
+    setTableRows(prev => prev.map((row, i) =>
+      i === rowIdx ? { ...row, [col]: value } : row
+    ));
+  };
+
+  // Ajouter une ligne vide
+  const handleAddRow = () => {
+    const emptyRow = {};
+    tableColumns.forEach(col => { emptyRow[col] = ''; });
+    setTableRows(prev => [...prev, emptyRow]);
+  };
+
+  // Supprimer une ligne
+  const handleDeleteRow = (rowIdx) => {
+    setTableRows(prev => prev.filter((_, i) => i !== rowIdx));
+  };
+
+  // Ajouter une colonne
+  const handleAddColumn = () => {
+    const name = prompt('Nom de la nouvelle colonne :');
+    if (!name || tableColumns.includes(name)) return;
+    setTableColumns(prev => [...prev, name]);
+    setTableRows(prev => prev.map(row => ({ ...row, [name]: '' })));
   };
 
   const handleCreateConcession = async () => {
@@ -129,25 +186,26 @@ export default function Upload() {
     }
   };
 
+  // Retourne les données du tableau dans le même format qu'attendu par saveFacture/handleSemanticValidation
+  const getTableData = () => {
+    const [descCol, ...valueCols] = tableColumns;
+    return tableRows.map(row => {
+      const valeurs = {};
+      valueCols.forEach(col => {
+        if (row[col] !== undefined && row[col] !== '') valeurs[col] = cleanValue(row[col]);
+      });
+      return { description: cleanValue(row[descCol] || ''), valeurs };
+    });
+  };
+
   const handleSemanticValidation = async () => {
-    if (!concessionId) {
-      showToast('⚠️ Sélectionnez une Concession.', 'warning');
-      return;
-    }
-    if (!tabulatorRef.current) return;
+    if (!concessionId) { showToast('⚠️ Sélectionnez une Concession.', 'warning'); return; }
 
     showSpinner();
     try {
-      const itemsData = tabulatorRef.current.getData().map(row => {
-        const { description, ...valeurs } = row;
-        const cleanedValeurs = {};
-        Object.entries(valeurs).forEach(([k, v]) => {
-          if (v !== undefined && v !== null && v !== '') cleanedValeurs[k] = cleanValue(v);
-        });
-        return { description: cleanValue(description || ''), valeurs: cleanedValeurs };
-      });
-
+      const itemsData = getTableData();
       const validationResults = [];
+
       for (const item of itemsData) {
         if (!item.description) continue;
         try {
@@ -155,10 +213,7 @@ export default function Upload() {
             description: item.description,
             id_concession: concessionId
           });
-          validationResults.push({
-            ...item,
-            semantic: result
-          });
+          validationResults.push({ ...item, semantic: result });
         } catch {
           validationResults.push({ ...item, semantic: { needs_confirmation: false, auto_match: false } });
         }
@@ -169,8 +224,8 @@ export default function Upload() {
       setValidationItems(validationResults);
       setShowValidation(true);
 
-      const needsValidation = validationResults.filter(v => v.semantic.needs_confirmation);
       const autoMatched = validationResults.filter(v => v.semantic.auto_match && !v.semantic.needs_confirmation);
+      const needsValidation = validationResults.filter(v => v.semantic.needs_confirmation);
       showToast(`${autoMatched.length} items matchés automatiquement, ${needsValidation.length} à valider`, 'info');
     } catch {
       showToast('Erreur lors de la validation sémantique', 'danger');
@@ -180,25 +235,14 @@ export default function Upload() {
   };
 
   const saveFacture = async (decisions = {}) => {
-    if (!concessionId) {
-      showToast('⚠️ Sélectionnez une Concession.', 'warning');
-      return;
-    }
-    if (!tabulatorRef.current) return;
+    if (!concessionId) { showToast('⚠️ Sélectionnez une Concession.', 'warning'); return; }
 
     showSpinner();
     try {
-      const itemsData = tabulatorRef.current.getData().map((row, idx) => {
-        const { description, ...valeurs } = row;
-        const cleanedValeurs = {};
-        Object.entries(valeurs).forEach(([k, v]) => {
-          if (v !== undefined && v !== null && v !== '') cleanedValeurs[k] = cleanValue(v);
-        });
-        
+      const itemsData = getTableData().map((item, idx) => {
         const decision = decisions[idx] || { decision: 'new', targetItemId: null };
         return {
-          description: cleanValue(description || ''),
-          valeurs: cleanedValeurs,
+          ...item,
           semantic_decision: decision.decision,
           semantic_target_id: decision.targetItemId,
           semantic_auto: decision.preselected ? '1' : '0',
@@ -220,6 +264,8 @@ export default function Upload() {
       showToast('✅ Facture enregistrée avec succès !', 'success');
       setExtraction(null);
       setFiles([]);
+      setTableColumns([]);
+      setTableRows([]);
       setShowValidation(false);
     } catch (err) {
       if (err?.response?.status === 409) {
@@ -232,125 +278,8 @@ export default function Upload() {
     }
   };
 
-  // ✅ Initialize Tabulator - VERSION CORRIGÉE
-  useEffect(() => {
-    if (!extraction?.items || !tableRef.current) return;
-
-    if (tabulatorRef.current) {
-      tabulatorRef.current.destroy();
-      tabulatorRef.current = null;
-    }
-
-    const originalColumns = extraction.columns || [];
-    const cleanedColumns = originalColumns.map(col => String(col).trim());
-    
-    console.log("=== INIT TABULATOR ===");
-    console.log("Colonnes originales:", cleanedColumns);
-    console.log("Items reçus:", extraction.items.length);
-    
-    // Construire les colonnes Tabulator
-    const columns = [
-      {
-        title: extraction.metadata?.first_column_name || 'Description',
-        field: 'description',
-        editor: 'input',
-        minWidth: 250,
-        headerSort: false,
-      },
-    ];
-
-    // Pour chaque colonne, créer une colonne Tabulator
-    cleanedColumns.forEach((col) => {
-      const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-      columns.push({
-        title: col,
-        field: safeField,
-        editor: 'input',
-        minWidth: 140,
-        hozAlign: 'center',
-      });
-    });
-
-    // Construire les données avec le bon mapping
-    const tableData = extraction.items.map((item, idx) => {
-      const row = { 
-        id: idx, 
-        description: cleanValue(item.description || item.libelle || '') 
-      };
-      
-      // Initialiser toutes les colonnes à vide
-      cleanedColumns.forEach(col => {
-        const safeField = col.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-        row[safeField] = '';
-      });
-      
-      // Remplir les valeurs
-      const valeurs = item.valeurs || {};
-      
-      // Méthode 1: Chercher par correspondance exacte du titre
-      Object.entries(valeurs).forEach(([key, value]) => {
-        // Chercher la colonne dont le titre correspond à la clé
-        const matchingCol = cleanedColumns.find(col => 
-          col.toLowerCase() === key.toLowerCase()
-        );
-        
-        if (matchingCol) {
-          const safeField = matchingCol.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-          row[safeField] = cleanValue(value);
-          console.log(`  Match exact: ${key} -> ${matchingCol} = ${value}`);
-        } else {
-          // Méthode 2: Chercher par similarité (suppression des caractères spéciaux)
-          const normalizedKey = key.toLowerCase().replace(/[^a-z]/g, '');
-          const matchingColFuzzy = cleanedColumns.find(col => {
-            const normalizedCol = col.toLowerCase().replace(/[^a-z]/g, '');
-            return normalizedCol === normalizedKey;
-          });
-          
-          if (matchingColFuzzy) {
-            const safeField = matchingColFuzzy.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-            row[safeField] = cleanValue(value);
-            console.log(`  Match fuzzy: ${key} -> ${matchingColFuzzy} = ${value}`);
-          } else {
-            // Méthode 3: Utiliser directement la clé comme nom de champ
-            const safeField = key.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_');
-            // Vérifier si ce champ existe dans les colonnes
-            const columnExists = columns.some(col => col.field === safeField);
-            if (columnExists) {
-              row[safeField] = cleanValue(value);
-              console.log(`  Match direct: ${key} -> ${safeField} = ${value}`);
-            } else {
-              console.log(`  Aucun match pour: ${key}`);
-            }
-          }
-        }
-      });
-      
-      return row;
-    });
-
-    console.log("TableData construit:", tableData.length, "lignes");
-    if (tableData.length > 0) {
-      console.log("Première ligne:", tableData[0]);
-    }
-
-    setTimeout(() => {
-      tabulatorRef.current = new Tabulator(tableRef.current, {
-        data: tableData,
-        columns,
-        layout: 'fitDataFill',
-        height: 'auto',
-        maxHeight: '500px',
-        editable: true,
-        movableColumns: false,
-        placeholder: 'Aucune donnée détectée',
-      });
-      
-      console.log("Tabulator initialisé avec", columns.length, "colonnes");
-    }, 100);
-  }, [extraction]);
-
   // ==================== UPLOAD VIEW ====================
-  if (showProgress && taskId && !extraction) {
+  if (showProgress && !extraction) {
     return (
       <div className="max-w-2xl mx-auto">
         <ExtractionProgress
@@ -366,12 +295,12 @@ export default function Upload() {
     return (
       <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary-light dark:text-primary-dark">
-            <span className="w-6 h-px bg-primary-light dark:bg-primary-dark" />
+          <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest" style={{ color: primaryColor }}>
+            <span className="w-6 h-px" style={{ background: primaryColor }} />
             Import intelligent
           </div>
           <h1 className="font-display text-3xl font-extrabold text-slate-800 dark:text-white">
-            Déposer une <span className="text-primary-light dark:text-primary-dark">facture</span>
+            Déposer une <span style={{ color: primaryColor }}>facture</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-400">Glissez vos fichiers ou paramétrez l'extraction</p>
         </div>
@@ -383,7 +312,7 @@ export default function Upload() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFiles(e.dataTransfer.files); }}
           onClick={() => fileInputRef.current?.click()}
         >
-          <UploadCloud size={48} className="mx-auto text-primary-light dark:text-primary-dark mb-4" />
+          <UploadCloud size={48} className="mx-auto mb-4" style={{ color: primaryColor }} />
           <h5 className="font-semibold text-lg text-slate-700 dark:text-slate-200 mb-2">
             {files.length ? files.map(f => f.name).join(', ') : 'Glissez votre facture ici'}
           </h5>
@@ -396,7 +325,7 @@ export default function Upload() {
             <h6 className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">📎 Fichiers sélectionnés</h6>
             {files.map((f, i) => (
               <div key={i} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/30 rounded-xl">
-                <FileText size={18} className="text-primary-light dark:text-primary-dark" />
+                <FileText size={18} style={{ color: primaryColor }} />
                 <span className="flex-1 text-sm truncate">{f.name}</span>
                 <span className="text-xs text-slate-400">{(f.size / 1024).toFixed(1)} KB</span>
                 <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} className="p-1 hover:text-red-500 transition-colors">
@@ -435,6 +364,7 @@ export default function Upload() {
   // ==================== RESULTS VIEW ====================
   return (
     <div className="max-w-7xl mx-auto space-y-6 animate-slide-up">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
@@ -442,7 +372,7 @@ export default function Upload() {
             Résultat
           </div>
           <h2 className="font-display text-2xl font-extrabold text-slate-800 dark:text-white">
-            Extraction <span className="text-primary-light dark:text-primary-dark">terminée</span>
+            Extraction <span style={{ color: primaryColor }}>terminée</span>
           </h2>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-full glass border-emerald-200 dark:border-emerald-500/20">
@@ -451,6 +381,7 @@ export default function Upload() {
         </div>
       </div>
 
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="glass kpi-card accent-cyan">
           <span className="text-2xl">📄</span>
@@ -460,15 +391,16 @@ export default function Upload() {
         <div className="glass kpi-card accent-green">
           <span className="text-2xl">✅</span>
           <span className="kpi-label">Articles extraits</span>
-          <span className="font-display text-2xl font-bold">{extraction.items?.length || 0}</span>
+          <span className="font-display text-2xl font-bold">{tableRows.length}</span>
         </div>
         <div className="glass kpi-card accent-blue">
           <span className="text-2xl">💰</span>
           <span className="kpi-label">Montant total estimé</span>
-          <span className="font-display text-xl font-bold text-primary-light dark:text-primary-dark">— €</span>
+          <span className="font-display text-xl font-bold" style={{ color: primaryColor }}>— €</span>
         </div>
       </div>
 
+      {/* Métadonnées */}
       <div className="glass-card">
         <h3 className="font-display font-bold text-lg mb-4">Métadonnées</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -498,30 +430,115 @@ export default function Upload() {
         </div>
       </div>
 
+      {/* Tableau des articles — même style que History.jsx */}
       <div className="glass-card p-4">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-display font-bold text-lg text-slate-800 dark:text-white">Articles extraits</h3>
+          <h3 className="font-display font-bold text-lg text-slate-800 dark:text-white">
+            Articles extraits
+          </h3>
           <div className="flex gap-2">
-            <button className="btn-glass text-sm"><Columns size={16} /> Colonne</button>
-            <button className="btn-glass text-sm"><Plus size={16} /> Ligne</button>
+            <button onClick={handleAddColumn} className="btn-glass text-sm">
+              <Columns size={16} /> Colonne
+            </button>
+            <button onClick={handleAddRow} className="btn-glass text-sm">
+              <Plus size={16} /> Ligne
+            </button>
           </div>
         </div>
+
         <div className="overflow-x-auto rounded-xl border border-slate-200/30 dark:border-slate-700/30">
-          <div ref={tableRef} />
+          {tableRows.length === 0 ? (
+            <p className="text-center text-slate-400 dark:text-slate-500 py-10 italic">
+              Aucune donnée détectée
+            </p>
+          ) : (
+            <table className="w-full text-sm" style={{ minWidth: '100%' }}>
+              <thead>
+                <tr className="bg-gradient-to-r from-blue-50/80 to-cyan-50/80 dark:from-blue-950/30 dark:to-cyan-950/20">
+                  {tableColumns.map((col) => (
+                    <th
+                      key={col}
+                      className="px-4 py-3 text-left font-mono text-xs uppercase tracking-wider whitespace-nowrap"
+                      style={{ color: primaryColor }}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                  {/* Colonne action suppression */}
+                  <th className="px-4 py-3 w-10" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-blue-100/50 dark:divide-slate-800/50">
+                {tableRows.map((row, rowIdx) => (
+                  <tr
+                    key={rowIdx}
+                    className="hover:bg-blue-50/30 dark:hover:bg-slate-800/30 transition-colors"
+                  >
+                    {tableColumns.map((col, colIdx) => {
+                      const isEditing = editingCell?.rowIdx === rowIdx && editingCell?.col === col;
+                      const isFirst = colIdx === 0;
+                      return (
+                        <td
+                          key={col}
+                          className={`px-4 py-2 whitespace-nowrap ${
+                            isFirst
+                              ? 'font-medium text-slate-800 dark:text-slate-200'
+                              : 'font-mono text-right text-slate-600 dark:text-slate-400'
+                          }`}
+                          onClick={() => setEditingCell({ rowIdx, col })}
+                        >
+                          {isEditing ? (
+                            <input
+                              autoFocus
+                              className="w-full bg-transparent outline-none border-b border-cyan-400 dark:border-cyan-500 text-slate-800 dark:text-slate-100 text-sm"
+                              value={row[col] ?? ''}
+                              onChange={(e) => handleCellEdit(rowIdx, col, e.target.value)}
+                              onBlur={() => setEditingCell(null)}
+                              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') setEditingCell(null); }}
+                            />
+                          ) : (
+                            <span className="cursor-text">{row[col] || '—'}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                    <td className="px-2 py-2 text-center">
+                      <button
+                        onClick={() => handleDeleteRow(rowIdx)}
+                        className="p-1 text-slate-300 hover:text-red-500 dark:text-slate-600 dark:hover:text-red-400 transition-colors"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
+
+        <p className="text-right text-xs font-mono text-slate-400 dark:text-slate-500 mt-2">
+          Cliquez sur une cellule pour l'éditer
+        </p>
       </div>
 
+      {/* Footer actions */}
       <div className="glass-card flex flex-col sm:flex-row justify-between items-center gap-4">
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input type="checkbox" checked={forceOverwrite} onChange={(e) => setForceOverwrite(e.target.checked)} className="rounded border-slate-300" />
+        <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={forceOverwrite}
+            onChange={(e) => setForceOverwrite(e.target.checked)}
+            className="rounded border-slate-300 accent-cyan-500"
+          />
           Écraser si existante
         </label>
         <div className="flex gap-2">
-          <button onClick={handleSemanticValidation} className="btn-primary bg-gradient-to-r from-purple-500 to-blue-500">
+          <button onClick={handleSemanticValidation} className="btn-primary" style={{ background: 'linear-gradient(135deg, #7c3aed, #4361ee)' }}>
             <Brain size={18} />
             Validation sémantique
           </button>
-          <button onClick={saveFacture} className="btn-primary">
+          <button onClick={() => saveFacture()} className="btn-primary">
             <Save size={18} />
             Enregistrer
           </button>

@@ -9,12 +9,11 @@ export default function SemanticValidation({
   onSave, onBack, forceOverwrite, onForceOverwriteChange 
 }) {
   
-  const [visibleCount, setVisibleCount] = useState(5); // Afficher 5 items par défaut
+  const [visibleCount, setVisibleCount] = useState(5);
   const [decisions, setDecisions] = useState({});
   const [showItemList, setShowItemList] = useState({});
   const [searchTerms, setSearchTerms] = useState({});
 
-  // 🔥 TRIER LES ITEMS PAR PRIORITÉ (Faible → Forte)
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
       const getPriority = (item) => {
@@ -22,15 +21,12 @@ export default function SemanticValidation({
         const autoMatch = item.semantic?.auto_match === true;
         const textType = item.semantic?.text_type;
         
-        // Priorité 1: Pas de match (score 0)
         if (score === 0 || textType === 'skip' || textType === 'noise' || textType === 'doc_ref') {
           return 0;
         }
-        // Priorité 2: À valider (70-94%)
         if (score >= 0.70 && score < 0.95 && !autoMatch) {
           return 1;
         }
-        // Priorité 3: Match automatique (95-100%)
         if (score >= 0.95 || autoMatch) {
           return 2;
         }
@@ -42,14 +38,12 @@ export default function SemanticValidation({
       
       if (priorityA !== priorityB) return priorityA - priorityB;
       
-      // À l'intérieur d'une même priorité, trier par score décroissant
       const scoreA = a.semantic?.confiance || a.semantic?.suggested_item?.confiance || 0;
       const scoreB = b.semantic?.confiance || b.semantic?.suggested_item?.confiance || 0;
       return scoreB - scoreA;
     });
   }, [items]);
 
-  // Initialiser les décisions par défaut
   const defaultDecisions = useMemo(() => {
     const decisionsMap = {};
     sortedItems.forEach((item) => {
@@ -71,7 +65,6 @@ export default function SemanticValidation({
     return decisionsMap;
   }, [sortedItems, items]);
 
-  // Mettre à jour les décisions quand les items changent
   useState(() => {
     setDecisions(defaultDecisions);
   }, [defaultDecisions]);
@@ -118,20 +111,23 @@ export default function SemanticValidation({
   const newCount = Object.values(decisions).filter(d => d.decision === 'new').length;
   const skippedCount = Object.values(decisions).filter(d => d.decision === 'skip').length;
 
-  // Items à afficher (pagination)
   const visibleItems = sortedItems.slice(0, visibleCount);
   const hasMore = sortedItems.length > visibleCount;
+
+  // Couleur principale de l'interface
+  const primaryColor = '#06b6d4';
+  const primaryLight = 'rgba(6, 182, 212, 0.1)';
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-purple-500 mb-1">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider mb-1" style={{ color: primaryColor }}>
             <Brain size={14} />
             Validation semantique
           </div>
           <h2 className="font-display text-2xl font-extrabold text-slate-800 dark:text-white">
-            Verifier chaque <span className="text-purple-500">correspondance</span>
+            Verifier chaque <span style={{ color: primaryColor }}>correspondance</span>
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             {items.length} items extraits — Verifiez et confirmez chaque association
@@ -144,8 +140,8 @@ export default function SemanticValidation({
 
       {/* Statistiques */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="glass-card text-center py-4 border-l-4 border-emerald-400">
-          <div className="text-2xl font-bold text-emerald-600">{linkedCount}</div>
+        <div className="glass-card text-center py-4 border-l-4" style={{ borderLeftColor: primaryColor }}>
+          <div className="text-2xl font-bold" style={{ color: primaryColor }}>{linkedCount}</div>
           <div className="text-xs text-slate-500">Associes</div>
         </div>
         <div className="glass-card text-center py-4 border-l-4 border-blue-400">
@@ -161,7 +157,6 @@ export default function SemanticValidation({
       {/* Liste des items triés */}
       <div className="space-y-3">
         {visibleItems.map((item, displayIdx) => {
-          // Trouver l'index original pour les décisions
           const originalIdx = items.findIndex(i => i.description === item.description);
           const decision = decisions[originalIdx] || { decision: 'new', targetItemId: null };
           const scoreInfo = getScoreInfo(item);
@@ -192,7 +187,7 @@ export default function SemanticValidation({
                     )}
 
                     {isPreselected && (
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-purple-100 dark:bg-purple-500/10 text-purple-600">
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ backgroundColor: primaryLight, color: primaryColor }}>
                         <Sparkles size={12} className="inline mr-1" />
                         Pré-sélectionné
                       </span>
@@ -203,8 +198,18 @@ export default function SemanticValidation({
                   {!isSkipped && suggestedLibelle && (
                     <div className="text-sm text-slate-500 dark:text-slate-400 mb-3">
                       Suggestion IA : 
-                      <span className="font-medium text-purple-600 dark:text-purple-400 ml-1">
+                      <span className="font-medium ml-1" style={{ color: primaryColor }}>
                         {suggestedLibelle}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Afficher l'item matché quand pré-sélectionné */}
+                  {isPreselected && decision.targetItemId && (
+                    <div className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+                      Matché avec : 
+                      <span className="font-medium ml-1" style={{ color: primaryColor }}>
+                        {existingItems.find(ei => ei.id_item === decision.targetItemId)?.libelle_canonique || 'Item inconnu'}
                       </span>
                     </div>
                   )}
@@ -320,7 +325,7 @@ export default function SemanticValidation({
           />
           Écraser si existante
         </label>
-        <button onClick={() => onSave(decisions)} className="btn-primary">
+        <button onClick={() => onSave(decisions)} className="btn-primary" style={{ backgroundColor: primaryColor }}>
           <Save size={18} />
           Enregistrer avec mes choix
         </button>

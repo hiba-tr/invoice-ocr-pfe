@@ -97,22 +97,6 @@ def build_items_from_rows(
     totals: List[LineItem] = []
 
     desc_col_idx = _find_description_col(col_semantics, schema)
-    # 🔍 DEBUG
-    print(f"=== build_items_from_rows ===")
-    print(f"Nombre de rows: {len(rows)}")
-    print(f"col_semantics: {col_semantics}")
-    print(f"desc_col_idx: {desc_col_idx}")
-    
-    for row in sorted(rows, key=lambda r: r.get("row_index", 0)):
-        raw_desc = row.get("description", "")
-        row_type = row.get("row_type", "data")
-        row_idx  = row.get("row_index", 0)
-        raw_vals = row.get("values", {})
-        
-        # 🔍 DEBUG
-        print(f"  Row {row_idx}: desc='{raw_desc[:50]}', type={row_type}, values keys={list(raw_vals.keys())}")
-        #end debug
-        
     _log.debug(f"[LineItemBuilder] Colonne description = idx {desc_col_idx} ({col_semantics[desc_col_idx] if desc_col_idx < len(col_semantics) else '?'})")
 
     for row in sorted(rows, key=lambda r: r.get("row_index", 0)):
@@ -193,7 +177,8 @@ def _tables_are_continuations(t1: Dict, t2: Dict) -> bool:
 def merge_tables(tables: List[Dict]) -> List[Dict]:
     """
     Fusionne les tableaux de continuation multi-pages.
-    Conserve les rows déjà structurées par le bridge.
+    - Fusionne uniquement si les pages sont consécutives.
+    - Ne fusionne pas si la dernière ligne de la table courante est un total.
     """
     if not tables:
         return []
@@ -215,6 +200,18 @@ def merge_tables(tables: List[Dict]) -> List[Dict]:
                 continue
             if t2.get("page_no") == t1.get("page_no"):
                 continue
+
+            # ---- Nouvelle vérification 1 : pages consécutives ----
+            current_max_page = max(current["source_pages"])
+            if t2.get("page_no") != current_max_page + 1:
+                continue
+
+            # ---- Nouvelle vérification 2 : pas de total en fin de tableau ----
+            if current["rows"]:
+                last_row = current["rows"][-1]
+                if last_row.get("row_type") == "total":
+                    continue
+
             if _tables_are_continuations(t1, t2):
                 offset = max((r.get("row_index", 0) for r in current["rows"]), default=-1) + 1
                 for row in t2.get("rows", []):

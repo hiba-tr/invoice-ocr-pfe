@@ -249,6 +249,8 @@ class InvoiceDocument:
     financial_summary: FinancialSummary
     quality: ExtractionQuality
     raw_tables: List[RawTable] = field(default_factory=list)
+    extra_metadata: Dict[str, str] = field(default_factory=dict)
+    candidate_texts: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
         return {
@@ -258,6 +260,8 @@ class InvoiceDocument:
             "financial_summary": self.financial_summary.to_dict(),
             "quality": self.quality.to_dict(),
             "raw_tables": [{"table_id": rt.table_id, "headers": rt.headers, "rows": rt.rows} for rt in self.raw_tables],
+            "extra_metadata": self.extra_metadata, 
+            "candidate_texts": self.candidate_texts,
         }
 
     def to_json(self, path: Optional[str] = None, indent: int = 2) -> str:

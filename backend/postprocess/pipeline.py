@@ -18,8 +18,10 @@ from .invoice.line_item_builder import build_items_from_rows, merge_tables
 from .invoice.financial_analyzer import analyze_financials
 from .quality.quality_scorer import compute_quality
 from .models import (
-    InvoiceDocument, Section, LineItem,  RawTable
+    InvoiceDocument, Section, LineItem,
+    RawTable, DocumentIdentity
 )
+from .invoice.header_extractor import _collect_all_text
 
 _log = logging.getLogger(__name__)
 
@@ -79,6 +81,94 @@ def _matrix_to_rows(table: Dict) -> List[Dict[str, Any]]:
 
     return rows
 
+def _collect_candidate_texts(pages: List[Dict], identity: DocumentIdentity) -> List[str]:
+    """
+    Parcourt toutes les cellules des kv_regions et retourne les textes
+    qui ne sont pas déjà utilisés dans l'identité (company, concession, period…).
+    """
+    used = {
+        identity.company,
+        identity.concession,
+        identity.period,
+        identity.invoice_number,
+        identity.currency,
+        identity.document_type,
+    }
+    candidates = []
+    for page in pages:
+        for kv in page.get("kv_regions", []):
+            for cell in kv.get("cells", []):
+                text = cell.get("text", "").strip()
+                if not text or text in used:
+                    continue
+                # on garde tout le reste
+                candidates.append(text)
+    # Déduplication et ordre d’apparition conservé
+    seen = set()
+    unique = []
+    for c in candidates:
+        if c not in seen:
+            seen.add(c)
+            unique.append(c)
+    return unique
+def _clean_table_columns(table: Dict) -> Dict:
+    """
+    Nettoie les colonnes en double dans les en-têtes.
+    - Si une colonne a le même nom que la suivante, on fusionne leurs contenus
+      dans la matrice (concaténation avec un espace) et on supprime la colonne dupliquée.
+    - Les sémantiques et le nombre de colonnes sont mis à jour.
+    """
+    headers = table.get("column_headers_raw", [])
+    semantics = table.get("column_semantics", [])
+    matrix = table.get("matrix", [])
+    if not headers or not matrix:
+        return table
+
+    new_headers = []
+    new_semantics = []
+    col_mapping = []  # pour chaque colonne d'origine, vers quelle nouvelle colonne elle va
+    skip = False
+    for i, h in enumerate(headers):
+        if skip:
+            skip = False
+            continue
+        # Si la colonne suivante a le même nom (insensible à la casse) on les fusionne
+        if i + 1 < len(headers) and headers[i+1].strip().lower() == h.strip().lower():
+            # Fusionner les textes des cellules de la matrice pour ces deux colonnes
+            for row in matrix:
+                if row[i] is not None and row[i+1] is not None:
+                    row[i] = (row[i] + " " + row[i+1]).strip()
+                elif row[i+1] is not None:
+                    row[i] = row[i+1]
+                # supprimer la colonne i+1 plus tard
+            new_headers.append(h)
+            new_semantics.append(semantics[i] if i < len(semantics) else f"col_{i}")
+            col_mapping.append(len(new_headers) - 1)
+            skip = True  # sauter la colonne suivante
+        else:
+            new_headers.append(h)
+            new_semantics.append(semantics[i] if i < len(semantics) else f"col_{i}")
+            col_mapping.append(len(new_headers) - 1)
+
+    # Reconstruire la matrice avec seulement les colonnes conservées
+    new_matrix = []
+    for row in matrix:
+        new_row = [row[i] for i in range(len(headers)) if not (i > 0 and headers[i].strip().lower() == headers[i-1].strip().lower() and i-1 not in col_mapping)]  # méthode simplifiée
+    # Méthode plus lisible :
+    new_matrix = []
+    for row in matrix:
+        new_row = []
+        for i in range(len(headers)):
+            if i not in col_mapping:
+                continue
+            new_row.append(row[i])
+        new_matrix.append(new_row)
+
+    table["column_headers_raw"] = new_headers
+    table["column_semantics"] = new_semantics
+    table["matrix"] = new_matrix
+    table["num_cols"] = len(new_headers)
+    return table
 
 def process_from_dict(
     raw: Dict[str, Any],
@@ -87,13 +177,16 @@ def process_from_dict(
     t0 = time.perf_counter()
 
     pages    = raw.get("pages", [])
+    # Générer le texte complet une seule fois
     tables   = raw.get("tables", [])
+    all_text_enriched = _collect_all_text(pages, tables)
+
     metadata = raw.get("metadata", {})
     doc_info = raw.get("document_info", {})
 
-    # ── 1. Devise ──────────────────────────────────────────────────────────
-    currency = _find_currency_in_pages(pages)
 
+        # ── 1. Devise ──────────────────────────────────────────────────────────
+    currency = _find_currency_in_pages(pages, all_text_enriched, tables)
     # ── 2. Schéma de colonnes ──────────────────────────────────────────────
     schema_table = next((t for t in tables if t.get("column_headers_raw")), None)
     if schema_table:
@@ -109,7 +202,10 @@ def process_from_dict(
     for t in tables:
         if "rows" not in t:
             t["rows"] = _matrix_to_rows(t)
-
+            
+        # 3. Nettoyer les colonnes en double pour chaque table
+    for t in tables:
+        t = _clean_table_columns(t)
     # 🔍 DIAGNOSTIC TEMPORAIRE
     _log.warning("=== DIAGNOSTIC FUSION ===")
     _log.warning(f"Nombre de tables brutes : {len(tables)}")
@@ -138,8 +234,10 @@ def process_from_dict(
             "semantics": table.get("column_semantics", []),
         }
         items, totals = build_items_from_rows(rows, col_semantics, schema, currency)
-        # ✅ Inclure les lignes de totaux dans la section pour l'affichage
+        # Rétablir l'ordre exact de la facture (tri par position d'origine)
         all_items = items + totals
+        all_items.sort(key=lambda it: it.row_index)
+        
         sections.append(Section(
             name="Items",
             row_index=0,
@@ -149,9 +247,11 @@ def process_from_dict(
         global_totals.extend(totals)   # conserver pour l'analyse financière
 
     # ── 6. Identité ────────────────────────────────────────────────────────
-    identity = extract_identity(doc_info, pages, metadata, known_suppliers)
+    identity = extract_identity(doc_info, pages, metadata, known_suppliers, all_text=all_text_enriched)    
     identity.currency = currency
 
+    # ── 6b. Métadonnées supplémentaires ────────────────────────────────────
+    candidate_texts = _collect_candidate_texts(pages, identity)
     # ── 7. Analyse financière ──────────────────────────────────────────────
     financial_summary = analyze_financials(
         sections, global_totals, raw.get("totals", {}), schema, currency
@@ -181,13 +281,10 @@ def process_from_dict(
         financial_summary=financial_summary,
         quality=quality,
         raw_tables=raw_tables,
+        candidate_texts=candidate_texts,   # ← nouveau champ
+        extra_metadata={},                 # gardé vide pour compatibilité
     )
-
-    elapsed = time.perf_counter() - t0
-    _log.info(
-        f"[Pipeline] ✓ {elapsed:.3f}s | Score: {quality.overall_score:.0%} | "
-        f"Colonnes: {schema.semantics} | Items: {sum(s.item_count for s in sections)}"
-    )
+    print(invoice.summary_text())
     return invoice
 
 
