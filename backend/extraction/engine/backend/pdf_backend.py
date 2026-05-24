@@ -13,7 +13,6 @@ from backend.extraction.engine.datamodel.backend_options import PdfBackendOption
 from backend.extraction.engine.datamodel.base_models import InputFormat
 from backend.extraction.engine.datamodel.document import InputDocument
 
-
 class PdfPageBackend(ABC):
     @abstractmethod
     def get_text_in_rect(self, bbox: BoundingBox) -> str:

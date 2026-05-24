@@ -1,5 +1,7 @@
+// frontend/src/components/ResumeModal.jsx
 import { useState, useEffect } from 'react';
 import { X, FileText, Calendar, Building2, Package, Euro, TrendingUp, AlertCircle, Landmark } from 'lucide-react';
+import { apiCall } from '../api/api';
 
 export default function ResumeModal({ isOpen, onClose, factureId, factureData }) {
   const [resume, setResume] = useState(null);
@@ -14,19 +16,11 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
       setLoading(true);
       setError(null);
       try {
-        // 1. Récupérer le résumé
-        const resumeResponse = await fetch(`http://localhost:8000/facture/${factureId}/resume`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        const resumeData = await resumeResponse.json();
+        const resumeData = await apiCall('POST', `/facture/${factureId}/resume`);
+        const factureDataRaw = await apiCall('GET', `/facture/${factureId}`);
         
-        // 2. Récupérer les informations de la facture (concession, fournisseur)
-        const factureResponse = await fetch(`http://localhost:8000/facture/${factureId}`);
-        const factureDataRaw = await factureResponse.json();
-        
-        console.log("📊 Facture data:", factureDataRaw);
-        console.log("📊 Resume data:", resumeData);
+        console.log('📊 Facture data raw:', factureDataRaw);
+        console.log('📊 Resume data:', resumeData);
         
         setFactureInfo(factureDataRaw.facture || factureDataRaw);
         setResume(resumeData.resume || resumeData);
@@ -44,64 +38,69 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
   if (!isOpen) return null;
 
   const primaryColor = '#06b6d4';
-
-  // Récupération des valeurs depuis factureInfo (base de données)
   const nbArticles = resume?.nb_articles || 0;
-  
-  // Total TTC
   let totalTtc = resume?.total_ttc || 0;
-  if (totalTtc === 0 && resume?.total_ht) {
-    totalTtc = resume.total_ht;
+  if (totalTtc === 0 && resume?.total_ht) totalTtc = resume.total_ht;
+  
+  // 🔥 CORRECTION : Extraire correctement la concession
+  // Priorité 1: depuis factureInfo.concession (objet)
+  // Priorité 2: depuis factureInfo.concession_nom (string)
+  // Priorité 3: depuis factureData.concession
+  // Priorité 4: depuis resume.concession
+  // Priorité 5: depuis le texte du résumé (fallback)
+  let concession = "Non spécifiée";
+  
+  if (factureInfo?.concession) {
+    if (typeof factureInfo.concession === 'object' && factureInfo.concession.nom) {
+      concession = factureInfo.concession.nom;
+    } else if (typeof factureInfo.concession === 'string') {
+      concession = factureInfo.concession;
+    }
+  } else if (factureInfo?.concession_nom && typeof factureInfo.concession_nom === 'string') {
+    concession = factureInfo.concession_nom;
+  } else if (factureData?.concession && typeof factureData.concession === 'string') {
+    concession = factureData.concession;
+  } else if (resume?.concession && typeof resume.concession === 'string') {
+    concession = resume.concession;
   }
   
-  // ✅ Fournisseur - depuis la base (factureInfo)
-  const fournisseur = factureInfo?.fournisseur || 
-                      factureData?.fournisseur || 
-                      "Non spécifié";
+  // 🔥 Extraire le fournisseur correctement
+  let fournisseur = "Non spécifié";
+  if (factureInfo?.fournisseur && typeof factureInfo.fournisseur === 'string') {
+    fournisseur = factureInfo.fournisseur;
+  } else if (factureData?.fournisseur && typeof factureData.fournisseur === 'string') {
+    fournisseur = factureData.fournisseur;
+  } else if (resume?.fournisseur && typeof resume.fournisseur === 'string') {
+    fournisseur = resume.fournisseur;
+  }
   
-  // ✅ Concession - depuis la base (factureInfo.concession)
-  const concession = factureInfo?.concession?.nom || 
-                     factureInfo?.concession_nom ||
-                     factureData?.concession ||
-                     "Non spécifiée";
-  
-  // Date
-  const dateEmission = factureInfo?.date_facture || 
-                       resume?.date_emission || 
-                       "N/A";
+  const dateEmission = factureInfo?.date_facture || resume?.date_emission || "N/A";
   const formattedDate = dateEmission !== "N/A" ? dateEmission.split('T')[0] : "N/A";
-  
-  // Devise
   const devise = factureInfo?.devise || resume?.devise || "EUR";
 
-  console.log("🔄 Affichage modal:", { 
-    nbArticles, totalTtc, fournisseur, concession, formattedDate,
-    factureInfo 
-  });
+  console.log('🔄 Concession extraite:', concession);
+  console.log('🔄 Fournisseur extrait:', fournisseur);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="glass-card w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col animate-slide-up">
-        
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="glass-card w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200/50 dark:border-slate-700/30">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${primaryColor}20` }}>
               <FileText size={20} style={{ color: primaryColor }} />
             </div>
             <div>
-              <h3 className="font-display text-xl font-bold text-slate-800 dark:text-white">
-                Résumé intelligent
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Facture #{factureId}
-              </p>
+              <h3 className="font-display text-xl font-bold text-slate-800">Résumé intelligent</h3>
+              <p className="text-xs text-slate-500">Facture #{factureId}</p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
             <X size={20} className="text-slate-500" />
           </button>
         </div>
@@ -121,45 +120,40 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
           ) : resume ? (
             <>
               {/* Résumé texte */}
-              <div className="bg-gradient-to-r from-cyan-50/50 to-blue-50/50 dark:from-cyan-950/20 dark:to-blue-950/20 rounded-xl p-6 border-l-4" style={{ borderLeftColor: primaryColor }}>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {resume.resume_texte || "Aucun résumé disponible"}
-                </p>
+              <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-6 border-l-4" style={{ borderLeftColor: primaryColor }}>
+                <p className="text-slate-700">{resume.resume_texte || "Aucun résumé disponible"}</p>
               </div>
 
-              {/* Statistiques - 5 cartes avec les données de la base */}
+              {/* Statistiques */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div className="glass-card text-center py-3">
                   <Package size={18} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white">{nbArticles}</p>
+                  <p className="text-2xl font-bold text-slate-800">{nbArticles}</p>
                   <p className="text-xs text-slate-500">Articles</p>
                 </div>
                 <div className="glass-card text-center py-3">
                   <Euro size={18} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-xl font-bold truncate" style={{ color: primaryColor }}>
-                    {totalTtc.toLocaleString('fr-FR')}
-                  </p>
+                  <p className="text-xl font-bold truncate" style={{ color: primaryColor }}>{totalTtc.toLocaleString('fr-FR')}</p>
                   <p className="text-xs text-slate-500">Total TTC ({devise})</p>
                 </div>
                 <div className="glass-card text-center py-3">
                   <Building2 size={18} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-sm font-medium text-slate-800 dark:text-white truncate" title={fournisseur}>
-                    {fournisseur.length > 15 ? fournisseur.substring(0, 15) + '...' : fournisseur}
+                  <p className="text-sm font-medium text-slate-800 truncate" title={fournisseur}>
+                    {fournisseur.length > 15 ? fournisseur.substring(0,15)+'...' : fournisseur}
                   </p>
                   <p className="text-xs text-slate-500">Fournisseur</p>
                 </div>
                 <div className="glass-card text-center py-3">
                   <Landmark size={18} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-sm font-medium text-slate-800 dark:text-white truncate" title={concession}>
-                    {concession.length > 15 ? concession.substring(0, 15) + '...' : concession}
+                  {/* 🔥 CORRECTION : Afficher la concession correctement */}
+                  <p className="text-sm font-medium text-slate-800 truncate" title={concession}>
+                    {concession.length > 15 ? concession.substring(0,15)+'...' : concession}
                   </p>
                   <p className="text-xs text-slate-500">Concession</p>
                 </div>
                 <div className="glass-card text-center py-3">
                   <Calendar size={18} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-sm font-medium text-slate-800 dark:text-white">
-                    {formattedDate}
-                  </p>
+                  <p className="text-sm font-medium text-slate-800">{formattedDate}</p>
                   <p className="text-xs text-slate-500">Date</p>
                 </div>
               </div>
@@ -167,17 +161,13 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
               {/* Catégories */}
               {resume.categories_principales?.length > 0 && (
                 <div className="glass-card p-4">
-                  <h4 className="font-medium text-slate-800 dark:text-white mb-3 flex items-center gap-2">
+                  <h4 className="font-medium text-slate-800 mb-3 flex items-center gap-2">
                     <TrendingUp size={16} style={{ color: primaryColor }} />
                     Catégories principales
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {resume.categories_principales.map((cat, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 rounded-full text-xs font-mono"
-                        style={{ backgroundColor: `${primaryColor}15`, color: primaryColor }}
-                      >
+                      <span key={idx} className="px-3 py-1 rounded-full text-xs font-mono" style={{ backgroundColor: `${primaryColor}15`, color: primaryColor }}>
                         {cat}
                       </span>
                     ))}
@@ -188,15 +178,15 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
               {/* Détail des items */}
               {resume.details_items?.length > 0 && (
                 <div className="glass-card p-4">
-                  <h4 className="font-medium text-slate-800 dark:text-white mb-3">Détail des articles</h4>
+                  <h4 className="font-medium text-slate-800 mb-3">Détail des articles</h4>
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {resume.details_items.map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-                        <span className="text-sm text-slate-700 dark:text-slate-300">{item.description}</span>
+                      <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+                        <span className="text-sm text-slate-700">{item.description}</span>
                         <div className="flex gap-3">
-                          {Object.entries(item.valeurs).map(([key, val]) => (
+                          {Object.entries(item.valeurs || {}).map(([key, val]) => (
                             <span key={key} className="text-xs font-mono text-slate-500">
-                              {key}: {val}
+                              {key}: {String(val)}
                             </span>
                           ))}
                         </div>
@@ -214,11 +204,8 @@ export default function ResumeModal({ isOpen, onClose, factureId, factureData })
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-200/50 dark:border-slate-700/30 flex justify-end">
-          <button
-            onClick={onClose}
-            className="btn-glass px-6"
-          >
+        <div className="p-6 border-t border-slate-200/50 flex justify-end">
+          <button onClick={onClose} className="btn-glass px-6">
             Fermer
           </button>
         </div>

@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import sys
 import time
@@ -22,7 +23,7 @@ from backend.extraction.engine.datamodel.base_models import (
 from backend.extraction.engine.datamodel.document import (
     ConversionResult, InputDocument, _DocumentConversionInput,
 )
-from backend.extraction.engine.datamodel.pipeline_options import  PdfPipelineOptions
+from backend.extraction.engine.datamodel.pipeline_options import PipelineOptions, PdfPipelineOptions, OcrAutoOptions
 from backend.extraction.engine.datamodel.settings import (
     DEFAULT_PAGE_RANGE, DocumentLimits, PageRange, settings,
 )
@@ -33,7 +34,9 @@ from backend.extraction.engine.utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 
-
+from backend.extraction.engine.datamodel.pipeline_options import (
+    ThreadedPdfPipelineOptions, RapidOcrOptions
+)
 class FormatOption(BaseFormatOption):
     pipeline_cls: Type[BasePipeline]
     backend_options: Optional[BackendOptions] = None
@@ -91,79 +94,43 @@ class DocumentConverter:
             for format in self.allowed_formats
         }
 
-        # --- FORCER L'OCR POUR LES PDF ---
-        # --- FORCER L'OCR POUR LES PDF (RapidOCR obligatoire) ---
-        if InputFormat.PDF in self.format_to_options:
-            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
-            
-            opt = self.format_to_options[InputFormat.PDF]
-            current_opts = opt.pipeline_options
-            
-            new_opts = PdfPipelineOptions()
-            new_opts.do_ocr = True
-            new_opts.ocr_options = RapidOcrOptions(
+        # --- OPTIONS COMMUNES : paramètres identiques pour PDF et IMAGE ---
+        def _make_opts(ocr_batch: int) -> ThreadedPdfPipelineOptions:
+            opts = ThreadedPdfPipelineOptions()
+            opts.do_ocr = True
+            opts.document_timeout = 900.0  # ~15s/page × 50 pages CPU worst case; GPU sera bien en dessous
+            opts.ocr_options = RapidOcrOptions(
                 force_full_page_ocr=False,
                 lang=["english"]
             )
-            new_opts.do_table_structure = True
-            new_opts.table_structure_options.mode = "accurate"
-            
-            if current_opts:
-                for k, v in current_opts.__dict__.items():
-                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
-                        try:
-                            setattr(new_opts, k, v)
-                        except Exception:
-                            pass
-            
-            opt.pipeline_options = new_opts
-            _log.info("OCR forcé → RapidOCR pour les PDF")
-        # -----------------------------
-        # --- FORCER L'OCR POUR LES IMAGES ---
-        # --- FORCER L'OCR POUR LES IMAGES (RapidOCR obligatoire) ---
-        if InputFormat.IMAGE in self.format_to_options:
-            from backend.extraction.engine.datamodel.pipeline_options import RapidOcrOptions
-            
-            opt = self.format_to_options[InputFormat.IMAGE]
-            current_opts = opt.pipeline_options
-            
-            new_opts = PdfPipelineOptions()
-            new_opts.do_ocr = True
-            new_opts.ocr_options = RapidOcrOptions(
-                force_full_page_ocr=False,
-                lang=["english"]  # RapidOCR supporte "english" et "chinese"
-            )
-            new_opts.do_table_structure = True
-            new_opts.table_structure_options.mode = "accurate"
-            
-            # Copier les autres attributs existants
-            if current_opts:
-                for k, v in current_opts.__dict__.items():
-                    if k not in ['do_ocr', 'ocr_options', 'do_table_structure', 'table_structure_options']:
-                        try:
-                            setattr(new_opts, k, v)
-                        except Exception:
-                            pass
-            
-            opt.pipeline_options = new_opts
-            _log.info("OCR forcé → RapidOCR pour les IMAGES")
+            opts.do_table_structure = True
+            opts.table_structure_options.mode = "accurate"
+            opts.table_structure_options.do_cell_matching = True
+            opts.ocr_batch_size = ocr_batch
+            opts.layout_batch_size = 4
+            opts.table_batch_size = 4
+            return opts
 
-
+        # Deux pipelines séparés : chacun gère son propre cycle de vie backend.
+        # Le partage d'une instance unique entre PDF et IMAGE causait un crash
+        # NoneType sur pypdfium2 quand le backend était déchargé entre les stages.
         self._pipelines: dict[InputFormat, BasePipeline] = {}
-        for fmt, opt in self.format_to_options.items():
-            if opt.pipeline_options is not None:
-                # DIAGNOSTIC
-                opts = opt.pipeline_options
-                print(f"=== FORMAT: {fmt.value} ===")
-                print(f"  pipeline_options type: {type(opts).__name__}")
-                print(f"  do_ocr: {getattr(opts, 'do_ocr', 'N/A')}")
-                print(f"  do_table_structure: {getattr(opts, 'do_table_structure', 'N/A')}")
-                print(f"  ocr_options type: {type(getattr(opts, 'ocr_options', None)).__name__ if getattr(opts, 'ocr_options', None) else None}")
-                
-                self._pipelines[fmt] = opt.pipeline_cls(
-                    pipeline_options=opt.pipeline_options
-                )
-                _log.info(f"Pipeline initialisé pour {fmt.value}")
+
+        if InputFormat.PDF in self.format_to_options:
+            pdf_opts = _make_opts(ocr_batch=15)
+            self.format_to_options[InputFormat.PDF].pipeline_options = pdf_opts
+            self._pipelines[InputFormat.PDF] = DocumentExtractionPipeline(
+                pipeline_options=pdf_opts
+            )
+            _log.info("Pipeline PDF initialisé")
+
+        if InputFormat.IMAGE in self.format_to_options:
+            img_opts = _make_opts(ocr_batch=1)
+            self.format_to_options[InputFormat.IMAGE].pipeline_options = img_opts
+            self._pipelines[InputFormat.IMAGE] = DocumentExtractionPipeline(
+                pipeline_options=img_opts
+            )
+            _log.info("Pipeline IMAGE initialisé")
 
     def initialize_pipeline(self, format: InputFormat):
         """Vérifie qu'un pipeline est disponible pour le format"""

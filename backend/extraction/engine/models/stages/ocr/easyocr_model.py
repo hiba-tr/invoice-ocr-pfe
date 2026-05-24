@@ -9,7 +9,10 @@ import numpy
 from docling_core.types.doc import BoundingBox, CoordOrigin
 from docling_core.types.doc.page import BoundingRectangle, TextCell
 
-from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from backend.extraction.engine.datamodel.accelerator_options import (
+    AcceleratorDevice,
+    AcceleratorOptions,
+)
 from backend.extraction.engine.datamodel.base_models import Page
 from backend.extraction.engine.datamodel.document import ConversionResult
 from backend.extraction.engine.datamodel.pipeline_options import (
@@ -43,7 +46,7 @@ class EasyOcrModel(BaseOcrModel):
         )
         self.options: EasyOcrOptions
 
-        self.scale = 2  # multiplier for 72 dpi == 144  dpi.
+        self.scale = 3  # multiplier for 72 dpi == 216 dpi.
 
         if self.enabled:
             try:
@@ -131,67 +134,67 @@ class EasyOcrModel(BaseOcrModel):
         if not self.enabled:
             yield from page_batch
             return
- 
-        from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor
-        preprocessor = ImagePreprocessor()
- 
+
         for page in page_batch:
             assert page._backend is not None
             if not page._backend.is_valid():
                 yield page
-                continue
- 
-            with TimeRecorder(conv_res, "ocr"):
-                ocr_rects = self.get_ocr_rects(page)
- 
-                all_ocr_cells = []
-                for ocr_rect in ocr_rects:
-                    if ocr_rect.area() == 0:
-                        continue
- 
-                    # 1. Image native
-                    high_res_image = page._backend.get_page_image(
-                        scale=self.scale, cropbox=ocr_rect
-                    )
- 
-                    # 2. Preprocessing adaptatif (passthrough si image propre)
-                    high_res_image = preprocessor.get_enhanced_image(high_res_image)
- 
-                    im = numpy.array(high_res_image.convert("RGB"))
-                    result = self.reader.readtext(im)
- 
-                    del high_res_image
-                    del im
- 
-                    cells = [
-                        TextCell(
-                            index=ix,
-                            text=line[1],
-                            orig=line[1],
-                            confidence=line[2],
-                            from_ocr=True,
-                            rect=BoundingRectangle.from_bounding_box(
-                                BoundingBox.from_tuple(
-                                    coord=(
-                                        (line[0][0][0] / self.scale) + ocr_rect.l,
-                                        (line[0][0][1] / self.scale) + ocr_rect.t,
-                                        (line[0][2][0] / self.scale) + ocr_rect.l,
-                                        (line[0][2][1] / self.scale) + ocr_rect.t,
-                                    ),
-                                    origin=CoordOrigin.TOPLEFT,
-                                )
-                            ),
+            else:
+                with TimeRecorder(conv_res, "ocr"):
+                    ocr_rects = self.get_ocr_rects(page)
+
+                    all_ocr_cells = []
+                    for ocr_rect in ocr_rects:
+                        # Skip zero area boxes
+                        if ocr_rect.area() == 0:
+                            continue
+                        high_res_image = page._backend.get_page_image(
+                            scale=self.scale, cropbox=ocr_rect
                         )
-                        for ix, line in enumerate(result)
-                        if line[2] >= self.options.confidence_threshold
-                    ]
-                    all_ocr_cells.extend(cells)
- 
-                self.post_process_cells(all_ocr_cells, page)
- 
+                        im = numpy.array(high_res_image)
+
+                        with warnings.catch_warnings():
+                            if self.options.suppress_mps_warnings:
+                                warnings.filterwarnings(
+                                    "ignore", message=".*pin_memory.*MPS.*"
+                                )
+
+                            result = self.reader.readtext(im)
+
+                        del high_res_image
+                        del im
+
+                        cells = [
+                            TextCell(
+                                index=ix,
+                                text=line[1],
+                                orig=line[1],
+                                from_ocr=True,
+                                confidence=line[2],
+                                rect=BoundingRectangle.from_bounding_box(
+                                    BoundingBox.from_tuple(
+                                        coord=(
+                                            (line[0][0][0] / self.scale) + ocr_rect.l,
+                                            (line[0][0][1] / self.scale) + ocr_rect.t,
+                                            (line[0][2][0] / self.scale) + ocr_rect.l,
+                                            (line[0][2][1] / self.scale) + ocr_rect.t,
+                                        ),
+                                        origin=CoordOrigin.TOPLEFT,
+                                    )
+                                ),
+                            )
+                            for ix, line in enumerate(result)
+                            if line[2] >= self.options.confidence_threshold
+                        ]
+                        all_ocr_cells.extend(cells)
+
+                    # Post-process the cells
+                    self.post_process_cells(all_ocr_cells, page)
+
+                # DEBUG code:
                 if settings.debug.visualize_ocr:
                     self.draw_ocr_rects_and_cells(conv_res, page, ocr_rects)
- 
+
                 yield page
 
     @classmethod

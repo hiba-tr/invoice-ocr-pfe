@@ -84,7 +84,6 @@ class UniversalSemanticCorrector:
         best_score = 0.0
         best_match = token
 
-        # Embedding du token (une seule fois)
         try:
             token_emb = encode([norm_token])
         except:
@@ -93,18 +92,18 @@ class UniversalSemanticCorrector:
         for item in db_items:
             item_norm = normalize_text(item.libelle_canonique).lower()
             
-            for word in item_norm.split():
+            # 🔥 CORRECTION: Convertir item_norm.split() qui est une liste
+            words = item_norm.split()
+            for word in words:
                 if len(word) < 2:
                     continue
                 
                 word_norm = normalize_word(word)
 
-                # 1. Fuzzy Matching (fautes de frappe)
                 fuzzy_score = _rfuzz.token_sort_ratio(norm_token, word_norm) / 100.0
                 partial_score = _rfuzz.partial_ratio(norm_token, word_norm) / 100.0
                 score = max(fuzzy_score, partial_score)
 
-                # 2. Similarité sémantique (embeddings)
                 if token_emb is not None:
                     try:
                         word_emb = encode([word_norm])
@@ -119,9 +118,7 @@ class UniversalSemanticCorrector:
                     best_match = word
 
         if best_score >= 0.75:
-            _log.debug(f"Token corrigé : '{token}' → '{best_match}' (score={best_score:.2f})")
             return best_match
-
         return token
 
 

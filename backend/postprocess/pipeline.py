@@ -12,16 +12,15 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from .invoice.header_extractor import  _collect_all_text
 from .core.schema_detector import build_schema
 from .invoice.header_extractor import extract_identity, _find_currency_in_pages
 from .invoice.line_item_builder import build_items_from_rows, merge_tables
 from .invoice.financial_analyzer import analyze_financials
 from .quality.quality_scorer import compute_quality
 from .models import (
-    InvoiceDocument, Section, LineItem,
-    RawTable, DocumentIdentity
+    InvoiceDocument, Section, LineItem, RawTable, DocumentIdentity
 )
-from .invoice.header_extractor import _collect_all_text
 
 _log = logging.getLogger(__name__)
 
@@ -174,7 +173,7 @@ def process_from_dict(
     raw: Dict[str, Any],
     known_suppliers: Optional[List[str]] = None,
 ) -> InvoiceDocument:
-    t0 = time.perf_counter()
+    time.perf_counter()
 
     pages    = raw.get("pages", [])
     # Générer le texte complet une seule fois

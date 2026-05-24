@@ -1,5 +1,4 @@
 import logging
-
 from backend.extraction.engine.models.base_ocr_model import BaseOcrModel
 from backend.extraction.engine.models.factories.base_factory import BaseFactory
 

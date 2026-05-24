@@ -18,6 +18,7 @@ from backend.extraction.engine.models.base_model import BasePageModel
 from backend.extraction.engine.models.stages.layout.layout_model import LayoutModel
 from backend.extraction.engine.utils.profiling import TimeRecorder
 
+
 _log = logging.getLogger(__name__)
 
 

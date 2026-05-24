@@ -12,8 +12,15 @@ from docling_core.types.doc.page import (
 )
 from PIL import ImageDraw
 
-from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
-from backend.extraction.engine.datamodel.base_models import Page, Table, TableStructurePrediction
+from backend.extraction.engine.datamodel.accelerator_options import (
+    AcceleratorDevice,
+    AcceleratorOptions,
+)
+from backend.extraction.engine.datamodel.base_models import (
+    Page,
+    Table,
+    TableStructurePrediction,
+)
 from backend.extraction.engine.datamodel.document import ConversionResult
 from backend.extraction.engine.datamodel.pipeline_options import (
     TableFormerMode,
@@ -24,6 +31,7 @@ from backend.extraction.engine.models.base_table_model import BaseTableStructure
 from backend.extraction.engine.models.utils.hf_model_download import download_hf_model
 from backend.extraction.engine.utils.accelerator_utils import decide_device
 from backend.extraction.engine.utils.profiling import TimeRecorder
+
 
 
 class TableStructureModel(BaseTableStructureModel):

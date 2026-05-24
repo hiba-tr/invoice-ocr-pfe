@@ -2,12 +2,15 @@ import logging
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Literal, Optional, Type, TypedDict
-
+import time
 import numpy
 from docling_core.types.doc import BoundingBox, CoordOrigin
 from docling_core.types.doc.page import BoundingRectangle, TextCell
 
-from backend.extraction.engine.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from backend.extraction.engine.datamodel.accelerator_options import (
+    AcceleratorDevice,
+    AcceleratorOptions,
+)
 from backend.extraction.engine.datamodel.base_models import Page
 from backend.extraction.engine.datamodel.document import ConversionResult
 from backend.extraction.engine.datamodel.pipeline_options import (
@@ -19,6 +22,7 @@ from backend.extraction.engine.models.base_ocr_model import BaseOcrModel
 from backend.extraction.engine.utils.accelerator_utils import decide_device
 from backend.extraction.engine.utils.profiling import TimeRecorder
 from backend.extraction.engine.utils.utils import download_url_with_progress
+
 
 _log = logging.getLogger(__name__)
 
@@ -251,77 +255,82 @@ class RapidOcrModel(BaseOcrModel):
         if not self.enabled:
             yield from page_batch
             return
- 
-        from backend.extraction.engine.models.utils.image_preprocessing.image_preprocessor import ImagePreprocessor
-        preprocessor = ImagePreprocessor()
- 
+
         for page in page_batch:
             assert page._backend is not None
             if not page._backend.is_valid():
                 yield page
-                continue
- 
-            with TimeRecorder(conv_res, "ocr"):
-                ocr_rects = self.get_ocr_rects(page)
- 
-                all_ocr_cells = []
-                for ocr_rect in ocr_rects:
-                    if ocr_rect.area() == 0:
-                        continue
- 
-                    # 1. Récupère l'image native (scale=3 → 216 dpi, suffisant pour RapidOCR)
-                    high_res_image = page._backend.get_page_image(
-                        scale=self.scale, cropbox=ocr_rect
-                    )
- 
-                    # 2. Préprocessing intelligent : passthrough si image propre,
-                    #    léger débruitage si qualité moyenne, pipeline complet si flou
-                    high_res_image = preprocessor.get_enhanced_image(high_res_image)
- 
-                    im = numpy.array(high_res_image.convert("RGB"))
-                    result = self.reader(
-                        im,
-                        use_det=self.options.use_det,
-                        use_cls=self.options.use_cls,
-                        use_rec=self.options.use_rec,
-                    )
- 
-                    del high_res_image
-                    del im
- 
-                    if result is None or result.boxes is None:
-                        continue
- 
-                    result = list(zip(result.boxes.tolist(), result.txts, result.scores))
- 
-                    cells = [
-                        TextCell(
-                            index=ix,
-                            text=line[1],
-                            orig=line[1],
-                            confidence=line[2],
-                            from_ocr=True,
-                            rect=BoundingRectangle.from_bounding_box(
-                                BoundingBox.from_tuple(
-                                    coord=(
-                                        (line[0][0][0] / self.scale) + ocr_rect.l,
-                                        (line[0][0][1] / self.scale) + ocr_rect.t,
-                                        (line[0][2][0] / self.scale) + ocr_rect.l,
-                                        (line[0][2][1] / self.scale) + ocr_rect.t,
-                                    ),
-                                    origin=CoordOrigin.TOPLEFT,
-                                )
-                            ),
+            else:
+                with TimeRecorder(conv_res, "ocr"):
+                    ocr_rects = self.get_ocr_rects(page)
+
+                    all_ocr_cells = []
+                    for ocr_rect in ocr_rects:
+                        # Skip zero area boxes
+                        if ocr_rect.area() == 0:
+                            continue
+                        high_res_image = page._backend.get_page_image(
+                            scale=self.scale, cropbox=ocr_rect
                         )
-                        for ix, line in enumerate(result)
-                    ]
-                    all_ocr_cells.extend(cells)
- 
-                self.post_process_cells(all_ocr_cells, page)
- 
+                        im = numpy.array(high_res_image)
+                        _t = time.time()
+
+                        result = self.reader(
+                            im,
+                            use_det=self.options.use_det,
+                            use_cls=self.options.use_cls,
+                            use_rec=self.options.use_rec,
+                        )
+
+                        print(
+                            f"[OCR] page reader: {time.time()-_t:.3f}s | "
+                            f"zones: {len(ocr_rects)} | rect: {ocr_rect}"
+                        )
+                        if result is None or result.boxes is None:
+                            _log.warning("RapidOCR returned empty result!")
+                            continue
+                        result = list(
+                            zip(result.boxes.tolist(), result.txts, result.scores)
+                        )
+
+                        del high_res_image
+                        del im
+
+                        if result is not None:
+                            cells = [
+                                TextCell(
+                                    index=ix,
+                                    text=line[1],
+                                    orig=line[1],
+                                    confidence=line[2],
+                                    from_ocr=True,
+                                    rect=BoundingRectangle.from_bounding_box(
+                                        BoundingBox.from_tuple(
+                                            coord=(
+                                                (line[0][0][0] / self.scale)
+                                                + ocr_rect.l,
+                                                (line[0][0][1] / self.scale)
+                                                + ocr_rect.t,
+                                                (line[0][2][0] / self.scale)
+                                                + ocr_rect.l,
+                                                (line[0][2][1] / self.scale)
+                                                + ocr_rect.t,
+                                            ),
+                                            origin=CoordOrigin.TOPLEFT,
+                                        )
+                                    ),
+                                )
+                                for ix, line in enumerate(result)
+                            ]
+                            all_ocr_cells.extend(cells)
+
+                    # Post-process the cells
+                    self.post_process_cells(all_ocr_cells, page)
+
+                # DEBUG code:
                 if settings.debug.visualize_ocr:
                     self.draw_ocr_rects_and_cells(conv_res, page, ocr_rects)
- 
+
                 yield page
 
     @classmethod

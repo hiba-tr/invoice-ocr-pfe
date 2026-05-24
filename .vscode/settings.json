@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "rfuzz"
+    ],
+    "python.analysis.extraPaths": [
+        "./backend/extraction/engine"
     ]
 }

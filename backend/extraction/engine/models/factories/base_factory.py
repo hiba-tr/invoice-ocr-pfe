@@ -94,13 +94,12 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
                 from backend.extraction.engine.models.stages.ocr.auto_ocr_model import OcrAutoModel
                 from backend.extraction.engine.models.stages.ocr.easyocr_model import EasyOcrModel
                 from backend.extraction.engine.models.stages.ocr.rapid_ocr_model import RapidOcrModel
-                from backend.extraction.engine.models.stages.ocr.tesseract_ocr_model import TesseractOcrModel
-                from backend.extraction.engine.models.stages.ocr.paddle_ocr_model import PaddleOcrModel
-                engines = [OcrAutoModel, EasyOcrModel, RapidOcrModel, TesseractOcrModel, PaddleOcrModel]
+                
+                engines = [OcrAutoModel, EasyOcrModel, RapidOcrModel]
                 
                 for engine in engines:
                     try:
-                        self.register(engine, "local", "backend.extraction.engine.models.stages.ocr")
+                        self.register(engine, "local", "models.stages.ocr")
                         logger.info(f"Registered local OCR engine: {engine.__name__}")
                     except ValueError:
                         logger.debug(f"Engine {engine.__name__} already registered")
@@ -109,11 +108,11 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
                 
         elif self.plugin_attr_name == "layout_engines":
             try:
-                from backend.extraction.engine.models.stages.layout.layout_model import LayoutModel
+                from backend.extraction.engine.models.stages.layout.layout_model import LayoutModel               
                 engines = [LayoutModel]
                 for engine in engines:
                     try:
-                        self.register(engine, "local", "backend.extraction.engine.models.stages.layout")
+                        self.register(engine, "local", "models.stages.layout")
                         logger.info(f"Registered local layout engine: {engine.__name__}")
                     except ValueError:
                         logger.debug(f"Engine {engine.__name__} already registered")
@@ -122,9 +121,8 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
                 
         elif self.plugin_attr_name == "table_structure_engines":
             try:
-                from backend.extraction.engine.models.stages.table_structure.table_structure_model import TableStructureModel
-                
-                self.register(TableStructureModel, "local", "backend.extraction.engine.models.stages.table_structure")
+                from backend.extraction.engine.models.stages.table_structure.table_structure_model import TableStructureModel                
+                self.register(TableStructureModel, "local", "models.stages.table_structure")
                 logger.info(f"Registered local table structure engine: {TableStructureModel.__name__}")
             except ImportError as e:
                 logger.warning(f"Could not import table structure engines: {e}")
@@ -147,7 +145,7 @@ class BaseFactory(Generic[A], metaclass=ABCMeta):
             for plugin_name, plugin_module in plugin_manager.list_name_plugin():
                 plugin_module_name = str(plugin_module.__name__)
 
-                if not plugin_module_name.startswith(("docling.", "backend.")):
+                if not plugin_module_name.startswith(("docling.", "models.")):
                     logger.warning(
                         f"The plugin {plugin_name} will not be loaded because Docling is being executed with allow_external_plugins=false."
                     )

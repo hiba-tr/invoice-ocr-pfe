@@ -9,10 +9,11 @@ import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
 from backend.extraction.engine.document_converter import DocumentConverter
 from backend.extraction.engine.datamodel.base_models import InputFormat
 from .utils.geometry import BBox, sort_cells_spatially
-
+import threading
 _log = logging.getLogger(__name__)
 
 def _deduplicate_merged_headers(merged_headers: List[str]) -> List[str]:
@@ -315,6 +316,23 @@ def _collect_raw_text(page) -> str:
             text_parts.append(text)
     return "\n".join(text_parts)
 
+
+_converter = None
+_converter_lock = threading.Lock()
+
+def _get_converter():
+    """Retourne l'instance unique de DocumentConverter (chargement paresseux)."""
+    global _converter
+    if _converter is not None:
+        return _converter
+    with _converter_lock:
+        if _converter is not None:  # double vérification
+            return _converter
+        _log.info("Initialisation du convertisseur OCR (modèles ONNX)…")
+        _converter = DocumentConverter(allowed_formats=[InputFormat.PDF, InputFormat.IMAGE])
+        _log.info("Convertisseur OCR prêt.")
+        return _converter
+  
 def extract_invoice(
     input_path: str,
     output_path: Optional[str] = None,
@@ -332,10 +350,14 @@ def extract_invoice(
     else:
         raise ValueError(f"Format non supporté: {suffix}")
     _log.info(f"[Extraction] Démarrage → {input_file.name}")
-    converter = DocumentConverter(allowed_formats=[InputFormat.PDF, InputFormat.IMAGE])
+    converter = _get_converter()
     try:
         result = converter.convert(source=input_file, raises_on_error=False,
                                    max_num_pages=max_pages, page_range=page_range)
+        if hasattr(result, "timings") and result.timings:
+            for k, v in result.timings.items():
+                print(f"[STAGE TIMER] {k}: {sum(v.times):.3f}s (x{v.count})")
+            
     except Exception as e:
         _log.error(f"Erreur conversion : {e}")
         raise
@@ -449,7 +471,7 @@ def main() -> None:
     output_path = args.output or (Path(args.input).stem + "_extraction.json")
     t_start = time.perf_counter()
     try:
-        result = extract_invoice(input_path=args.input, output_path=output_path, max_pages=args.max_pages)
+        extract_invoice(input_path=args.input, output_path=output_path, max_pages=args.max_pages)
     except Exception as e:
         print(f"[ERREUR] {e}", file=sys.stderr)
         if args.verbose:

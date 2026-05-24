@@ -152,8 +152,7 @@ def analyze_financials(
     Analyse financière complète.
     Générique : fonctionne quelle que soit la structure de la facture.
     """
-    from backend.postprocess.invoice.total_calculator import extract_global_totals
-
+    from .total_calculator import extract_global_totals
 
     totals_by_col = extract_global_totals(
         sections, global_totals, raw_totals, schema, currency

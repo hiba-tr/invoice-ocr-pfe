@@ -12,5 +12,5 @@ Laissez ce terminal ouvert.
 cmd
 cd C:\doc_core
 venv\Scripts\activate
-cd frontend-doc
+cd frontend
 npm run dev

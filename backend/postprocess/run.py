@@ -38,7 +38,8 @@ def main() -> None:
     except Exception as e:
         print(f"[ERREUR] {e}", file=sys.stderr)
         if args.verbose:
-            import traceback; traceback.print_exc()
+            import traceback
+            traceback.print_exc()
         sys.exit(1)
 
     elapsed = time.perf_counter() - t0
@@ -73,9 +74,11 @@ def main() -> None:
         print(f"  Lignes       : {q.total_rows} (actives: {q.active_rows})")
         print(f"  Qualité      : {q.overall_score:.0%}")
         if q.issues:
-            for i in q.issues: print(f"  ✗ {i}")
+            for i in q.issues:
+                print(f"  ✗ {i}")
         if q.warnings:
-            for w in q.warnings: print(f"  ⚠ {w}")
+            for w in q.warnings:
+                print(f"  ⚠ {w}")
         print("=" * 60)
 
     print(f"\n  JSON → {output_path}")

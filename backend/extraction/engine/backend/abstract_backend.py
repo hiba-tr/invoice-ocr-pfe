@@ -4,17 +4,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Union
 
 from docling_core.types.doc import DoclingDocument
-
 from backend.extraction.engine.datamodel.backend_options import (
-    BackendOptions,
-    BaseBackendOptions,
-    DeclarativeBackendOptions,
+    BackendOptions, BaseBackendOptions, DeclarativeBackendOptions,
 )
 
 if TYPE_CHECKING:
     from backend.extraction.engine.datamodel.base_models import InputFormat
     from backend.extraction.engine.datamodel.document import InputDocument
-
 
 class AbstractDocumentBackend(ABC):
     @abstractmethod

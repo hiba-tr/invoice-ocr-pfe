@@ -36,51 +36,28 @@ _ABBREVS = {
 def normalize_text(text: str) -> str:
     """
     Normalise un texte pour le matching sémantique.
-
-    Étapes :
-    1. Découpage camelCase → mots séparés
-    2. Normalisation Unicode NFKD (suppression des accents)
-    3. Minuscules
-    4. Expansion des abréviations techniques
-    5. Suppression de la ponctuation
-    6. Compression des espaces
-
-    Args:
-        text: Texte brut (peut contenir des accents, majuscules, etc.)
-
-    Returns:
-        Texte normalisé (minuscules, sans accents, sans ponctuation)
-
-    Examples:
-        >>> normalize_text("CurrentMonthBalance")
-        "current month balance"
-        >>> normalize_text("ÉTAP share @50%")
-        "etap share 50"
-        >>> normalize_text("D&C")
-        "drilling and completion"
+    Version améliorée qui préserve les informations importantes.
     """
     if not text:
         return ""
 
-    # 1. CamelCase → mots séparés
-    text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
-    text = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1 \2', text)
-
-    # 2. Normalisation Unicode (suppression des accents)
+    # 1. Normalisation Unicode (suppression des accents)
     text = unicodedata.normalize("NFKD", text)
     text = "".join(c for c in text if not unicodedata.combining(c))
 
-    # 3. Minuscules
+    # 2. Minuscules
     text = text.lower()
 
-    # 4. Expansion des abréviations (les plus longues d'abord)
+    # 3. Préserver les caractères importants (#, &, etc.)
+    # Ne pas supprimer #, &, /, -
+    # Remplacer seulement la ponctuation excessive
+    text = re.sub(r"[.,;:!?\"'`´]", " ", text)
+    
+    # 4. Expansion des abréviations
     for abbr, full in sorted(_ABBREVS.items(), key=lambda x: -len(x[0])):
         text = re.sub(r'\b' + re.escape(abbr) + r'\b', full, text)
 
-    # 5. Suppression ponctuation (garde les espaces et tirets)
-    text = re.sub(r"[^\w\s\-]", " ", text)
-
-    # 6. Compression des espaces
+    # 5. Nettoyer les espaces multiples
     text = re.sub(r"\s+", " ", text).strip()
 
     return text

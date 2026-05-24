@@ -1,10 +1,8 @@
-// frontend-doc/src/context/AppContext.jsx
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  // Changé: mode clair par défaut (false au lieu de true)
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
@@ -35,11 +33,7 @@ export function AppProvider({ children }) {
     }, 4000);
   }, []);
 
-  // Initialize dark mode on mount - mode clair par défaut
-  useEffect(() => {
-    // Ne pas ajouter la classe dark par défaut
-    // document.documentElement.classList.add('dark'); ← supprimé
-  }, []);
+
 
   return (
     <AppContext.Provider value={{
@@ -63,7 +57,6 @@ export function AppProvider({ children }) {
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {

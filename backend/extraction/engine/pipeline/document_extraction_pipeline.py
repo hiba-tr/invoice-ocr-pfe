@@ -5,12 +5,17 @@ import itertools
 import logging
 import threading
 import time
+import warnings
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Sequence, Tuple
+from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple, cast
 
 
+from docling_core.types.doc import (
+    Size,
+    PageItem,
+)
 
 from backend.extraction.engine.backend.abstract_backend import AbstractDocumentBackend
 from backend.extraction.engine.backend.pdf_backend import PdfDocumentBackend
@@ -23,6 +28,7 @@ from backend.extraction.engine.datamodel.base_models import (
 )
 from backend.extraction.engine.datamodel.document import ConversionResult
 from backend.extraction.engine.datamodel.pipeline_options import ThreadedPdfPipelineOptions
+from backend.extraction.engine.datamodel.settings import settings
 from backend.extraction.engine.models.factories import (
     get_layout_factory,
     get_ocr_factory,
@@ -38,6 +44,7 @@ from backend.extraction.engine.models.stages.page_preprocessing.page_preprocessi
 )
 from backend.extraction.engine.pipeline.base_pipeline import ConvertPipeline
 from backend.extraction.engine.utils.profiling import ProfilingScope, TimeRecorder
+from backend.extraction.engine.utils.utils import chunkify
 
 _log = logging.getLogger(__name__)
 
