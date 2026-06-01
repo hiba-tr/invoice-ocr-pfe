@@ -11,7 +11,11 @@ class SemanticConfig:
 
     # Modèle d'embedding
     """ model_name:           str   = "all-MiniLM-L6-v2" """
-    model_name: str = r"C:\doccore_new\backend\models\models--sentence-transformers--all-MiniLM-L6-v2\snapshots\c9745ed1d9f207416be6d2e6f8de32d1f16199bf"
+    from pathlib import Path
+
+    model_name = str(
+        Path("backend/models/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/c9745ed1d9f207416be6d2e6f8de32d1f16199bf")
+    )
     embedding_dimension:  int   = 384
     embedding_batch_size: int   = 64     # était 32 → 64 (aligné avec embedder.py)
 
