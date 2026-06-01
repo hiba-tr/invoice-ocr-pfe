@@ -64,9 +64,9 @@ def _preload_model_background() -> None:
     t = threading.Thread(target=_load, daemon=True, name="embedder-preload")
     t.start()
 
-
+"""
 def _get_model():
-    """Charge le modèle d'embedding (lazy loading, thread-safe)."""
+
     global _model
     if _model is not None:
         return _model
@@ -87,8 +87,36 @@ def _get_model():
             _log.error(f"Erreur chargement modèle : {e}")
             _model_ready.set()   # libère les éventuels waiters même en cas d'erreur
             return None
+"""
 
+# Ajoute cet import en haut du fichier
+from backend.semantic.config import config 
 
+def _get_model():
+    """Charge le modèle d'embedding via la configuration centralisée."""
+    global _model
+    if _model is not None:
+        return _model
+
+    with _model_lock:
+        if _model is not None:
+            return _model
+        try:
+            from sentence_transformers import SentenceTransformer
+            
+            # Utilise directement le chemin défini dans config.py
+            model_path = config.model_name
+            
+            _log.info(f"Chargement du modèle via config : {model_path}")
+            
+            _model = SentenceTransformer(model_path)
+            _model.encode("test", convert_to_numpy=True, show_progress_bar=False)
+            _model_ready.set()
+            return _model
+        except Exception as e:
+            _log.error(f"Erreur chargement modèle : {e}")
+            return None
+        
 def encode(texts: List[str], batch_size: int = 64) -> Optional[np.ndarray]:
     """
     Encode une liste de textes en vecteurs normalisés.

@@ -3,7 +3,10 @@
 # Chaîne : extraction (invoice_extraction_bridge) → postprocess (pipeline)
 #          → stockage avec matching sémantique automatique
 # ------------------------------------------------------------------------------
-
+import os
+# Force le mode hors-ligne pour toutes les bibliothèques Hugging Face
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
+os.environ['HF_HUB_OFFLINE'] = '1'
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
